@@ -286,13 +286,20 @@ ConstInitVal: ConstExp{
 Block: T_L_BRACE T_R_BRACE{
   stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
                                    {"inner", llvm::json::Array{}}};
-}
-Block: T_L_BRACE BlockItem T_R_BRACE {
+}|T_L_BRACE BlockItem T_R_BRACE {
   if(debug) llvm::outs()<<"blockitem 2 block\n";
 }
 
 BlockItem: 
-BlockItem Stmt{
+Stmt {
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{inner}}};
+}|Decl{
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{inner}}};
+}|BlockItem Stmt{
   auto stmt = stak.back();
   stak.pop_back();
   auto be_block_item = stak.back();
@@ -302,14 +309,6 @@ BlockItem Stmt{
   stak.pop_back();
   auto be_block_item = stak.back();
   stak.back().getAsObject()->get("inner")->getAsArray()->push_back(decl);
-}|Stmt {
-  auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
-}|Decl{
-  auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
 }
 
 
@@ -327,7 +326,6 @@ VarDecl: T_INT T_IDENTIFIER T_SEMI {
   auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
   stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name}};
 }
-
 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block {
   auto inner = stak.back();
   stak.pop_back();
