@@ -295,25 +295,11 @@ ConstInitVal: ConstExp{
   if(debug) llvm::outs()<<"constexp 2 ConstInitVal\n";
 }
 
-
 Block: T_L_BRACE T_R_BRACE{
-  stak.push_back(llvm::json::Object{{"kind", "CompoundStmt"}});
-}|T_L_BRACE BlockItemChain T_R_BRACE {
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{}}};
+}|T_L_BRACE BlockItem T_R_BRACE {
   if(debug) llvm::outs()<<"blockitem 2 block\n";
-}
-
-BlockItemChain:BlockItem{
-
-}|BlockItemChain Stmt{
-  auto stmt = stak.back();
-  stak.pop_back();
-  auto be_block_item = stak.back();
-  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(stmt);
-}|BlockItemChain Decl{
-  auto decl = stak.back();
-  stak.pop_back();
-  auto be_block_item = stak.back();
-  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(decl);
 }
 
 BlockItem: 
@@ -325,24 +311,26 @@ Stmt {
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
                                    {"inner", llvm::json::Array{inner}}};
+}|BlockItem Stmt{
+  auto stmt = stak.back();
+  stak.pop_back();
+  auto be_block_item = stak.back();
+  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(stmt);
+}|BlockItem Decl{
+  auto decl = stak.back();
+  stak.pop_back();
+  auto be_block_item = stak.back();
+  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(decl);
 }
 
 
-
+//todo
 Stmt: LVal T_EQUAL Exp T_SEMI {
   auto exp = stak.back();
   stak.pop_back();
   auto lval = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","BinaryOperator"},{"opcode","="},{"inner",llvm::json::Array{lval,exp}}});
-}|T_SEMI{
-  stak.push_back(llvm::json::Object{{"kind","NullStmt"}});
-}|Exp T_SEMI{
-
-}|Block{
-
-}|T_RETURN T_SEMI{
-  stak.push_back(llvm::json::Object{{"kind", "ReturnStmt"}});
 }|T_RETURN Exp T_SEMI {
   if(debug) llvm::outs()<<"return 2 stmt\n";
   if(debug) print_stack();
@@ -350,7 +338,9 @@ Stmt: LVal T_EQUAL Exp T_SEMI {
   stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
                                    {"inner", llvm::json::Array{inner}}};
 }
+//todo
 
+// todo
 VarDecl: T_INT VarDefChain T_SEMI {
   if(debug) llvm::outs()<<"valdefchain 2 vardecl and val_def_num is "<<val_def_num<<"\n";
 }
@@ -374,6 +364,7 @@ VarDef: T_IDENTIFIER{
 InitVal: Exp{
 
 }
+// todo
 
 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block {
   auto inner = stak.back();
@@ -390,12 +381,13 @@ Exp : LOrExp{
 
 LVal : T_IDENTIFIER{
   auto ident = stak.back();
-  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  auto name = ident.getAsObject()->get("value")->getAsString()->Str();
   stak.back() = llvm::json::Object{{"kind", "DeclRefExpr"},
                                    {"name", name}};
 }|LVal T_L_SQUARE Exp T_R_SQUARE{
   auto exp = stak.back();
-}//todo
+  auto 
+}// todo
 
 PrimaryExp : T_L_PAREN Exp T_R_PAREN{
   auto inner = stak.back();

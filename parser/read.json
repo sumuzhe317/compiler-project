@@ -1,5 +1,5 @@
 {
-  "id": "0xb4989e8",
+  "id": "0xa09d9e8",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0xb499210",
+      "id": "0xa09e210",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0xb498fb0",
+          "id": "0xa09dfb0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0xb499280",
+      "id": "0xa09e280",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0xb498fd0",
+          "id": "0xa09dfd0",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0xb499588",
+      "id": "0xa09e588",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0xb499360",
+          "id": "0xa09e360",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0xb4992d8",
+            "id": "0xa09e2d8",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0xb499620",
+      "id": "0xa09e620",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0xb4995e0",
+          "id": "0xa09e5e0",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0xb498a90",
+              "id": "0xa09da90",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0xb499918",
+      "id": "0xa09e918",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0xb4998c0",
+          "id": "0xa09e8c0",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0xb499700",
+              "id": "0xa09e700",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0xb499678",
+                "id": "0xa09e678",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "id": "0xb4efd00",
+      "id": "0xa0f4d20",
       "kind": "FunctionDecl",
       "loc": {
         "offset": 4,
@@ -168,8 +168,8 @@
           "tokLen": 3
         },
         "end": {
-          "offset": 42,
-          "line": 5,
+          "offset": 71,
+          "line": 8,
           "col": 1,
           "tokLen": 1
         }
@@ -181,7 +181,7 @@
       },
       "inner": [
         {
-          "id": "0xb4efeb0",
+          "id": "0xa0f4e60",
           "kind": "CompoundStmt",
           "range": {
             "begin": {
@@ -191,85 +191,79 @@
               "tokLen": 1
             },
             "end": {
-              "offset": 42,
-              "line": 5,
+              "offset": 71,
+              "line": 8,
               "col": 1,
               "tokLen": 1
             }
           },
           "inner": [
             {
-              "id": "0xb4efe68",
-              "kind": "DeclStmt",
+              "id": "0xa0f4e18",
+              "kind": "CompoundStmt",
               "range": {
                 "begin": {
                   "offset": 16,
                   "line": 2,
                   "col": 5,
-                  "tokLen": 3
+                  "tokLen": 1
                 },
                 "end": {
-                  "offset": 21,
-                  "col": 10,
+                  "offset": 55,
+                  "line": 6,
+                  "col": 5,
                   "tokLen": 1
                 }
               },
               "inner": [
                 {
-                  "id": "0xb4efe00",
-                  "kind": "VarDecl",
-                  "loc": {
-                    "offset": 20,
-                    "col": 9,
-                    "tokLen": 1
-                  },
+                  "id": "0xa0f4e08",
+                  "kind": "CompoundStmt",
                   "range": {
                     "begin": {
-                      "offset": 16,
-                      "col": 5,
-                      "tokLen": 3
+                      "offset": 26,
+                      "line": 3,
+                      "col": 9,
+                      "tokLen": 1
                     },
                     "end": {
-                      "offset": 20,
+                      "offset": 49,
+                      "line": 5,
                       "col": 9,
                       "tokLen": 1
                     }
-                  },
-                  "name": "a",
-                  "type": {
-                    "qualType": "int"
                   }
                 }
               ]
             },
             {
-              "id": "0xb4efea0",
+              "id": "0xa0f4e50",
               "kind": "ReturnStmt",
               "range": {
                 "begin": {
-                  "offset": 32,
-                  "line": 4,
+                  "offset": 61,
+                  "line": 7,
                   "col": 5,
                   "tokLen": 6
                 },
                 "end": {
-                  "offset": 39,
+                  "offset": 68,
                   "col": 12,
                   "tokLen": 1
                 }
               },
               "inner": [
                 {
-                  "id": "0xb4efe80",
+                  "id": "0xa0f4e30",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
-                      "offset": 39,
+                      "offset": 68,
                       "col": 12,
                       "tokLen": 1
                     },
                     "end": {
-                      "offset": 39,
+                      "offset": 68,
                       "col": 12,
                       "tokLen": 1
                     }
@@ -278,7 +272,7 @@
                     "qualType": "int"
                   },
                   "valueCategory": "prvalue",
-                  "value": "0"
+                  "value": "1"
                 }
               ]
             }
@@ -288,10 +282,56 @@
     }
   ]
 }-------------------------------------------------------------------------------------------------------
+yylex int
+yylex identifier
+yylex l_paren
+yylex r_paren
+yylex l_brace
+yylex l_brace
+yylex l_brace
+yylex r_brace
+yylex r_brace
+blockitem 2 block
+yylex return
+yylex numeric_constant
+T_NUMERIC_CONSTANT 2 number
+number 2 primary
+primary 2 unaryexp
+
+printf stak
+{"value":"main"}
+{"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+{"kind":"IntegerLiteral","value":"1"}
+
+printf stak end
+UnaryExp 2 MulExp
+
+printf stak
+{"value":"main"}
+{"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+{"kind":"IntegerLiteral","value":"1"}
+
+printf stak end
+yylex semi
+MulExp 2 AddExp
+AddExp 2 RelExp
+LOrExp 2 Exp
+return 2 stmt
+
+printf stak
+{"value":"main"}
+{"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+{"kind":"IntegerLiteral","value":"1"}
+
+printf stak end
+yylex r_brace
+blockitem 2 block
+yylex eof
+{"inner":[{"inner":[{"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"},{"inner":[{"kind":"IntegerLiteral","value":"1"}],"kind":"ReturnStmt"}],"kind":"CompoundStmt"}],"kind":"FunctionDecl","name":"main"}],"kind":"TranslationUnitDecl"}
 -------------------------------------------------------------------------------------------------------
-1,290d0
+1,284c1,46
 < {
-<   "id": "0xb4989e8",
+<   "id": "0xa09d9e8",
 <   "kind": "TranslationUnitDecl",
 <   "loc": {},
 <   "range": {
@@ -300,7 +340,7 @@
 <   },
 <   "inner": [
 <     {
-<       "id": "0xb499210",
+<       "id": "0xa09e210",
 <       "kind": "TypedefDecl",
 <       "loc": {},
 <       "range": {
@@ -314,7 +354,7 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb498fb0",
+<           "id": "0xa09dfb0",
 <           "kind": "BuiltinType",
 <           "type": {
 <             "qualType": "__int128"
@@ -323,7 +363,7 @@
 <       ]
 <     },
 <     {
-<       "id": "0xb499280",
+<       "id": "0xa09e280",
 <       "kind": "TypedefDecl",
 <       "loc": {},
 <       "range": {
@@ -337,7 +377,7 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb498fd0",
+<           "id": "0xa09dfd0",
 <           "kind": "BuiltinType",
 <           "type": {
 <             "qualType": "unsigned __int128"
@@ -346,7 +386,7 @@
 <       ]
 <     },
 <     {
-<       "id": "0xb499588",
+<       "id": "0xa09e588",
 <       "kind": "TypedefDecl",
 <       "loc": {},
 <       "range": {
@@ -360,13 +400,13 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb499360",
+<           "id": "0xa09e360",
 <           "kind": "RecordType",
 <           "type": {
 <             "qualType": "struct __NSConstantString_tag"
 <           },
 <           "decl": {
-<             "id": "0xb4992d8",
+<             "id": "0xa09e2d8",
 <             "kind": "RecordDecl",
 <             "name": "__NSConstantString_tag"
 <           }
@@ -374,7 +414,7 @@
 <       ]
 <     },
 <     {
-<       "id": "0xb499620",
+<       "id": "0xa09e620",
 <       "kind": "TypedefDecl",
 <       "loc": {},
 <       "range": {
@@ -388,14 +428,14 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb4995e0",
+<           "id": "0xa09e5e0",
 <           "kind": "PointerType",
 <           "type": {
 <             "qualType": "char *"
 <           },
 <           "inner": [
 <             {
-<               "id": "0xb498a90",
+<               "id": "0xa09da90",
 <               "kind": "BuiltinType",
 <               "type": {
 <                 "qualType": "char"
@@ -406,7 +446,7 @@
 <       ]
 <     },
 <     {
-<       "id": "0xb499918",
+<       "id": "0xa09e918",
 <       "kind": "TypedefDecl",
 <       "loc": {},
 <       "range": {
@@ -420,7 +460,7 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb4998c0",
+<           "id": "0xa09e8c0",
 <           "kind": "ConstantArrayType",
 <           "type": {
 <             "qualType": "struct __va_list_tag[1]"
@@ -428,13 +468,13 @@
 <           "size": 1,
 <           "inner": [
 <             {
-<               "id": "0xb499700",
+<               "id": "0xa09e700",
 <               "kind": "RecordType",
 <               "type": {
 <                 "qualType": "struct __va_list_tag"
 <               },
 <               "decl": {
-<                 "id": "0xb499678",
+<                 "id": "0xa09e678",
 <                 "kind": "RecordDecl",
 <                 "name": "__va_list_tag"
 <               }
@@ -444,7 +484,7 @@
 <       ]
 <     },
 <     {
-<       "id": "0xb4efd00",
+<       "id": "0xa0f4d20",
 <       "kind": "FunctionDecl",
 <       "loc": {
 <         "offset": 4,
@@ -460,8 +500,8 @@
 <           "tokLen": 3
 <         },
 <         "end": {
-<           "offset": 42,
-<           "line": 5,
+<           "offset": 71,
+<           "line": 8,
 <           "col": 1,
 <           "tokLen": 1
 <         }
@@ -473,7 +513,7 @@
 <       },
 <       "inner": [
 <         {
-<           "id": "0xb4efeb0",
+<           "id": "0xa0f4e60",
 <           "kind": "CompoundStmt",
 <           "range": {
 <             "begin": {
@@ -483,85 +523,79 @@
 <               "tokLen": 1
 <             },
 <             "end": {
-<               "offset": 42,
-<               "line": 5,
+<               "offset": 71,
+<               "line": 8,
 <               "col": 1,
 <               "tokLen": 1
 <             }
 <           },
 <           "inner": [
 <             {
-<               "id": "0xb4efe68",
-<               "kind": "DeclStmt",
+<               "id": "0xa0f4e18",
+<               "kind": "CompoundStmt",
 <               "range": {
 <                 "begin": {
 <                   "offset": 16,
 <                   "line": 2,
 <                   "col": 5,
-<                   "tokLen": 3
+<                   "tokLen": 1
 <                 },
 <                 "end": {
-<                   "offset": 21,
-<                   "col": 10,
+<                   "offset": 55,
+<                   "line": 6,
+<                   "col": 5,
 <                   "tokLen": 1
 <                 }
 <               },
 <               "inner": [
 <                 {
-<                   "id": "0xb4efe00",
-<                   "kind": "VarDecl",
-<                   "loc": {
-<                     "offset": 20,
-<                     "col": 9,
-<                     "tokLen": 1
-<                   },
+<                   "id": "0xa0f4e08",
+<                   "kind": "CompoundStmt",
 <                   "range": {
 <                     "begin": {
-<                       "offset": 16,
-<                       "col": 5,
-<                       "tokLen": 3
+<                       "offset": 26,
+<                       "line": 3,
+<                       "col": 9,
+<                       "tokLen": 1
 <                     },
 <                     "end": {
-<                       "offset": 20,
+<                       "offset": 49,
+<                       "line": 5,
 <                       "col": 9,
 <                       "tokLen": 1
 <                     }
-<                   },
-<                   "name": "a",
-<                   "type": {
-<                     "qualType": "int"
 <                   }
 <                 }
 <               ]
 <             },
 <             {
-<               "id": "0xb4efea0",
+<               "id": "0xa0f4e50",
 <               "kind": "ReturnStmt",
 <               "range": {
 <                 "begin": {
-<                   "offset": 32,
-<                   "line": 4,
+<                   "offset": 61,
+<                   "line": 7,
 <                   "col": 5,
 <                   "tokLen": 6
 <                 },
 <                 "end": {
-<                   "offset": 39,
+<                   "offset": 68,
 <                   "col": 12,
 <                   "tokLen": 1
 <                 }
 <               },
 <               "inner": [
 <                 {
-<                   "id": "0xb4efe80",
+<                   "id": "0xa0f4e30",
 <                   "kind": "IntegerLiteral",
 <                   "range": {
 <                     "begin": {
-<                       "offset": 39,
+<                       "offset": 68,
 <                       "col": 12,
 <                       "tokLen": 1
 <                     },
 <                     "end": {
-<                       "offset": 39,
+<                       "offset": 68,
 <                       "col": 12,
 <                       "tokLen": 1
 <                     }
@@ -570,7 +604,7 @@
 <                     "qualType": "int"
 <                   },
 <                   "valueCategory": "prvalue",
-<                   "value": "0"
+<                   "value": "1"
 <                 }
 <               ]
 <             }
@@ -581,3 +615,50 @@
 <   ]
 < }
 \ No newline at end of file
+---
+> yylex int
+> yylex identifier
+> yylex l_paren
+> yylex r_paren
+> yylex l_brace
+> yylex l_brace
+> yylex l_brace
+> yylex r_brace
+> yylex r_brace
+> blockitem 2 block
+> yylex return
+> yylex numeric_constant
+> T_NUMERIC_CONSTANT 2 number
+> number 2 primary
+> primary 2 unaryexp
+> 
+> printf stak
+> {"value":"main"}
+> {"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+> {"kind":"IntegerLiteral","value":"1"}
+> 
+> printf stak end
+> UnaryExp 2 MulExp
+> 
+> printf stak
+> {"value":"main"}
+> {"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+> {"kind":"IntegerLiteral","value":"1"}
+> 
+> printf stak end
+> yylex semi
+> MulExp 2 AddExp
+> AddExp 2 RelExp
+> LOrExp 2 Exp
+> return 2 stmt
+> 
+> printf stak
+> {"value":"main"}
+> {"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"}],"kind":"CompoundStmt"}
+> {"kind":"IntegerLiteral","value":"1"}
+> 
+> printf stak end
+> yylex r_brace
+> blockitem 2 block
+> yylex eof
+> {"inner":[{"inner":[{"inner":[{"inner":[{"kind":"CompoundStmt"}],"kind":"CompoundStmt"},{"inner":[{"kind":"IntegerLiteral","value":"1"}],"kind":"ReturnStmt"}],"kind":"CompoundStmt"}],"kind":"FunctionDecl","name":"main"}],"kind":"TranslationUnitDecl"}

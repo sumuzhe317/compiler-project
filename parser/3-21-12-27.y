@@ -294,7 +294,7 @@ ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal{
 ConstInitVal: ConstExp{
   if(debug) llvm::outs()<<"constexp 2 ConstInitVal\n";
 }
-
+//todo
 
 Block: T_L_BRACE T_R_BRACE{
   stak.push_back(llvm::json::Object{{"kind", "CompoundStmt"}});
@@ -326,9 +326,9 @@ Stmt {
   stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
                                    {"inner", llvm::json::Array{inner}}};
 }
+//todo
 
-
-
+//todo
 Stmt: LVal T_EQUAL Exp T_SEMI {
   auto exp = stak.back();
   stak.pop_back();
@@ -350,6 +350,7 @@ Stmt: LVal T_EQUAL Exp T_SEMI {
   stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
                                    {"inner", llvm::json::Array{inner}}};
 }
+//todo
 
 VarDecl: T_INT VarDefChain T_SEMI {
   if(debug) llvm::outs()<<"valdefchain 2 vardecl and val_def_num is "<<val_def_num<<"\n";
@@ -395,7 +396,7 @@ LVal : T_IDENTIFIER{
                                    {"name", name}};
 }|LVal T_L_SQUARE Exp T_R_SQUARE{
   auto exp = stak.back();
-}//todo
+}// todo
 
 PrimaryExp : T_L_PAREN Exp T_R_PAREN{
   auto inner = stak.back();

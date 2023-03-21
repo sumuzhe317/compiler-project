@@ -1,24 +1,13 @@
 Terminals unused in grammar
 
-    T_CONST
-    T_COMMA
     T_L_SQUARE
     T_R_SQUARE
-    T_EQUAL
     T_VOID
     T_IF
     T_ELSE
     T_WHILE
     T_BREAK
     T_CONTINUE
-    T_LESS
-    T_GREATER
-    T_LESSEQUAL
-    T_GREATEREQUAL
-    T_EQUALEQUAL
-    T_EXCLAIMEQUAL
-    T_AMPAMP
-    T_PIPEPIPE
 
 
 Grammar
@@ -31,120 +20,189 @@ Grammar
     3 CompUnitItem: VarDecl
     4             | FuncDef
 
-    5 VarDecl: T_INT T_IDENTIFIER T_SEMI
+    5 Decl: ConstDecl
+    6     | VarDecl
 
-    6 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block
+    7 ConstDecl: T_CONST T_INT ConstDefChain T_SEMI
+    8          | T_CONST T_CHAR ConstDefChain T_SEMI
+    9          | T_CONST T_LONGLONG ConstDefChain T_SEMI
 
-    7 Block: T_L_BRACE T_R_BRACE
-    8      | T_L_BRACE BlockItem T_R_BRACE
+   10 ConstDefChain: ConstDef
+   11              | ConstDefChain T_COMMA ConstDef
 
-    9 BlockItem: Stmt
+   12 ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal
 
-   10 Stmt: T_RETURN EXP T_SEMI
+   13 ConstInitVal: ConstExp
 
-   11 UnaryOp: T_MINUS
-   12        | T_PLUS
-   13        | T_EXCLAIM
+   14 Block: T_L_BRACE T_R_BRACE
+   15      | T_L_BRACE BlockItem T_R_BRACE
 
-   14 UnaryExp: PrimaryExp
-   15         | UnaryOp UnaryExp
+   16 BlockItem: BlockItem Stmt
+   17          | BlockItem Decl
+   18          | Stmt
+   19          | Decl
 
-   16 Number: T_NUMERIC_CONSTANT
+   20 Stmt: T_RETURN Exp T_SEMI
 
-   17 PrimaryExp: T_L_PAREN EXP T_R_PAREN
-   18           | Number
+   21 VarDecl: T_INT T_IDENTIFIER T_SEMI
 
-   19 MulExp: UnaryExp
-   20       | MulExp T_STAR UnaryExp
-   21       | MulExp T_SLASH UnaryExp
-   22       | MulExp T_PERCENT UnaryExp
+   22 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block
 
-   23 EXP: MulExp
+   23 Exp: LOrExp
+
+   24 PrimaryExp: T_L_PAREN Exp T_R_PAREN
+   25           | Number
+
+   26 UnaryExp: PrimaryExp
+   27         | T_PLUS UnaryExp
+   28         | T_MINUS UnaryExp
+   29         | T_EXCLAIM UnaryExp
+
+   30 Number: T_NUMERIC_CONSTANT
+
+   31 MulExp: UnaryExp
+   32       | MulExp T_STAR UnaryExp
+   33       | MulExp T_SLASH UnaryExp
+   34       | MulExp T_PERCENT UnaryExp
+
+   35 AddExp: MulExp
+   36       | AddExp T_PLUS MulExp
+   37       | AddExp T_MINUS MulExp
+
+   38 RelExp: AddExp
+   39       | RelExp T_LESS AddExp
+   40       | RelExp T_GREATER AddExp
+   41       | RelExp T_LESSEQUAL AddExp
+   42       | RelExp T_GREATEREQUAL AddExp
+
+   43 EqExp: RelExp
+   44      | EqExp T_EQUALEQUAL RelExp
+   45      | EqExp T_EXCLAIMEQUAL RelExp
+
+   46 LAndExp: EqExp
+   47        | LAndExp T_AMPAMP EqExp
+
+   48 LOrExp: LAndExp
+   49       | LOrExp T_PIPEPIPE LAndExp
+
+   50 ConstExp: Exp
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    T_CONST (258)
-    T_COMMA (259)
-    T_SEMI (260) 5 10
-    T_INT (261) 5 6
-    T_L_SQUARE (262)
-    T_R_SQUARE (263)
-    T_EQUAL (264)
-    T_L_BRACE (265) 7 8
-    T_R_BRACE (266) 7 8
-    T_IDENTIFIER (267) 5 6
-    T_L_PAREN (268) 6 17
-    T_R_PAREN (269) 6 17
-    T_VOID (270)
-    T_IF (271)
-    T_ELSE (272)
-    T_WHILE (273)
-    T_BREAK (274)
-    T_CONTINUE (275)
-    T_RETURN (276) 10
-    T_NUMERIC_CONSTANT (277) 16
-    T_PLUS (278) 12
-    T_MINUS (279) 11
-    T_EXCLAIM (280) 13
-    T_STAR (281) 20
-    T_SLASH (282) 21
-    T_PERCENT (283) 22
-    T_LESS (284)
-    T_GREATER (285)
-    T_LESSEQUAL (286)
-    T_GREATEREQUAL (287)
-    T_EQUALEQUAL (288)
-    T_EXCLAIMEQUAL (289)
-    T_AMPAMP (290)
-    T_PIPEPIPE (291)
+    T_CONST (258) 7 8 9
+    T_COMMA (259) 11
+    T_SEMI (260) 7 8 9 20 21
+    T_INT (261) 7 21 22
+    T_CHAR (262) 8
+    T_LONGLONG (263) 9
+    T_L_SQUARE (264)
+    T_R_SQUARE (265)
+    T_EQUAL (266) 12
+    T_L_BRACE (267) 14 15
+    T_R_BRACE (268) 14 15
+    T_IDENTIFIER (269) 12 21 22
+    T_L_PAREN (270) 22 24
+    T_R_PAREN (271) 22 24
+    T_VOID (272)
+    T_IF (273)
+    T_ELSE (274)
+    T_WHILE (275)
+    T_BREAK (276)
+    T_CONTINUE (277)
+    T_RETURN (278) 20
+    T_NUMERIC_CONSTANT (279) 30
+    T_PLUS (280) 27 36
+    T_MINUS (281) 28 37
+    T_EXCLAIM (282) 29
+    T_STAR (283) 32
+    T_SLASH (284) 33
+    T_PERCENT (285) 34
+    T_LESS (286) 39
+    T_GREATER (287) 40
+    T_LESSEQUAL (288) 41
+    T_GREATEREQUAL (289) 42
+    T_EQUALEQUAL (290) 44
+    T_EXCLAIMEQUAL (291) 45
+    T_AMPAMP (292) 47
+    T_PIPEPIPE (293) 49
 
 
 Nonterminals, with rules where they appear
 
-    $accept (37)
+    $accept (39)
         on left: 0
-    CompUnit (38)
+    CompUnit (40)
         on left: 1 2
         on right: 0 1
-    CompUnitItem (39)
+    CompUnitItem (41)
         on left: 3 4
         on right: 1 2
-    VarDecl (40)
-        on left: 5
-        on right: 3
-    FuncDef (41)
-        on left: 6
-        on right: 4
-    Block (42)
-        on left: 7 8
-        on right: 6
-    BlockItem (43)
-        on left: 9
-        on right: 8
-    Stmt (44)
-        on left: 10
-        on right: 9
-    UnaryOp (45)
-        on left: 11 12 13
-        on right: 15
-    UnaryExp (46)
+    Decl (42)
+        on left: 5 6
+        on right: 17 19
+    ConstDecl (43)
+        on left: 7 8 9
+        on right: 5
+    ConstDefChain (44)
+        on left: 10 11
+        on right: 7 8 9 11
+    ConstDef (45)
+        on left: 12
+        on right: 10 11
+    ConstInitVal (46)
+        on left: 13
+        on right: 12
+    Block (47)
         on left: 14 15
-        on right: 15 19 20 21 22
-    Number (47)
-        on left: 16
-        on right: 18
-    PrimaryExp (48)
-        on left: 17 18
-        on right: 14
-    MulExp (49)
-        on left: 19 20 21 22
-        on right: 20 21 22 23
-    EXP (50)
+        on right: 22
+    BlockItem (48)
+        on left: 16 17 18 19
+        on right: 15 16 17
+    Stmt (49)
+        on left: 20
+        on right: 16 18
+    VarDecl (50)
+        on left: 21
+        on right: 3 6
+    FuncDef (51)
+        on left: 22
+        on right: 4
+    Exp (52)
         on left: 23
-        on right: 10 17
+        on right: 20 24 50
+    PrimaryExp (53)
+        on left: 24 25
+        on right: 26
+    UnaryExp (54)
+        on left: 26 27 28 29
+        on right: 27 28 29 31 32 33 34
+    Number (55)
+        on left: 30
+        on right: 25
+    MulExp (56)
+        on left: 31 32 33 34
+        on right: 32 33 34 35 36 37
+    AddExp (57)
+        on left: 35 36 37
+        on right: 36 37 38 39 40 41 42
+    RelExp (58)
+        on left: 38 39 40 41 42
+        on right: 39 40 41 42 43 44 45
+    EqExp (59)
+        on left: 43 44 45
+        on right: 44 45 46 47
+    LAndExp (60)
+        on left: 46 47
+        on right: 47 48 49
+    LOrExp (61)
+        on left: 48 49
+        on right: 23 49
+    ConstExp (62)
+        on left: 50
+        on right: 13
 
 
 State 0
@@ -161,8 +219,8 @@ State 0
 
 State 1
 
-    5 VarDecl: T_INT • T_IDENTIFIER T_SEMI
-    6 FuncDef: T_INT • T_IDENTIFIER T_L_PAREN T_R_PAREN Block
+   21 VarDecl: T_INT • T_IDENTIFIER T_SEMI
+   22 FuncDef: T_INT • T_IDENTIFIER T_L_PAREN T_R_PAREN Block
 
     T_IDENTIFIER  shift, and go to state 6
 
@@ -203,8 +261,8 @@ State 5
 
 State 6
 
-    5 VarDecl: T_INT T_IDENTIFIER • T_SEMI
-    6 FuncDef: T_INT T_IDENTIFIER • T_L_PAREN T_R_PAREN Block
+   21 VarDecl: T_INT T_IDENTIFIER • T_SEMI
+   22 FuncDef: T_INT T_IDENTIFIER • T_L_PAREN T_R_PAREN Block
 
     T_SEMI     shift, and go to state 9
     T_L_PAREN  shift, and go to state 10
@@ -226,21 +284,21 @@ State 8
 
 State 9
 
-    5 VarDecl: T_INT T_IDENTIFIER T_SEMI •
+   21 VarDecl: T_INT T_IDENTIFIER T_SEMI •
 
-    $default  reduce using rule 5 (VarDecl)
+    $default  reduce using rule 21 (VarDecl)
 
 
 State 10
 
-    6 FuncDef: T_INT T_IDENTIFIER T_L_PAREN • T_R_PAREN Block
+   22 FuncDef: T_INT T_IDENTIFIER T_L_PAREN • T_R_PAREN Block
 
     T_R_PAREN  shift, and go to state 11
 
 
 State 11
 
-    6 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN • Block
+   22 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN • Block
 
     T_L_BRACE  shift, and go to state 12
 
@@ -249,265 +307,885 @@ State 11
 
 State 12
 
-    7 Block: T_L_BRACE • T_R_BRACE
-    8      | T_L_BRACE • BlockItem T_R_BRACE
+   14 Block: T_L_BRACE • T_R_BRACE
+   15      | T_L_BRACE • BlockItem T_R_BRACE
 
-    T_R_BRACE  shift, and go to state 14
-    T_RETURN   shift, and go to state 15
+    T_CONST    shift, and go to state 14
+    T_INT      shift, and go to state 15
+    T_R_BRACE  shift, and go to state 16
+    T_RETURN   shift, and go to state 17
 
-    BlockItem  go to state 16
-    Stmt       go to state 17
+    Decl       go to state 18
+    ConstDecl  go to state 19
+    BlockItem  go to state 20
+    Stmt       go to state 21
+    VarDecl    go to state 22
 
 
 State 13
 
-    6 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block •
+   22 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block •
 
-    $default  reduce using rule 6 (FuncDef)
+    $default  reduce using rule 22 (FuncDef)
 
 
 State 14
 
-    7 Block: T_L_BRACE T_R_BRACE •
+    7 ConstDecl: T_CONST • T_INT ConstDefChain T_SEMI
+    8          | T_CONST • T_CHAR ConstDefChain T_SEMI
+    9          | T_CONST • T_LONGLONG ConstDefChain T_SEMI
 
-    $default  reduce using rule 7 (Block)
+    T_INT       shift, and go to state 23
+    T_CHAR      shift, and go to state 24
+    T_LONGLONG  shift, and go to state 25
 
 
 State 15
 
-   10 Stmt: T_RETURN • EXP T_SEMI
+   21 VarDecl: T_INT • T_IDENTIFIER T_SEMI
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
-
-    UnaryOp     go to state 23
-    UnaryExp    go to state 24
-    Number      go to state 25
-    PrimaryExp  go to state 26
-    MulExp      go to state 27
-    EXP         go to state 28
+    T_IDENTIFIER  shift, and go to state 26
 
 
 State 16
 
-    8 Block: T_L_BRACE BlockItem • T_R_BRACE
+   14 Block: T_L_BRACE T_R_BRACE •
 
-    T_R_BRACE  shift, and go to state 29
+    $default  reduce using rule 14 (Block)
 
 
 State 17
 
-    9 BlockItem: Stmt •
+   20 Stmt: T_RETURN • Exp T_SEMI
 
-    $default  reduce using rule 9 (BlockItem)
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    Exp         go to state 32
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 38
+    EqExp       go to state 39
+    LAndExp     go to state 40
+    LOrExp      go to state 41
 
 
 State 18
 
-   17 PrimaryExp: T_L_PAREN • EXP T_R_PAREN
+   19 BlockItem: Decl •
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
-
-    UnaryOp     go to state 23
-    UnaryExp    go to state 24
-    Number      go to state 25
-    PrimaryExp  go to state 26
-    MulExp      go to state 27
-    EXP         go to state 30
+    $default  reduce using rule 19 (BlockItem)
 
 
 State 19
 
-   16 Number: T_NUMERIC_CONSTANT •
+    5 Decl: ConstDecl •
 
-    $default  reduce using rule 16 (Number)
+    $default  reduce using rule 5 (Decl)
 
 
 State 20
 
-   12 UnaryOp: T_PLUS •
+   15 Block: T_L_BRACE BlockItem • T_R_BRACE
+   16 BlockItem: BlockItem • Stmt
+   17          | BlockItem • Decl
 
-    $default  reduce using rule 12 (UnaryOp)
+    T_CONST    shift, and go to state 14
+    T_INT      shift, and go to state 15
+    T_R_BRACE  shift, and go to state 42
+    T_RETURN   shift, and go to state 17
+
+    Decl       go to state 43
+    ConstDecl  go to state 19
+    Stmt       go to state 44
+    VarDecl    go to state 22
 
 
 State 21
 
-   11 UnaryOp: T_MINUS •
+   18 BlockItem: Stmt •
 
-    $default  reduce using rule 11 (UnaryOp)
+    $default  reduce using rule 18 (BlockItem)
 
 
 State 22
 
-   13 UnaryOp: T_EXCLAIM •
+    6 Decl: VarDecl •
 
-    $default  reduce using rule 13 (UnaryOp)
+    $default  reduce using rule 6 (Decl)
 
 
 State 23
 
-   15 UnaryExp: UnaryOp • UnaryExp
+    7 ConstDecl: T_CONST T_INT • ConstDefChain T_SEMI
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
+    T_IDENTIFIER  shift, and go to state 45
 
-    UnaryOp     go to state 23
-    UnaryExp    go to state 31
-    Number      go to state 25
-    PrimaryExp  go to state 26
+    ConstDefChain  go to state 46
+    ConstDef       go to state 47
 
 
 State 24
 
-   19 MulExp: UnaryExp •
+    8 ConstDecl: T_CONST T_CHAR • ConstDefChain T_SEMI
 
-    $default  reduce using rule 19 (MulExp)
+    T_IDENTIFIER  shift, and go to state 45
+
+    ConstDefChain  go to state 48
+    ConstDef       go to state 47
 
 
 State 25
 
-   18 PrimaryExp: Number •
+    9 ConstDecl: T_CONST T_LONGLONG • ConstDefChain T_SEMI
 
-    $default  reduce using rule 18 (PrimaryExp)
+    T_IDENTIFIER  shift, and go to state 45
+
+    ConstDefChain  go to state 49
+    ConstDef       go to state 47
 
 
 State 26
 
-   14 UnaryExp: PrimaryExp •
+   21 VarDecl: T_INT T_IDENTIFIER • T_SEMI
 
-    $default  reduce using rule 14 (UnaryExp)
+    T_SEMI  shift, and go to state 9
 
 
 State 27
 
-   20 MulExp: MulExp • T_STAR UnaryExp
-   21       | MulExp • T_SLASH UnaryExp
-   22       | MulExp • T_PERCENT UnaryExp
-   23 EXP: MulExp •
+   24 PrimaryExp: T_L_PAREN • Exp T_R_PAREN
 
-    T_STAR     shift, and go to state 32
-    T_SLASH    shift, and go to state 33
-    T_PERCENT  shift, and go to state 34
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
 
-    $default  reduce using rule 23 (EXP)
+    Exp         go to state 50
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 38
+    EqExp       go to state 39
+    LAndExp     go to state 40
+    LOrExp      go to state 41
 
 
 State 28
 
-   10 Stmt: T_RETURN EXP • T_SEMI
+   30 Number: T_NUMERIC_CONSTANT •
 
-    T_SEMI  shift, and go to state 35
+    $default  reduce using rule 30 (Number)
 
 
 State 29
 
-    8 Block: T_L_BRACE BlockItem T_R_BRACE •
+   27 UnaryExp: T_PLUS • UnaryExp
 
-    $default  reduce using rule 8 (Block)
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 51
+    Number      go to state 35
 
 
 State 30
 
-   17 PrimaryExp: T_L_PAREN EXP • T_R_PAREN
+   28 UnaryExp: T_MINUS • UnaryExp
 
-    T_R_PAREN  shift, and go to state 36
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 52
+    Number      go to state 35
 
 
 State 31
 
-   15 UnaryExp: UnaryOp UnaryExp •
+   29 UnaryExp: T_EXCLAIM • UnaryExp
 
-    $default  reduce using rule 15 (UnaryExp)
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 53
+    Number      go to state 35
 
 
 State 32
 
-   20 MulExp: MulExp T_STAR • UnaryExp
+   20 Stmt: T_RETURN Exp • T_SEMI
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
-
-    UnaryOp     go to state 23
-    UnaryExp    go to state 37
-    Number      go to state 25
-    PrimaryExp  go to state 26
+    T_SEMI  shift, and go to state 54
 
 
 State 33
 
-   21 MulExp: MulExp T_SLASH • UnaryExp
+   26 UnaryExp: PrimaryExp •
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
-
-    UnaryOp     go to state 23
-    UnaryExp    go to state 38
-    Number      go to state 25
-    PrimaryExp  go to state 26
+    $default  reduce using rule 26 (UnaryExp)
 
 
 State 34
 
-   22 MulExp: MulExp T_PERCENT • UnaryExp
+   31 MulExp: UnaryExp •
 
-    T_L_PAREN           shift, and go to state 18
-    T_NUMERIC_CONSTANT  shift, and go to state 19
-    T_PLUS              shift, and go to state 20
-    T_MINUS             shift, and go to state 21
-    T_EXCLAIM           shift, and go to state 22
-
-    UnaryOp     go to state 23
-    UnaryExp    go to state 39
-    Number      go to state 25
-    PrimaryExp  go to state 26
+    $default  reduce using rule 31 (MulExp)
 
 
 State 35
 
-   10 Stmt: T_RETURN EXP T_SEMI •
+   25 PrimaryExp: Number •
 
-    $default  reduce using rule 10 (Stmt)
+    $default  reduce using rule 25 (PrimaryExp)
 
 
 State 36
 
-   17 PrimaryExp: T_L_PAREN EXP T_R_PAREN •
+   32 MulExp: MulExp • T_STAR UnaryExp
+   33       | MulExp • T_SLASH UnaryExp
+   34       | MulExp • T_PERCENT UnaryExp
+   35 AddExp: MulExp •
 
-    $default  reduce using rule 17 (PrimaryExp)
+    T_STAR     shift, and go to state 55
+    T_SLASH    shift, and go to state 56
+    T_PERCENT  shift, and go to state 57
+
+    $default  reduce using rule 35 (AddExp)
 
 
 State 37
 
-   20 MulExp: MulExp T_STAR UnaryExp •
+   36 AddExp: AddExp • T_PLUS MulExp
+   37       | AddExp • T_MINUS MulExp
+   38 RelExp: AddExp •
 
-    $default  reduce using rule 20 (MulExp)
+    T_PLUS   shift, and go to state 58
+    T_MINUS  shift, and go to state 59
+
+    $default  reduce using rule 38 (RelExp)
 
 
 State 38
 
-   21 MulExp: MulExp T_SLASH UnaryExp •
+   39 RelExp: RelExp • T_LESS AddExp
+   40       | RelExp • T_GREATER AddExp
+   41       | RelExp • T_LESSEQUAL AddExp
+   42       | RelExp • T_GREATEREQUAL AddExp
+   43 EqExp: RelExp •
 
-    $default  reduce using rule 21 (MulExp)
+    T_LESS          shift, and go to state 60
+    T_GREATER       shift, and go to state 61
+    T_LESSEQUAL     shift, and go to state 62
+    T_GREATEREQUAL  shift, and go to state 63
+
+    $default  reduce using rule 43 (EqExp)
 
 
 State 39
 
-   22 MulExp: MulExp T_PERCENT UnaryExp •
+   44 EqExp: EqExp • T_EQUALEQUAL RelExp
+   45      | EqExp • T_EXCLAIMEQUAL RelExp
+   46 LAndExp: EqExp •
 
-    $default  reduce using rule 22 (MulExp)
+    T_EQUALEQUAL    shift, and go to state 64
+    T_EXCLAIMEQUAL  shift, and go to state 65
+
+    $default  reduce using rule 46 (LAndExp)
+
+
+State 40
+
+   47 LAndExp: LAndExp • T_AMPAMP EqExp
+   48 LOrExp: LAndExp •
+
+    T_AMPAMP  shift, and go to state 66
+
+    $default  reduce using rule 48 (LOrExp)
+
+
+State 41
+
+   23 Exp: LOrExp •
+   49 LOrExp: LOrExp • T_PIPEPIPE LAndExp
+
+    T_PIPEPIPE  shift, and go to state 67
+
+    $default  reduce using rule 23 (Exp)
+
+
+State 42
+
+   15 Block: T_L_BRACE BlockItem T_R_BRACE •
+
+    $default  reduce using rule 15 (Block)
+
+
+State 43
+
+   17 BlockItem: BlockItem Decl •
+
+    $default  reduce using rule 17 (BlockItem)
+
+
+State 44
+
+   16 BlockItem: BlockItem Stmt •
+
+    $default  reduce using rule 16 (BlockItem)
+
+
+State 45
+
+   12 ConstDef: T_IDENTIFIER • T_EQUAL ConstInitVal
+
+    T_EQUAL  shift, and go to state 68
+
+
+State 46
+
+    7 ConstDecl: T_CONST T_INT ConstDefChain • T_SEMI
+   11 ConstDefChain: ConstDefChain • T_COMMA ConstDef
+
+    T_COMMA  shift, and go to state 69
+    T_SEMI   shift, and go to state 70
+
+
+State 47
+
+   10 ConstDefChain: ConstDef •
+
+    $default  reduce using rule 10 (ConstDefChain)
+
+
+State 48
+
+    8 ConstDecl: T_CONST T_CHAR ConstDefChain • T_SEMI
+   11 ConstDefChain: ConstDefChain • T_COMMA ConstDef
+
+    T_COMMA  shift, and go to state 69
+    T_SEMI   shift, and go to state 71
+
+
+State 49
+
+    9 ConstDecl: T_CONST T_LONGLONG ConstDefChain • T_SEMI
+   11 ConstDefChain: ConstDefChain • T_COMMA ConstDef
+
+    T_COMMA  shift, and go to state 69
+    T_SEMI   shift, and go to state 72
+
+
+State 50
+
+   24 PrimaryExp: T_L_PAREN Exp • T_R_PAREN
+
+    T_R_PAREN  shift, and go to state 73
+
+
+State 51
+
+   27 UnaryExp: T_PLUS UnaryExp •
+
+    $default  reduce using rule 27 (UnaryExp)
+
+
+State 52
+
+   28 UnaryExp: T_MINUS UnaryExp •
+
+    $default  reduce using rule 28 (UnaryExp)
+
+
+State 53
+
+   29 UnaryExp: T_EXCLAIM UnaryExp •
+
+    $default  reduce using rule 29 (UnaryExp)
+
+
+State 54
+
+   20 Stmt: T_RETURN Exp T_SEMI •
+
+    $default  reduce using rule 20 (Stmt)
+
+
+State 55
+
+   32 MulExp: MulExp T_STAR • UnaryExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 74
+    Number      go to state 35
+
+
+State 56
+
+   33 MulExp: MulExp T_SLASH • UnaryExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 75
+    Number      go to state 35
+
+
+State 57
+
+   34 MulExp: MulExp T_PERCENT • UnaryExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 76
+    Number      go to state 35
+
+
+State 58
+
+   36 AddExp: AddExp T_PLUS • MulExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 77
+
+
+State 59
+
+   37 AddExp: AddExp T_MINUS • MulExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 78
+
+
+State 60
+
+   39 RelExp: RelExp T_LESS • AddExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 79
+
+
+State 61
+
+   40 RelExp: RelExp T_GREATER • AddExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 80
+
+
+State 62
+
+   41 RelExp: RelExp T_LESSEQUAL • AddExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 81
+
+
+State 63
+
+   42 RelExp: RelExp T_GREATEREQUAL • AddExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 82
+
+
+State 64
+
+   44 EqExp: EqExp T_EQUALEQUAL • RelExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 83
+
+
+State 65
+
+   45 EqExp: EqExp T_EXCLAIMEQUAL • RelExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 84
+
+
+State 66
+
+   47 LAndExp: LAndExp T_AMPAMP • EqExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 38
+    EqExp       go to state 85
+
+
+State 67
+
+   49 LOrExp: LOrExp T_PIPEPIPE • LAndExp
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    PrimaryExp  go to state 33
+    UnaryExp    go to state 34
+    Number      go to state 35
+    MulExp      go to state 36
+    AddExp      go to state 37
+    RelExp      go to state 38
+    EqExp       go to state 39
+    LAndExp     go to state 86
+
+
+State 68
+
+   12 ConstDef: T_IDENTIFIER T_EQUAL • ConstInitVal
+
+    T_L_PAREN           shift, and go to state 27
+    T_NUMERIC_CONSTANT  shift, and go to state 28
+    T_PLUS              shift, and go to state 29
+    T_MINUS             shift, and go to state 30
+    T_EXCLAIM           shift, and go to state 31
+
+    ConstInitVal  go to state 87
+    Exp           go to state 88
+    PrimaryExp    go to state 33
+    UnaryExp      go to state 34
+    Number        go to state 35
+    MulExp        go to state 36
+    AddExp        go to state 37
+    RelExp        go to state 38
+    EqExp         go to state 39
+    LAndExp       go to state 40
+    LOrExp        go to state 41
+    ConstExp      go to state 89
+
+
+State 69
+
+   11 ConstDefChain: ConstDefChain T_COMMA • ConstDef
+
+    T_IDENTIFIER  shift, and go to state 45
+
+    ConstDef  go to state 90
+
+
+State 70
+
+    7 ConstDecl: T_CONST T_INT ConstDefChain T_SEMI •
+
+    $default  reduce using rule 7 (ConstDecl)
+
+
+State 71
+
+    8 ConstDecl: T_CONST T_CHAR ConstDefChain T_SEMI •
+
+    $default  reduce using rule 8 (ConstDecl)
+
+
+State 72
+
+    9 ConstDecl: T_CONST T_LONGLONG ConstDefChain T_SEMI •
+
+    $default  reduce using rule 9 (ConstDecl)
+
+
+State 73
+
+   24 PrimaryExp: T_L_PAREN Exp T_R_PAREN •
+
+    $default  reduce using rule 24 (PrimaryExp)
+
+
+State 74
+
+   32 MulExp: MulExp T_STAR UnaryExp •
+
+    $default  reduce using rule 32 (MulExp)
+
+
+State 75
+
+   33 MulExp: MulExp T_SLASH UnaryExp •
+
+    $default  reduce using rule 33 (MulExp)
+
+
+State 76
+
+   34 MulExp: MulExp T_PERCENT UnaryExp •
+
+    $default  reduce using rule 34 (MulExp)
+
+
+State 77
+
+   32 MulExp: MulExp • T_STAR UnaryExp
+   33       | MulExp • T_SLASH UnaryExp
+   34       | MulExp • T_PERCENT UnaryExp
+   36 AddExp: AddExp T_PLUS MulExp •
+
+    T_STAR     shift, and go to state 55
+    T_SLASH    shift, and go to state 56
+    T_PERCENT  shift, and go to state 57
+
+    $default  reduce using rule 36 (AddExp)
+
+
+State 78
+
+   32 MulExp: MulExp • T_STAR UnaryExp
+   33       | MulExp • T_SLASH UnaryExp
+   34       | MulExp • T_PERCENT UnaryExp
+   37 AddExp: AddExp T_MINUS MulExp •
+
+    T_STAR     shift, and go to state 55
+    T_SLASH    shift, and go to state 56
+    T_PERCENT  shift, and go to state 57
+
+    $default  reduce using rule 37 (AddExp)
+
+
+State 79
+
+   36 AddExp: AddExp • T_PLUS MulExp
+   37       | AddExp • T_MINUS MulExp
+   39 RelExp: RelExp T_LESS AddExp •
+
+    T_PLUS   shift, and go to state 58
+    T_MINUS  shift, and go to state 59
+
+    $default  reduce using rule 39 (RelExp)
+
+
+State 80
+
+   36 AddExp: AddExp • T_PLUS MulExp
+   37       | AddExp • T_MINUS MulExp
+   40 RelExp: RelExp T_GREATER AddExp •
+
+    T_PLUS   shift, and go to state 58
+    T_MINUS  shift, and go to state 59
+
+    $default  reduce using rule 40 (RelExp)
+
+
+State 81
+
+   36 AddExp: AddExp • T_PLUS MulExp
+   37       | AddExp • T_MINUS MulExp
+   41 RelExp: RelExp T_LESSEQUAL AddExp •
+
+    T_PLUS   shift, and go to state 58
+    T_MINUS  shift, and go to state 59
+
+    $default  reduce using rule 41 (RelExp)
+
+
+State 82
+
+   36 AddExp: AddExp • T_PLUS MulExp
+   37       | AddExp • T_MINUS MulExp
+   42 RelExp: RelExp T_GREATEREQUAL AddExp •
+
+    T_PLUS   shift, and go to state 58
+    T_MINUS  shift, and go to state 59
+
+    $default  reduce using rule 42 (RelExp)
+
+
+State 83
+
+   39 RelExp: RelExp • T_LESS AddExp
+   40       | RelExp • T_GREATER AddExp
+   41       | RelExp • T_LESSEQUAL AddExp
+   42       | RelExp • T_GREATEREQUAL AddExp
+   44 EqExp: EqExp T_EQUALEQUAL RelExp •
+
+    T_LESS          shift, and go to state 60
+    T_GREATER       shift, and go to state 61
+    T_LESSEQUAL     shift, and go to state 62
+    T_GREATEREQUAL  shift, and go to state 63
+
+    $default  reduce using rule 44 (EqExp)
+
+
+State 84
+
+   39 RelExp: RelExp • T_LESS AddExp
+   40       | RelExp • T_GREATER AddExp
+   41       | RelExp • T_LESSEQUAL AddExp
+   42       | RelExp • T_GREATEREQUAL AddExp
+   45 EqExp: EqExp T_EXCLAIMEQUAL RelExp •
+
+    T_LESS          shift, and go to state 60
+    T_GREATER       shift, and go to state 61
+    T_LESSEQUAL     shift, and go to state 62
+    T_GREATEREQUAL  shift, and go to state 63
+
+    $default  reduce using rule 45 (EqExp)
+
+
+State 85
+
+   44 EqExp: EqExp • T_EQUALEQUAL RelExp
+   45      | EqExp • T_EXCLAIMEQUAL RelExp
+   47 LAndExp: LAndExp T_AMPAMP EqExp •
+
+    T_EQUALEQUAL    shift, and go to state 64
+    T_EXCLAIMEQUAL  shift, and go to state 65
+
+    $default  reduce using rule 47 (LAndExp)
+
+
+State 86
+
+   47 LAndExp: LAndExp • T_AMPAMP EqExp
+   49 LOrExp: LOrExp T_PIPEPIPE LAndExp •
+
+    T_AMPAMP  shift, and go to state 66
+
+    $default  reduce using rule 49 (LOrExp)
+
+
+State 87
+
+   12 ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal •
+
+    $default  reduce using rule 12 (ConstDef)
+
+
+State 88
+
+   50 ConstExp: Exp •
+
+    $default  reduce using rule 50 (ConstExp)
+
+
+State 89
+
+   13 ConstInitVal: ConstExp •
+
+    $default  reduce using rule 13 (ConstInitVal)
+
+
+State 90
+
+   11 ConstDefChain: ConstDefChain T_COMMA ConstDef •
+
+    $default  reduce using rule 11 (ConstDefChain)

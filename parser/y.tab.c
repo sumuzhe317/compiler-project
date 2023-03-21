@@ -91,13 +91,24 @@ auto wk_getline(char endline = "\n"[0]) {
     ++it;
   return llvm::StringRef(beg, len);
 }
+auto debug = true;
 llvm::json::Array stak;
+int const_def_num = 0;
 }  //namespace
+auto print_stack(){
+  if(debug) llvm::outs()<<"\nprintf stak\n";
+  for(auto i=0;i<stak.size();i++){
+    if(debug) llvm::outs()<<stak[i]<<"\n";
+  }
+  if(debug) llvm::outs()<<"\nprintf stak end\n";
+  return 0;
+}
 auto yylex() {
-  llvm::outs()<<"1111111111111111111\n";
   auto tk = wk_getline();
   auto b = tk.find("'") + 1, e = tk.rfind("'");
   auto s = tk.substr(b, e - b).str(), t = tk.substr(0, tk.find(" ")).str();
+  if(debug) llvm::outs()<<"yylex ";
+  if(debug) llvm::outs()<<t<<"\n";
 
 
   if (t == "const")
@@ -108,11 +119,15 @@ auto yylex() {
     return T_SEMI;
   if (t == "int")
     return T_INT;
+  if (t == "char")
+    return T_CHAR;
+  if (t == "longlong")
+    return T_LONGLONG;
   if (t == "l_square")
     return T_L_SQUARE;
   if (t == "r_square")
     return T_R_SQUARE;
-  if (t == "=")
+  if (t == "equal")
     return T_EQUAL;
   if (t == "l_brace")
     return T_L_BRACE;
@@ -146,59 +161,92 @@ auto yylex() {
     return T_NUMERIC_CONSTANT;
   }
   if (t == "plus"){
-    stak.push_back(
-        llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_PLUS;
   }
   if (t == "minus"){
-    llvm::outs()<<"hello\n";
-    stak.push_back(
-        llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_MINUS;
   }
   if (t == "exclaim"){
-    stak.push_back(
-        llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_EXCLAIM;
   }
-  if (t == "star")
+  if (t == "star"){
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_STAR;
-  if (t == "slash")
+  }
+  if (t == "slash"){
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_SLASH;
-  if (t == "percent")
+  }
+  if (t == "percent"){
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_PERCENT;
+  }
   if (t == "less")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_LESS;
+  }
   if (t == "greater")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_GREATER;
+  }
   if (t == "lessequal")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_LESSEQUAL;
+  }
   if (t == "greaterequal")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_GREATEREQUAL;
+  }
   if (t == "equalequal")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_EQUALEQUAL;
+  }
   if (t == "exclaimequal")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_EXCLAIMEQUAL;
+  }
   if (t == "ampamp")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_AMPAMP;
+  }
   if (t == "pipepipe")
+  {
+    //stak.push_back(
+    //    llvm::json::Object{{"kind", "Operator"}, {"opcode", s}});
     return T_PIPEPIPE;
+  }
   return YYEOF;
 }
-auto print_stack(){
-  llvm::outs()<<"\nprintf stak\n";
-  for(auto i=0;i<stak.size();i++){
-    llvm::outs()<<stak[i]<<"\n";
-  }
-  llvm::outs()<<"\nprintf stak end\n";
-  return 0;
-}
+
 int main() {
   yyparse();
   llvm::outs() << stak.back() << "\n";
 }
 
-#line 202 "y.tab.c"
+#line 250 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -246,36 +294,38 @@ extern int yydebug;
     T_COMMA = 259,                 /* T_COMMA  */
     T_SEMI = 260,                  /* T_SEMI  */
     T_INT = 261,                   /* T_INT  */
-    T_L_SQUARE = 262,              /* T_L_SQUARE  */
-    T_R_SQUARE = 263,              /* T_R_SQUARE  */
-    T_EQUAL = 264,                 /* T_EQUAL  */
-    T_L_BRACE = 265,               /* T_L_BRACE  */
-    T_R_BRACE = 266,               /* T_R_BRACE  */
-    T_IDENTIFIER = 267,            /* T_IDENTIFIER  */
-    T_L_PAREN = 268,               /* T_L_PAREN  */
-    T_R_PAREN = 269,               /* T_R_PAREN  */
-    T_VOID = 270,                  /* T_VOID  */
-    T_IF = 271,                    /* T_IF  */
-    T_ELSE = 272,                  /* T_ELSE  */
-    T_WHILE = 273,                 /* T_WHILE  */
-    T_BREAK = 274,                 /* T_BREAK  */
-    T_CONTINUE = 275,              /* T_CONTINUE  */
-    T_RETURN = 276,                /* T_RETURN  */
-    T_NUMERIC_CONSTANT = 277,      /* T_NUMERIC_CONSTANT  */
-    T_PLUS = 278,                  /* T_PLUS  */
-    T_MINUS = 279,                 /* T_MINUS  */
-    T_EXCLAIM = 280,               /* T_EXCLAIM  */
-    T_STAR = 281,                  /* T_STAR  */
-    T_SLASH = 282,                 /* T_SLASH  */
-    T_PERCENT = 283,               /* T_PERCENT  */
-    T_LESS = 284,                  /* T_LESS  */
-    T_GREATER = 285,               /* T_GREATER  */
-    T_LESSEQUAL = 286,             /* T_LESSEQUAL  */
-    T_GREATEREQUAL = 287,          /* T_GREATEREQUAL  */
-    T_EQUALEQUAL = 288,            /* T_EQUALEQUAL  */
-    T_EXCLAIMEQUAL = 289,          /* T_EXCLAIMEQUAL  */
-    T_AMPAMP = 290,                /* T_AMPAMP  */
-    T_PIPEPIPE = 291               /* T_PIPEPIPE  */
+    T_CHAR = 262,                  /* T_CHAR  */
+    T_LONGLONG = 263,              /* T_LONGLONG  */
+    T_L_SQUARE = 264,              /* T_L_SQUARE  */
+    T_R_SQUARE = 265,              /* T_R_SQUARE  */
+    T_EQUAL = 266,                 /* T_EQUAL  */
+    T_L_BRACE = 267,               /* T_L_BRACE  */
+    T_R_BRACE = 268,               /* T_R_BRACE  */
+    T_IDENTIFIER = 269,            /* T_IDENTIFIER  */
+    T_L_PAREN = 270,               /* T_L_PAREN  */
+    T_R_PAREN = 271,               /* T_R_PAREN  */
+    T_VOID = 272,                  /* T_VOID  */
+    T_IF = 273,                    /* T_IF  */
+    T_ELSE = 274,                  /* T_ELSE  */
+    T_WHILE = 275,                 /* T_WHILE  */
+    T_BREAK = 276,                 /* T_BREAK  */
+    T_CONTINUE = 277,              /* T_CONTINUE  */
+    T_RETURN = 278,                /* T_RETURN  */
+    T_NUMERIC_CONSTANT = 279,      /* T_NUMERIC_CONSTANT  */
+    T_PLUS = 280,                  /* T_PLUS  */
+    T_MINUS = 281,                 /* T_MINUS  */
+    T_EXCLAIM = 282,               /* T_EXCLAIM  */
+    T_STAR = 283,                  /* T_STAR  */
+    T_SLASH = 284,                 /* T_SLASH  */
+    T_PERCENT = 285,               /* T_PERCENT  */
+    T_LESS = 286,                  /* T_LESS  */
+    T_GREATER = 287,               /* T_GREATER  */
+    T_LESSEQUAL = 288,             /* T_LESSEQUAL  */
+    T_GREATEREQUAL = 289,          /* T_GREATEREQUAL  */
+    T_EQUALEQUAL = 290,            /* T_EQUALEQUAL  */
+    T_EXCLAIMEQUAL = 291,          /* T_EXCLAIMEQUAL  */
+    T_AMPAMP = 292,                /* T_AMPAMP  */
+    T_PIPEPIPE = 293               /* T_PIPEPIPE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -288,36 +338,38 @@ extern int yydebug;
 #define T_COMMA 259
 #define T_SEMI 260
 #define T_INT 261
-#define T_L_SQUARE 262
-#define T_R_SQUARE 263
-#define T_EQUAL 264
-#define T_L_BRACE 265
-#define T_R_BRACE 266
-#define T_IDENTIFIER 267
-#define T_L_PAREN 268
-#define T_R_PAREN 269
-#define T_VOID 270
-#define T_IF 271
-#define T_ELSE 272
-#define T_WHILE 273
-#define T_BREAK 274
-#define T_CONTINUE 275
-#define T_RETURN 276
-#define T_NUMERIC_CONSTANT 277
-#define T_PLUS 278
-#define T_MINUS 279
-#define T_EXCLAIM 280
-#define T_STAR 281
-#define T_SLASH 282
-#define T_PERCENT 283
-#define T_LESS 284
-#define T_GREATER 285
-#define T_LESSEQUAL 286
-#define T_GREATEREQUAL 287
-#define T_EQUALEQUAL 288
-#define T_EXCLAIMEQUAL 289
-#define T_AMPAMP 290
-#define T_PIPEPIPE 291
+#define T_CHAR 262
+#define T_LONGLONG 263
+#define T_L_SQUARE 264
+#define T_R_SQUARE 265
+#define T_EQUAL 266
+#define T_L_BRACE 267
+#define T_R_BRACE 268
+#define T_IDENTIFIER 269
+#define T_L_PAREN 270
+#define T_R_PAREN 271
+#define T_VOID 272
+#define T_IF 273
+#define T_ELSE 274
+#define T_WHILE 275
+#define T_BREAK 276
+#define T_CONTINUE 277
+#define T_RETURN 278
+#define T_NUMERIC_CONSTANT 279
+#define T_PLUS 280
+#define T_MINUS 281
+#define T_EXCLAIM 282
+#define T_STAR 283
+#define T_SLASH 284
+#define T_PERCENT 285
+#define T_LESS 286
+#define T_GREATER 287
+#define T_LESSEQUAL 288
+#define T_GREATEREQUAL 289
+#define T_EQUALEQUAL 290
+#define T_EXCLAIMEQUAL 291
+#define T_AMPAMP 292
+#define T_PIPEPIPE 293
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -345,50 +397,62 @@ enum yysymbol_kind_t
   YYSYMBOL_T_COMMA = 4,                    /* T_COMMA  */
   YYSYMBOL_T_SEMI = 5,                     /* T_SEMI  */
   YYSYMBOL_T_INT = 6,                      /* T_INT  */
-  YYSYMBOL_T_L_SQUARE = 7,                 /* T_L_SQUARE  */
-  YYSYMBOL_T_R_SQUARE = 8,                 /* T_R_SQUARE  */
-  YYSYMBOL_T_EQUAL = 9,                    /* T_EQUAL  */
-  YYSYMBOL_T_L_BRACE = 10,                 /* T_L_BRACE  */
-  YYSYMBOL_T_R_BRACE = 11,                 /* T_R_BRACE  */
-  YYSYMBOL_T_IDENTIFIER = 12,              /* T_IDENTIFIER  */
-  YYSYMBOL_T_L_PAREN = 13,                 /* T_L_PAREN  */
-  YYSYMBOL_T_R_PAREN = 14,                 /* T_R_PAREN  */
-  YYSYMBOL_T_VOID = 15,                    /* T_VOID  */
-  YYSYMBOL_T_IF = 16,                      /* T_IF  */
-  YYSYMBOL_T_ELSE = 17,                    /* T_ELSE  */
-  YYSYMBOL_T_WHILE = 18,                   /* T_WHILE  */
-  YYSYMBOL_T_BREAK = 19,                   /* T_BREAK  */
-  YYSYMBOL_T_CONTINUE = 20,                /* T_CONTINUE  */
-  YYSYMBOL_T_RETURN = 21,                  /* T_RETURN  */
-  YYSYMBOL_T_NUMERIC_CONSTANT = 22,        /* T_NUMERIC_CONSTANT  */
-  YYSYMBOL_T_PLUS = 23,                    /* T_PLUS  */
-  YYSYMBOL_T_MINUS = 24,                   /* T_MINUS  */
-  YYSYMBOL_T_EXCLAIM = 25,                 /* T_EXCLAIM  */
-  YYSYMBOL_T_STAR = 26,                    /* T_STAR  */
-  YYSYMBOL_T_SLASH = 27,                   /* T_SLASH  */
-  YYSYMBOL_T_PERCENT = 28,                 /* T_PERCENT  */
-  YYSYMBOL_T_LESS = 29,                    /* T_LESS  */
-  YYSYMBOL_T_GREATER = 30,                 /* T_GREATER  */
-  YYSYMBOL_T_LESSEQUAL = 31,               /* T_LESSEQUAL  */
-  YYSYMBOL_T_GREATEREQUAL = 32,            /* T_GREATEREQUAL  */
-  YYSYMBOL_T_EQUALEQUAL = 33,              /* T_EQUALEQUAL  */
-  YYSYMBOL_T_EXCLAIMEQUAL = 34,            /* T_EXCLAIMEQUAL  */
-  YYSYMBOL_T_AMPAMP = 35,                  /* T_AMPAMP  */
-  YYSYMBOL_T_PIPEPIPE = 36,                /* T_PIPEPIPE  */
-  YYSYMBOL_YYACCEPT = 37,                  /* $accept  */
-  YYSYMBOL_CompUnit = 38,                  /* CompUnit  */
-  YYSYMBOL_CompUnitItem = 39,              /* CompUnitItem  */
-  YYSYMBOL_VarDecl = 40,                   /* VarDecl  */
-  YYSYMBOL_FuncDef = 41,                   /* FuncDef  */
-  YYSYMBOL_Block = 42,                     /* Block  */
-  YYSYMBOL_BlockItem = 43,                 /* BlockItem  */
-  YYSYMBOL_Stmt = 44,                      /* Stmt  */
-  YYSYMBOL_UnaryOp = 45,                   /* UnaryOp  */
-  YYSYMBOL_UnaryExp = 46,                  /* UnaryExp  */
-  YYSYMBOL_Number = 47,                    /* Number  */
-  YYSYMBOL_PrimaryExp = 48,                /* PrimaryExp  */
-  YYSYMBOL_MulExp = 49,                    /* MulExp  */
-  YYSYMBOL_EXP = 50                        /* EXP  */
+  YYSYMBOL_T_CHAR = 7,                     /* T_CHAR  */
+  YYSYMBOL_T_LONGLONG = 8,                 /* T_LONGLONG  */
+  YYSYMBOL_T_L_SQUARE = 9,                 /* T_L_SQUARE  */
+  YYSYMBOL_T_R_SQUARE = 10,                /* T_R_SQUARE  */
+  YYSYMBOL_T_EQUAL = 11,                   /* T_EQUAL  */
+  YYSYMBOL_T_L_BRACE = 12,                 /* T_L_BRACE  */
+  YYSYMBOL_T_R_BRACE = 13,                 /* T_R_BRACE  */
+  YYSYMBOL_T_IDENTIFIER = 14,              /* T_IDENTIFIER  */
+  YYSYMBOL_T_L_PAREN = 15,                 /* T_L_PAREN  */
+  YYSYMBOL_T_R_PAREN = 16,                 /* T_R_PAREN  */
+  YYSYMBOL_T_VOID = 17,                    /* T_VOID  */
+  YYSYMBOL_T_IF = 18,                      /* T_IF  */
+  YYSYMBOL_T_ELSE = 19,                    /* T_ELSE  */
+  YYSYMBOL_T_WHILE = 20,                   /* T_WHILE  */
+  YYSYMBOL_T_BREAK = 21,                   /* T_BREAK  */
+  YYSYMBOL_T_CONTINUE = 22,                /* T_CONTINUE  */
+  YYSYMBOL_T_RETURN = 23,                  /* T_RETURN  */
+  YYSYMBOL_T_NUMERIC_CONSTANT = 24,        /* T_NUMERIC_CONSTANT  */
+  YYSYMBOL_T_PLUS = 25,                    /* T_PLUS  */
+  YYSYMBOL_T_MINUS = 26,                   /* T_MINUS  */
+  YYSYMBOL_T_EXCLAIM = 27,                 /* T_EXCLAIM  */
+  YYSYMBOL_T_STAR = 28,                    /* T_STAR  */
+  YYSYMBOL_T_SLASH = 29,                   /* T_SLASH  */
+  YYSYMBOL_T_PERCENT = 30,                 /* T_PERCENT  */
+  YYSYMBOL_T_LESS = 31,                    /* T_LESS  */
+  YYSYMBOL_T_GREATER = 32,                 /* T_GREATER  */
+  YYSYMBOL_T_LESSEQUAL = 33,               /* T_LESSEQUAL  */
+  YYSYMBOL_T_GREATEREQUAL = 34,            /* T_GREATEREQUAL  */
+  YYSYMBOL_T_EQUALEQUAL = 35,              /* T_EQUALEQUAL  */
+  YYSYMBOL_T_EXCLAIMEQUAL = 36,            /* T_EXCLAIMEQUAL  */
+  YYSYMBOL_T_AMPAMP = 37,                  /* T_AMPAMP  */
+  YYSYMBOL_T_PIPEPIPE = 38,                /* T_PIPEPIPE  */
+  YYSYMBOL_YYACCEPT = 39,                  /* $accept  */
+  YYSYMBOL_CompUnit = 40,                  /* CompUnit  */
+  YYSYMBOL_CompUnitItem = 41,              /* CompUnitItem  */
+  YYSYMBOL_Decl = 42,                      /* Decl  */
+  YYSYMBOL_ConstDecl = 43,                 /* ConstDecl  */
+  YYSYMBOL_ConstDefChain = 44,             /* ConstDefChain  */
+  YYSYMBOL_ConstDef = 45,                  /* ConstDef  */
+  YYSYMBOL_ConstInitVal = 46,              /* ConstInitVal  */
+  YYSYMBOL_Block = 47,                     /* Block  */
+  YYSYMBOL_BlockItem = 48,                 /* BlockItem  */
+  YYSYMBOL_Stmt = 49,                      /* Stmt  */
+  YYSYMBOL_VarDecl = 50,                   /* VarDecl  */
+  YYSYMBOL_FuncDef = 51,                   /* FuncDef  */
+  YYSYMBOL_Exp = 52,                       /* Exp  */
+  YYSYMBOL_PrimaryExp = 53,                /* PrimaryExp  */
+  YYSYMBOL_UnaryExp = 54,                  /* UnaryExp  */
+  YYSYMBOL_Number = 55,                    /* Number  */
+  YYSYMBOL_MulExp = 56,                    /* MulExp  */
+  YYSYMBOL_AddExp = 57,                    /* AddExp  */
+  YYSYMBOL_RelExp = 58,                    /* RelExp  */
+  YYSYMBOL_EqExp = 59,                     /* EqExp  */
+  YYSYMBOL_LAndExp = 60,                   /* LAndExp  */
+  YYSYMBOL_LOrExp = 61,                    /* LOrExp  */
+  YYSYMBOL_ConstExp = 62                   /* ConstExp  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -586,33 +650,9 @@ typedef int yy_state_fast_t;
 
 #define YY_ASSERT(E) ((void) (0 && (E)))
 
-#if !defined yyoverflow
+#if 1
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
-
-# ifdef YYSTACK_USE_ALLOCA
-#  if YYSTACK_USE_ALLOCA
-#   ifdef __GNUC__
-#    define YYSTACK_ALLOC __builtin_alloca
-#   elif defined __BUILTIN_VA_ARG_INCR
-#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
-#   elif defined _AIX
-#    define YYSTACK_ALLOC __alloca
-#   elif defined _MSC_VER
-#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
-#    define alloca _alloca
-#   else
-#    define YYSTACK_ALLOC alloca
-#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
-#     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-      /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
-#     ifndef EXIT_SUCCESS
-#      define EXIT_SUCCESS 0
-#     endif
-#    endif
-#   endif
-#  endif
-# endif
 
 # ifdef YYSTACK_ALLOC
    /* Pacify GCC's 'empty if-body' warning.  */
@@ -651,7 +691,8 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 # endif
-#endif /* !defined yyoverflow */
+# define YYCOPY_NEEDED 1
+#endif /* 1 */
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
@@ -716,19 +757,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  7
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   27
+#define YYLAST   80
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  37
+#define YYNTOKENS  39
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  14
+#define YYNNTS  24
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  24
+#define YYNRULES  51
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  40
+#define YYNSTATES  91
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   291
+#define YYMAXUTOK   293
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -771,23 +812,26 @@ static const yytype_int8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36
+      35,    36,    37,    38
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   172,   172,   177,   182,   183,   184,   188,   196,   197,
-     198,   203,   209,   209,   209,   219,   224,   235,   239,   245,
-     249,   252,   252,   252,   267
+       0,   224,   224,   229,   234,   235,   237,   251,   258,   260,
+     262,   266,   269,   274,   284,   288,   292,   297,   302,   307,
+     311,   318,   328,   333,   342,   347,   351,   355,   358,   364,
+     370,   378,   386,   389,   396,   403,   414,   416,   422,   431,
+     433,   439,   445,   451,   460,   462,   467,   475,   477,   484,
+     486,   493
 };
 #endif
 
 /** Accessing symbol of state STATE.  */
 #define YY_ACCESSING_SYMBOL(State) YY_CAST (yysymbol_kind_t, yystos[State])
 
-#if YYDEBUG || 0
+#if 1
 /* The user-facing name of the symbol whose (internal) number is
    YYSYMBOL.  No bounds checking.  */
 static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
@@ -797,15 +841,17 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "T_CONST", "T_COMMA",
-  "T_SEMI", "T_INT", "T_L_SQUARE", "T_R_SQUARE", "T_EQUAL", "T_L_BRACE",
-  "T_R_BRACE", "T_IDENTIFIER", "T_L_PAREN", "T_R_PAREN", "T_VOID", "T_IF",
-  "T_ELSE", "T_WHILE", "T_BREAK", "T_CONTINUE", "T_RETURN",
-  "T_NUMERIC_CONSTANT", "T_PLUS", "T_MINUS", "T_EXCLAIM", "T_STAR",
-  "T_SLASH", "T_PERCENT", "T_LESS", "T_GREATER", "T_LESSEQUAL",
-  "T_GREATEREQUAL", "T_EQUALEQUAL", "T_EXCLAIMEQUAL", "T_AMPAMP",
-  "T_PIPEPIPE", "$accept", "CompUnit", "CompUnitItem", "VarDecl",
-  "FuncDef", "Block", "BlockItem", "Stmt", "UnaryOp", "UnaryExp", "Number",
-  "PrimaryExp", "MulExp", "EXP", YY_NULLPTR
+  "T_SEMI", "T_INT", "T_CHAR", "T_LONGLONG", "T_L_SQUARE", "T_R_SQUARE",
+  "T_EQUAL", "T_L_BRACE", "T_R_BRACE", "T_IDENTIFIER", "T_L_PAREN",
+  "T_R_PAREN", "T_VOID", "T_IF", "T_ELSE", "T_WHILE", "T_BREAK",
+  "T_CONTINUE", "T_RETURN", "T_NUMERIC_CONSTANT", "T_PLUS", "T_MINUS",
+  "T_EXCLAIM", "T_STAR", "T_SLASH", "T_PERCENT", "T_LESS", "T_GREATER",
+  "T_LESSEQUAL", "T_GREATEREQUAL", "T_EQUALEQUAL", "T_EXCLAIMEQUAL",
+  "T_AMPAMP", "T_PIPEPIPE", "$accept", "CompUnit", "CompUnitItem", "Decl",
+  "ConstDecl", "ConstDefChain", "ConstDef", "ConstInitVal", "Block",
+  "BlockItem", "Stmt", "VarDecl", "FuncDef", "Exp", "PrimaryExp",
+  "UnaryExp", "Number", "MulExp", "AddExp", "RelExp", "EqExp", "LAndExp",
+  "LOrExp", "ConstExp", YY_NULLPTR
 };
 
 static const char *
@@ -815,7 +861,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-20)
+#define YYPACT_NINF (-29)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -829,10 +875,16 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -4,    -9,     1,   -20,   -20,   -20,    12,   -20,   -20,   -20,
-      -6,    11,    -5,   -20,   -20,   -13,    13,   -20,   -13,   -20,
-     -20,   -20,   -20,   -13,   -20,   -20,   -20,    -8,     0,   -20,
-       8,   -20,   -13,   -13,   -13,   -20,   -20,   -20,   -20,   -20
+       0,    -1,    10,   -29,   -29,   -29,     7,   -29,   -29,   -29,
+      14,     5,     1,   -29,    32,    12,   -29,    -6,   -29,   -29,
+       2,   -29,   -29,    50,    50,    50,     6,    -6,   -29,    -6,
+      -6,    -6,    56,   -29,   -29,   -29,    18,    24,     3,    -3,
+      28,    29,   -29,   -29,   -29,    55,    47,   -29,    49,    51,
+      52,   -29,   -29,   -29,   -29,    -6,    -6,    -6,    -6,    -6,
+      -6,    -6,    -6,    -6,    -6,    -6,    -6,    -6,    -6,    50,
+     -29,   -29,   -29,   -29,   -29,   -29,   -29,    18,    18,    24,
+      24,    24,    24,     3,     3,    -3,    28,   -29,   -29,   -29,
+     -29
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -840,24 +892,32 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     3,     4,     5,     0,     1,     2,     6,
-       0,     0,     0,     7,     8,     0,     0,    10,     0,    17,
-      13,    12,    14,     0,    20,    19,    15,    24,     0,     9,
-       0,    16,     0,     0,     0,    11,    18,    21,    22,    23
+       0,     0,     0,     3,     4,     5,     0,     1,     2,    22,
+       0,     0,     0,    23,     0,     0,    15,     0,    20,     6,
+       0,    19,     7,     0,     0,     0,     0,     0,    31,     0,
+       0,     0,     0,    27,    32,    26,    36,    39,    44,    47,
+      49,    24,    16,    18,    17,     0,     0,    11,     0,     0,
+       0,    28,    29,    30,    21,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       8,     9,    10,    25,    33,    34,    35,    37,    38,    40,
+      41,    42,    43,    45,    46,    48,    50,    13,    51,    14,
+      12
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -20,   -20,    21,   -20,   -20,   -20,   -20,   -20,   -20,   -19,
-     -20,   -20,   -20,     9
+     -29,   -29,    67,    53,   -29,    33,     8,   -29,   -29,   -29,
+      54,    11,   -29,   -27,   -29,   -28,   -29,     4,   -18,    -5,
+       9,    13,   -29,   -29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     4,     5,    13,    16,    17,    23,    24,
-      25,    26,    27,    28
+       0,     2,     3,    18,    19,    46,    47,    87,    13,    20,
+      21,     4,     5,    32,    33,    34,    35,    36,    37,    38,
+      39,    40,    41,    89
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -865,42 +925,66 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      18,     7,     1,     6,    31,    35,    14,     1,    11,    19,
-      20,    21,    22,    37,    38,    39,    15,     9,    32,    33,
-      34,    12,    36,     8,    29,    10,     0,    30
+      50,    51,    52,    53,    14,    14,     1,    15,    15,    27,
+       7,     9,     9,     6,    16,    42,     1,    12,    28,    29,
+      30,    31,    10,    22,    17,    17,    26,    74,    75,    76,
+      11,    22,    64,    65,    60,    61,    62,    63,    23,    24,
+      25,    88,    79,    80,    81,    82,    55,    56,    57,    58,
+      59,    69,    70,    69,    71,    69,    72,    48,    49,    83,
+      84,    54,    77,    78,    45,    66,    68,    67,    73,     8,
+       0,     0,     0,    43,    44,    85,     0,    90,     0,     0,
+      86
 };
 
 static const yytype_int8 yycheck[] =
 {
-      13,     0,     6,    12,    23,     5,    11,     6,    14,    22,
-      23,    24,    25,    32,    33,    34,    21,     5,    26,    27,
-      28,    10,    14,     2,    11,    13,    -1,    18
+      27,    29,    30,    31,     3,     3,     6,     6,     6,    15,
+       0,     5,     5,    14,    13,    13,     6,    12,    24,    25,
+      26,    27,    15,    12,    23,    23,    14,    55,    56,    57,
+      16,    20,    35,    36,    31,    32,    33,    34,     6,     7,
+       8,    68,    60,    61,    62,    63,    28,    29,    30,    25,
+      26,     4,     5,     4,     5,     4,     5,    24,    25,    64,
+      65,     5,    58,    59,    14,    37,    11,    38,    16,     2,
+      -1,    -1,    -1,    20,    20,    66,    -1,    69,    -1,    -1,
+      67
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     6,    38,    39,    40,    41,    12,     0,    39,     5,
-      13,    14,    10,    42,    11,    21,    43,    44,    13,    22,
-      23,    24,    25,    45,    46,    47,    48,    49,    50,    11,
-      50,    46,    26,    27,    28,     5,    14,    46,    46,    46
+       0,     6,    40,    41,    50,    51,    14,     0,    41,     5,
+      15,    16,    12,    47,     3,     6,    13,    23,    42,    43,
+      48,    49,    50,     6,     7,     8,    14,    15,    24,    25,
+      26,    27,    52,    53,    54,    55,    56,    57,    58,    59,
+      60,    61,    13,    42,    49,    14,    44,    45,    44,    44,
+      52,    54,    54,    54,     5,    28,    29,    30,    25,    26,
+      31,    32,    33,    34,    35,    36,    37,    38,    11,     4,
+       5,     5,     5,    16,    54,    54,    54,    56,    56,    57,
+      57,    57,    57,    58,    58,    59,    60,    46,    52,    62,
+      45
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    37,    38,    38,    39,    39,    40,    41,    42,    42,
-      43,    44,    45,    45,    45,    46,    46,    47,    48,    48,
-      49,    49,    49,    49,    50
+       0,    39,    40,    40,    41,    41,    42,    42,    43,    43,
+      43,    44,    44,    45,    46,    47,    47,    48,    48,    48,
+      48,    49,    50,    51,    52,    53,    53,    54,    54,    54,
+      54,    55,    56,    56,    56,    56,    57,    57,    57,    58,
+      58,    58,    58,    58,    59,    59,    59,    60,    60,    61,
+      61,    62
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     1,     1,     1,     3,     5,     2,     3,
-       1,     3,     1,     1,     1,     1,     2,     1,     3,     1,
-       1,     3,     3,     3,     1
+       0,     2,     2,     1,     1,     1,     1,     1,     4,     4,
+       4,     1,     3,     3,     1,     2,     3,     2,     2,     1,
+       1,     3,     3,     5,     1,     3,     1,     1,     2,     2,
+       2,     1,     1,     3,     3,     3,     1,     3,     3,     1,
+       3,     3,     3,     3,     1,     3,     3,     1,     3,     1,
+       3,     1
 };
 
 
@@ -925,6 +1009,7 @@ enum { YYENOMEM = -2 };
         yylval = (Value);                                         \
         YYPOPSTACK (yylen);                                       \
         yystate = *yyssp;                                         \
+        YY_LAC_DISCARD ("YYBACKUP");                              \
         goto yybackup;                                            \
       }                                                           \
     else                                                          \
@@ -1083,8 +1168,521 @@ int yydebug;
 #endif
 
 
+/* Given a state stack such that *YYBOTTOM is its bottom, such that
+   *YYTOP is either its top or is YYTOP_EMPTY to indicate an empty
+   stack, and such that *YYCAPACITY is the maximum number of elements it
+   can hold without a reallocation, make sure there is enough room to
+   store YYADD more elements.  If not, allocate a new stack using
+   YYSTACK_ALLOC, copy the existing elements, and adjust *YYBOTTOM,
+   *YYTOP, and *YYCAPACITY to reflect the new capacity and memory
+   location.  If *YYBOTTOM != YYBOTTOM_NO_FREE, then free the old stack
+   using YYSTACK_FREE.  Return 0 if successful or if no reallocation is
+   required.  Return YYENOMEM if memory is exhausted.  */
+static int
+yy_lac_stack_realloc (YYPTRDIFF_T *yycapacity, YYPTRDIFF_T yyadd,
+#if YYDEBUG
+                      char const *yydebug_prefix,
+                      char const *yydebug_suffix,
+#endif
+                      yy_state_t **yybottom,
+                      yy_state_t *yybottom_no_free,
+                      yy_state_t **yytop, yy_state_t *yytop_empty)
+{
+  YYPTRDIFF_T yysize_old =
+    *yytop == yytop_empty ? 0 : *yytop - *yybottom + 1;
+  YYPTRDIFF_T yysize_new = yysize_old + yyadd;
+  if (*yycapacity < yysize_new)
+    {
+      YYPTRDIFF_T yyalloc = 2 * yysize_new;
+      yy_state_t *yybottom_new;
+      /* Use YYMAXDEPTH for maximum stack size given that the stack
+         should never need to grow larger than the main state stack
+         needs to grow without LAC.  */
+      if (YYMAXDEPTH < yysize_new)
+        {
+          YYDPRINTF ((stderr, "%smax size exceeded%s", yydebug_prefix,
+                      yydebug_suffix));
+          return YYENOMEM;
+        }
+      if (YYMAXDEPTH < yyalloc)
+        yyalloc = YYMAXDEPTH;
+      yybottom_new =
+        YY_CAST (yy_state_t *,
+                 YYSTACK_ALLOC (YY_CAST (YYSIZE_T,
+                                         yyalloc * YYSIZEOF (*yybottom_new))));
+      if (!yybottom_new)
+        {
+          YYDPRINTF ((stderr, "%srealloc failed%s", yydebug_prefix,
+                      yydebug_suffix));
+          return YYENOMEM;
+        }
+      if (*yytop != yytop_empty)
+        {
+          YYCOPY (yybottom_new, *yybottom, yysize_old);
+          *yytop = yybottom_new + (yysize_old - 1);
+        }
+      if (*yybottom != yybottom_no_free)
+        YYSTACK_FREE (*yybottom);
+      *yybottom = yybottom_new;
+      *yycapacity = yyalloc;
+    }
+  return 0;
+}
+
+/* Establish the initial context for the current lookahead if no initial
+   context is currently established.
+
+   We define a context as a snapshot of the parser stacks.  We define
+   the initial context for a lookahead as the context in which the
+   parser initially examines that lookahead in order to select a
+   syntactic action.  Thus, if the lookahead eventually proves
+   syntactically unacceptable (possibly in a later context reached via a
+   series of reductions), the initial context can be used to determine
+   the exact set of tokens that would be syntactically acceptable in the
+   lookahead's place.  Moreover, it is the context after which any
+   further semantic actions would be erroneous because they would be
+   determined by a syntactically unacceptable token.
+
+   YY_LAC_ESTABLISH should be invoked when a reduction is about to be
+   performed in an inconsistent state (which, for the purposes of LAC,
+   includes consistent states that don't know they're consistent because
+   their default reductions have been disabled).  Iff there is a
+   lookahead token, it should also be invoked before reporting a syntax
+   error.  This latter case is for the sake of the debugging output.
+
+   For parse.lac=full, the implementation of YY_LAC_ESTABLISH is as
+   follows.  If no initial context is currently established for the
+   current lookahead, then check if that lookahead can eventually be
+   shifted if syntactic actions continue from the current context.
+   Report a syntax error if it cannot.  */
+#define YY_LAC_ESTABLISH                                                \
+do {                                                                    \
+  if (!yy_lac_established)                                              \
+    {                                                                   \
+      YYDPRINTF ((stderr,                                               \
+                  "LAC: initial context established for %s\n",          \
+                  yysymbol_name (yytoken)));                            \
+      yy_lac_established = 1;                                           \
+      switch (yy_lac (yyesa, &yyes, &yyes_capacity, yyssp, yytoken))    \
+        {                                                               \
+        case YYENOMEM:                                                  \
+          YYNOMEM;                                                      \
+        case 1:                                                         \
+          goto yyerrlab;                                                \
+        }                                                               \
+    }                                                                   \
+} while (0)
+
+/* Discard any previous initial lookahead context because of Event,
+   which may be a lookahead change or an invalidation of the currently
+   established initial context for the current lookahead.
+
+   The most common example of a lookahead change is a shift.  An example
+   of both cases is syntax error recovery.  That is, a syntax error
+   occurs when the lookahead is syntactically erroneous for the
+   currently established initial context, so error recovery manipulates
+   the parser stacks to try to find a new initial context in which the
+   current lookahead is syntactically acceptable.  If it fails to find
+   such a context, it discards the lookahead.  */
+#if YYDEBUG
+# define YY_LAC_DISCARD(Event)                                           \
+do {                                                                     \
+  if (yy_lac_established)                                                \
+    {                                                                    \
+      YYDPRINTF ((stderr, "LAC: initial context discarded due to "       \
+                  Event "\n"));                                          \
+      yy_lac_established = 0;                                            \
+    }                                                                    \
+} while (0)
+#else
+# define YY_LAC_DISCARD(Event) yy_lac_established = 0
+#endif
+
+/* Given the stack whose top is *YYSSP, return 0 iff YYTOKEN can
+   eventually (after perhaps some reductions) be shifted, return 1 if
+   not, or return YYENOMEM if memory is exhausted.  As preconditions and
+   postconditions: *YYES_CAPACITY is the allocated size of the array to
+   which *YYES points, and either *YYES = YYESA or *YYES points to an
+   array allocated with YYSTACK_ALLOC.  yy_lac may overwrite the
+   contents of either array, alter *YYES and *YYES_CAPACITY, and free
+   any old *YYES other than YYESA.  */
+static int
+yy_lac (yy_state_t *yyesa, yy_state_t **yyes,
+        YYPTRDIFF_T *yyes_capacity, yy_state_t *yyssp, yysymbol_kind_t yytoken)
+{
+  yy_state_t *yyes_prev = yyssp;
+  yy_state_t *yyesp = yyes_prev;
+  /* Reduce until we encounter a shift and thereby accept the token.  */
+  YYDPRINTF ((stderr, "LAC: checking lookahead %s:", yysymbol_name (yytoken)));
+  if (yytoken == YYSYMBOL_YYUNDEF)
+    {
+      YYDPRINTF ((stderr, " Always Err\n"));
+      return 1;
+    }
+  while (1)
+    {
+      int yyrule = yypact[+*yyesp];
+      if (yypact_value_is_default (yyrule)
+          || (yyrule += yytoken) < 0 || YYLAST < yyrule
+          || yycheck[yyrule] != yytoken)
+        {
+          /* Use the default action.  */
+          yyrule = yydefact[+*yyesp];
+          if (yyrule == 0)
+            {
+              YYDPRINTF ((stderr, " Err\n"));
+              return 1;
+            }
+        }
+      else
+        {
+          /* Use the action from yytable.  */
+          yyrule = yytable[yyrule];
+          if (yytable_value_is_error (yyrule))
+            {
+              YYDPRINTF ((stderr, " Err\n"));
+              return 1;
+            }
+          if (0 < yyrule)
+            {
+              YYDPRINTF ((stderr, " S%d\n", yyrule));
+              return 0;
+            }
+          yyrule = -yyrule;
+        }
+      /* By now we know we have to simulate a reduce.  */
+      YYDPRINTF ((stderr, " R%d", yyrule - 1));
+      {
+        /* Pop the corresponding number of values from the stack.  */
+        YYPTRDIFF_T yylen = yyr2[yyrule];
+        /* First pop from the LAC stack as many tokens as possible.  */
+        if (yyesp != yyes_prev)
+          {
+            YYPTRDIFF_T yysize = yyesp - *yyes + 1;
+            if (yylen < yysize)
+              {
+                yyesp -= yylen;
+                yylen = 0;
+              }
+            else
+              {
+                yyesp = yyes_prev;
+                yylen -= yysize;
+              }
+          }
+        /* Only afterwards look at the main stack.  */
+        if (yylen)
+          yyesp = yyes_prev -= yylen;
+      }
+      /* Push the resulting state of the reduction.  */
+      {
+        yy_state_fast_t yystate;
+        {
+          const int yylhs = yyr1[yyrule] - YYNTOKENS;
+          const int yyi = yypgoto[yylhs] + *yyesp;
+          yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyesp
+                     ? yytable[yyi]
+                     : yydefgoto[yylhs]);
+        }
+        if (yyesp == yyes_prev)
+          {
+            yyesp = *yyes;
+            YY_IGNORE_USELESS_CAST_BEGIN
+            *yyesp = YY_CAST (yy_state_t, yystate);
+            YY_IGNORE_USELESS_CAST_END
+          }
+        else
+          {
+            if (yy_lac_stack_realloc (yyes_capacity, 1,
+#if YYDEBUG
+                                      " (", ")",
+#endif
+                                      yyes, yyesa, &yyesp, yyes_prev))
+              {
+                YYDPRINTF ((stderr, "\n"));
+                return YYENOMEM;
+              }
+            YY_IGNORE_USELESS_CAST_BEGIN
+            *++yyesp = YY_CAST (yy_state_t, yystate);
+            YY_IGNORE_USELESS_CAST_END
+          }
+        YYDPRINTF ((stderr, " G%d", yystate));
+      }
+    }
+}
+
+/* Context of a parse error.  */
+typedef struct
+{
+  yy_state_t *yyssp;
+  yy_state_t *yyesa;
+  yy_state_t **yyes;
+  YYPTRDIFF_T *yyes_capacity;
+  yysymbol_kind_t yytoken;
+} yypcontext_t;
+
+/* Put in YYARG at most YYARGN of the expected tokens given the
+   current YYCTX, and return the number of tokens stored in YYARG.  If
+   YYARG is null, return the number of expected tokens (guaranteed to
+   be less than YYNTOKENS).  Return YYENOMEM on memory exhaustion.
+   Return 0 if there are more than YYARGN expected tokens, yet fill
+   YYARG up to YYARGN. */
+static int
+yypcontext_expected_tokens (const yypcontext_t *yyctx,
+                            yysymbol_kind_t yyarg[], int yyargn)
+{
+  /* Actual size of YYARG. */
+  int yycount = 0;
+
+  int yyx;
+  for (yyx = 0; yyx < YYNTOKENS; ++yyx)
+    {
+      yysymbol_kind_t yysym = YY_CAST (yysymbol_kind_t, yyx);
+      if (yysym != YYSYMBOL_YYerror && yysym != YYSYMBOL_YYUNDEF)
+        switch (yy_lac (yyctx->yyesa, yyctx->yyes, yyctx->yyes_capacity, yyctx->yyssp, yysym))
+          {
+          case YYENOMEM:
+            return YYENOMEM;
+          case 1:
+            continue;
+          default:
+            if (!yyarg)
+              ++yycount;
+            else if (yycount == yyargn)
+              return 0;
+            else
+              yyarg[yycount++] = yysym;
+          }
+    }
+  if (yyarg && yycount == 0 && 0 < yyargn)
+    yyarg[0] = YYSYMBOL_YYEMPTY;
+  return yycount;
+}
 
 
+
+
+#ifndef yystrlen
+# if defined __GLIBC__ && defined _STRING_H
+#  define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
+# else
+/* Return the length of YYSTR.  */
+static YYPTRDIFF_T
+yystrlen (const char *yystr)
+{
+  YYPTRDIFF_T yylen;
+  for (yylen = 0; yystr[yylen]; yylen++)
+    continue;
+  return yylen;
+}
+# endif
+#endif
+
+#ifndef yystpcpy
+# if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
+#  define yystpcpy stpcpy
+# else
+/* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
+   YYDEST.  */
+static char *
+yystpcpy (char *yydest, const char *yysrc)
+{
+  char *yyd = yydest;
+  const char *yys = yysrc;
+
+  while ((*yyd++ = *yys++) != '\0')
+    continue;
+
+  return yyd - 1;
+}
+# endif
+#endif
+
+#ifndef yytnamerr
+/* Copy to YYRES the contents of YYSTR after stripping away unnecessary
+   quotes and backslashes, so that it's suitable for yyerror.  The
+   heuristic is that double-quoting is unnecessary unless the string
+   contains an apostrophe, a comma, or backslash (other than
+   backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
+   null, do not copy; instead, return the length of what the result
+   would have been.  */
+static YYPTRDIFF_T
+yytnamerr (char *yyres, const char *yystr)
+{
+  if (*yystr == '"')
+    {
+      YYPTRDIFF_T yyn = 0;
+      char const *yyp = yystr;
+      for (;;)
+        switch (*++yyp)
+          {
+          case '\'':
+          case ',':
+            goto do_not_strip_quotes;
+
+          case '\\':
+            if (*++yyp != '\\')
+              goto do_not_strip_quotes;
+            else
+              goto append;
+
+          append:
+          default:
+            if (yyres)
+              yyres[yyn] = *yyp;
+            yyn++;
+            break;
+
+          case '"':
+            if (yyres)
+              yyres[yyn] = '\0';
+            return yyn;
+          }
+    do_not_strip_quotes: ;
+    }
+
+  if (yyres)
+    return yystpcpy (yyres, yystr) - yyres;
+  else
+    return yystrlen (yystr);
+}
+#endif
+
+
+static int
+yy_syntax_error_arguments (const yypcontext_t *yyctx,
+                           yysymbol_kind_t yyarg[], int yyargn)
+{
+  /* Actual size of YYARG. */
+  int yycount = 0;
+  /* There are many possibilities here to consider:
+     - If this state is a consistent state with a default action, then
+       the only way this function was invoked is if the default action
+       is an error action.  In that case, don't check for expected
+       tokens because there are none.
+     - The only way there can be no lookahead present (in yychar) is if
+       this state is a consistent state with a default action.  Thus,
+       detecting the absence of a lookahead is sufficient to determine
+       that there is no unexpected or expected token to report.  In that
+       case, just report a simple "syntax error".
+     - Don't assume there isn't a lookahead just because this state is a
+       consistent state with a default action.  There might have been a
+       previous inconsistent state, consistent state with a non-default
+       action, or user semantic action that manipulated yychar.
+       In the first two cases, it might appear that the current syntax
+       error should have been detected in the previous state when yy_lac
+       was invoked.  However, at that time, there might have been a
+       different syntax error that discarded a different initial context
+       during error recovery, leaving behind the current lookahead.
+  */
+  if (yyctx->yytoken != YYSYMBOL_YYEMPTY)
+    {
+      int yyn;
+      YYDPRINTF ((stderr, "Constructing syntax error message\n"));
+      if (yyarg)
+        yyarg[yycount] = yyctx->yytoken;
+      ++yycount;
+      yyn = yypcontext_expected_tokens (yyctx,
+                                        yyarg ? yyarg + 1 : yyarg, yyargn - 1);
+      if (yyn == YYENOMEM)
+        return YYENOMEM;
+      else if (yyn == 0)
+        YYDPRINTF ((stderr, "No expected tokens.\n"));
+      else
+        yycount += yyn;
+    }
+  return yycount;
+}
+
+/* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
+   about the unexpected token YYTOKEN for the state stack whose top is
+   YYSSP.  In order to see if a particular token T is a
+   valid looakhead, invoke yy_lac (YYESA, YYES, YYES_CAPACITY, YYSSP, T).
+
+   Return 0 if *YYMSG was successfully written.  Return -1 if *YYMSG is
+   not large enough to hold the message.  In that case, also set
+   *YYMSG_ALLOC to the required number of bytes.  Return YYENOMEM if the
+   required number of bytes is too large to store or if
+   yy_lac returned YYENOMEM.  */
+static int
+yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
+                const yypcontext_t *yyctx)
+{
+  enum { YYARGS_MAX = 5 };
+  /* Internationalized format string. */
+  const char *yyformat = YY_NULLPTR;
+  /* Arguments of yyformat: reported tokens (one for the "unexpected",
+     one per "expected"). */
+  yysymbol_kind_t yyarg[YYARGS_MAX];
+  /* Cumulated lengths of YYARG.  */
+  YYPTRDIFF_T yysize = 0;
+
+  /* Actual size of YYARG. */
+  int yycount = yy_syntax_error_arguments (yyctx, yyarg, YYARGS_MAX);
+  if (yycount == YYENOMEM)
+    return YYENOMEM;
+
+  switch (yycount)
+    {
+#define YYCASE_(N, S)                       \
+      case N:                               \
+        yyformat = S;                       \
+        break
+    default: /* Avoid compiler warnings. */
+      YYCASE_(0, YY_("syntax error"));
+      YYCASE_(1, YY_("syntax error, unexpected %s"));
+      YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
+      YYCASE_(3, YY_("syntax error, unexpected %s, expecting %s or %s"));
+      YYCASE_(4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
+      YYCASE_(5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
+#undef YYCASE_
+    }
+
+  /* Compute error message size.  Don't count the "%s"s, but reserve
+     room for the terminator.  */
+  yysize = yystrlen (yyformat) - 2 * yycount + 1;
+  {
+    int yyi;
+    for (yyi = 0; yyi < yycount; ++yyi)
+      {
+        YYPTRDIFF_T yysize1
+          = yysize + yytnamerr (YY_NULLPTR, yytname[yyarg[yyi]]);
+        if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+          yysize = yysize1;
+        else
+          return YYENOMEM;
+      }
+  }
+
+  if (*yymsg_alloc < yysize)
+    {
+      *yymsg_alloc = 2 * yysize;
+      if (! (yysize <= *yymsg_alloc
+             && *yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
+        *yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
+      return -1;
+    }
+
+  /* Avoid sprintf, as that infringes on the user's name space.
+     Don't have undefined behavior even if the translation
+     produced a string with the wrong number of "%s"s.  */
+  {
+    char *yyp = *yymsg;
+    int yyi = 0;
+    while ((*yyp = *yyformat) != '\0')
+      if (*yyp == '%' && yyformat[1] == 's' && yyi < yycount)
+        {
+          yyp += yytnamerr (yyp, yytname[yyarg[yyi++]]);
+          yyformat += 2;
+        }
+      else
+        {
+          ++yyp;
+          ++yyformat;
+        }
+  }
+  return 0;
+}
 
 
 /*-----------------------------------------------.
@@ -1144,6 +1742,12 @@ yyparse (void)
     YYSTYPE *yyvs = yyvsa;
     YYSTYPE *yyvsp = yyvs;
 
+    yy_state_t yyesa[20];
+    yy_state_t *yyes = yyesa;
+    YYPTRDIFF_T yyes_capacity = 20 < YYMAXDEPTH ? 20 : YYMAXDEPTH;
+
+  /* Whether LAC context is established.  A Boolean.  */
+  int yy_lac_established = 0;
   int yyn;
   /* The return value of yyparse.  */
   int yyresult;
@@ -1153,7 +1757,10 @@ yyparse (void)
      action routines.  */
   YYSTYPE yyval;
 
-
+  /* Buffer for error messages, and its allocated size.  */
+  char yymsgbuf[128];
+  char *yymsg = yymsgbuf;
+  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
 
@@ -1305,13 +1912,17 @@ yybackup:
      detect an error, take that action.  */
   yyn += yytoken;
   if (yyn < 0 || YYLAST < yyn || yycheck[yyn] != yytoken)
-    goto yydefault;
+    {
+      YY_LAC_ESTABLISH;
+      goto yydefault;
+    }
   yyn = yytable[yyn];
   if (yyn <= 0)
     {
       if (yytable_value_is_error (yyn))
         goto yyerrlab;
       yyn = -yyn;
+      YY_LAC_ESTABLISH;
       goto yyreduce;
     }
 
@@ -1329,6 +1940,7 @@ yybackup:
 
   /* Discard the shifted token.  */
   yychar = YYEMPTY;
+  YY_LAC_DISCARD ("shift");
   goto yynewstate;
 
 
@@ -1361,51 +1973,219 @@ yyreduce:
 
 
   YY_REDUCE_PRINT (yyn);
-  switch (yyn)
-    {
+  {
+    int yychar_backup = yychar;
+    switch (yyn)
+      {
   case 2: /* CompUnit: CompUnit CompUnitItem  */
-#line 172 "parser.y"
+#line 224 "parser.y"
                                 {
   auto inner = stak.back();
   stak.pop_back();
   stak.back().getAsObject()->get("inner")->getAsArray()->push_back(inner);
 }
-#line 1374 "y.tab.c"
+#line 1988 "y.tab.c"
     break;
 
   case 3: /* CompUnit: CompUnitItem  */
-#line 177 "parser.y"
+#line 229 "parser.y"
                        {
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "TranslationUnitDecl"},
                                    {"inner", llvm::json::Array{inner}}};
 }
-#line 1384 "y.tab.c"
+#line 1998 "y.tab.c"
     break;
 
   case 4: /* CompUnitItem: VarDecl  */
-#line 182 "parser.y"
+#line 234 "parser.y"
                       {}
-#line 1390 "y.tab.c"
+#line 2004 "y.tab.c"
     break;
 
   case 5: /* CompUnitItem: FuncDef  */
-#line 183 "parser.y"
+#line 235 "parser.y"
                       {}
-#line 1396 "y.tab.c"
+#line 2010 "y.tab.c"
     break;
 
-  case 6: /* VarDecl: T_INT T_IDENTIFIER T_SEMI  */
-#line 184 "parser.y"
+  case 6: /* Decl: ConstDecl  */
+#line 237 "parser.y"
+               {
+  
+  auto json_inner = llvm::json::Array{};
+  for(auto i = 0; i < const_def_num; i++){
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+  }
+  stak.push_back(llvm::json::Object{{"kind", "DeclStmt"},
+                                   {"inner", llvm::json::Array{}}});
+  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  for(auto i = const_def_num-1; i >= 0; i--){
+    json_inner.push_back(json_inner[i]);
+  }
+  
+}
+#line 2030 "y.tab.c"
+    break;
+
+  case 7: /* Decl: VarDecl  */
+#line 251 "parser.y"
+          {
+  auto inner_valdecl = stak.back();
+  stak.pop_back();
+  stak.back() =llvm::json::Object{{"kind","DeclStmt"},
+                                  {"inner",inner_valdecl}};
+}
+#line 2041 "y.tab.c"
+    break;
+
+  case 8: /* ConstDecl: T_CONST T_INT ConstDefChain T_SEMI  */
+#line 258 "parser.y"
+                                             {
+
+}
+#line 2049 "y.tab.c"
+    break;
+
+  case 9: /* ConstDecl: T_CONST T_CHAR ConstDefChain T_SEMI  */
+#line 260 "parser.y"
+                                     {
+  
+}
+#line 2057 "y.tab.c"
+    break;
+
+  case 10: /* ConstDecl: T_CONST T_LONGLONG ConstDefChain T_SEMI  */
+#line 262 "parser.y"
+                                         {
+  
+}
+#line 2065 "y.tab.c"
+    break;
+
+  case 11: /* ConstDefChain: ConstDef  */
+#line 266 "parser.y"
+                       {
+  if(debug) llvm::outs()<<"constdef first\n";
+  const_def_num = 0;
+}
+#line 2074 "y.tab.c"
+    break;
+
+  case 12: /* ConstDefChain: ConstDefChain T_COMMA ConstDef  */
+#line 269 "parser.y"
+                                {
+  if(debug) llvm::outs()<<"constdef second\n";
+  const_def_num++;
+}
+#line 2083 "y.tab.c"
+    break;
+
+  case 13: /* ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal  */
+#line 274 "parser.y"
+                                           {
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  auto exp1_name = exp1.getAsObject()->get("value")->getAsString()->str();
+  stak.back() = llvm::json::Object{{"kind", "VarDecl"},
+                                  {"name",exp1_name},
+                                  {"inner", llvm::json::Array{exp2}}};
+}
+#line 2097 "y.tab.c"
+    break;
+
+  case 14: /* ConstInitVal: ConstExp  */
+#line 284 "parser.y"
+                      {
+  if(debug) llvm::outs()<<"constexp 2 ConstInitVal\n";
+}
+#line 2105 "y.tab.c"
+    break;
+
+  case 15: /* Block: T_L_BRACE T_R_BRACE  */
+#line 288 "parser.y"
+                          {
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{}}};
+}
+#line 2114 "y.tab.c"
+    break;
+
+  case 16: /* Block: T_L_BRACE BlockItem T_R_BRACE  */
+#line 292 "parser.y"
+                                     {
+  if(debug) llvm::outs()<<"blockitem 2 block\n";
+}
+#line 2122 "y.tab.c"
+    break;
+
+  case 17: /* BlockItem: BlockItem Stmt  */
+#line 297 "parser.y"
+              {
+  auto stmt = stak.back();
+  stak.pop_back();
+  auto be_block_item = stak.back();
+  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(stmt);
+}
+#line 2133 "y.tab.c"
+    break;
+
+  case 18: /* BlockItem: BlockItem Decl  */
+#line 302 "parser.y"
+                {
+  auto decl = stak.back();
+  stak.pop_back();
+  auto be_block_item = stak.back();
+  stak.back().getAsObject()->get("inner")->getAsArray()->push_back(decl);
+}
+#line 2144 "y.tab.c"
+    break;
+
+  case 19: /* BlockItem: Stmt  */
+#line 307 "parser.y"
+       {
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{inner}}};
+}
+#line 2154 "y.tab.c"
+    break;
+
+  case 20: /* BlockItem: Decl  */
+#line 311 "parser.y"
+      {
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
+                                   {"inner", llvm::json::Array{inner}}};
+}
+#line 2164 "y.tab.c"
+    break;
+
+  case 21: /* Stmt: T_RETURN Exp T_SEMI  */
+#line 318 "parser.y"
+                          {
+  if(debug) llvm::outs()<<"return 2 stmt\n";
+  if(debug) print_stack();
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
+                                   {"inner", llvm::json::Array{inner}}};
+}
+#line 2176 "y.tab.c"
+    break;
+
+  case 22: /* VarDecl: T_INT T_IDENTIFIER T_SEMI  */
+#line 328 "parser.y"
                                    {
   auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
   stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name}};
 }
-#line 1405 "y.tab.c"
+#line 2185 "y.tab.c"
     break;
 
-  case 7: /* FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block  */
-#line 188 "parser.y"
+  case 23: /* FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block  */
+#line 333 "parser.y"
                                                       {
   auto inner = stak.back();
   stak.pop_back();
@@ -1414,141 +2194,308 @@ yyreduce:
                                    {"name", name},
                                    {"inner", llvm::json::Array{inner}}};
 }
-#line 1418 "y.tab.c"
+#line 2198 "y.tab.c"
     break;
 
-  case 8: /* Block: T_L_BRACE T_R_BRACE  */
-#line 196 "parser.y"
-                           {}
-#line 1424 "y.tab.c"
-    break;
-
-  case 9: /* Block: T_L_BRACE BlockItem T_R_BRACE  */
-#line 197 "parser.y"
-                                     {}
-#line 1430 "y.tab.c"
-    break;
-
-  case 10: /* BlockItem: Stmt  */
-#line 198 "parser.y"
-                {
-  auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
+  case 24: /* Exp: LOrExp  */
+#line 342 "parser.y"
+            {
+  if(debug) llvm::outs()<<"LOrExp 2 Exp\n";
 }
-#line 1440 "y.tab.c"
+#line 2206 "y.tab.c"
     break;
 
-  case 11: /* Stmt: T_RETURN EXP T_SEMI  */
-#line 203 "parser.y"
-                          {
-  auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
-}
-#line 1450 "y.tab.c"
-    break;
-
-  case 14: /* UnaryOp: T_EXCLAIM  */
-#line 209 "parser.y"
-                                  {
-  llvm::outs()<<"minus 2 unaryop\n";
-  auto inner = stak.back();
-  auto op = inner.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
-  {"opcode",op}};
-}
-#line 1462 "y.tab.c"
-    break;
-
-  case 15: /* UnaryExp: PrimaryExp  */
-#line 219 "parser.y"
-                     {
-  print_stack();
-  llvm::outs()<<"primary 2 unaryexp\n";
-}
-#line 1471 "y.tab.c"
-    break;
-
-  case 16: /* UnaryExp: UnaryOp UnaryExp  */
-#line 224 "parser.y"
-                           {
-  llvm::outs()<<"UnaryExp 2 UnaryExp\n";
-  auto inner = stak.back();
-  stak.pop_back();
-  auto unary_op = stak.back();
-  auto op = unary_op.getAsObject()->get("opcode")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
-  {"opcode",op},
-  {"inner",llvm::json::Array{inner}}};
-}
-#line 1486 "y.tab.c"
-    break;
-
-  case 17: /* Number: T_NUMERIC_CONSTANT  */
-#line 235 "parser.y"
-                           {
-  llvm::outs()<<"T_NUMERIC_CONSTANT 2 number\n";
-}
-#line 1494 "y.tab.c"
-    break;
-
-  case 18: /* PrimaryExp: T_L_PAREN EXP T_R_PAREN  */
-#line 239 "parser.y"
+  case 25: /* PrimaryExp: T_L_PAREN Exp T_R_PAREN  */
+#line 347 "parser.y"
                                     {
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind","ParenExpr"},
   {"inner", llvm::json::Array{inner}}};
 }
-#line 1504 "y.tab.c"
+#line 2216 "y.tab.c"
     break;
 
-  case 19: /* PrimaryExp: Number  */
-#line 245 "parser.y"
-                   {
-  llvm::outs()<<"number 2 primary\n";
+  case 26: /* PrimaryExp: Number  */
+#line 351 "parser.y"
+        {
+  if(debug) llvm::outs()<<"number 2 primary\n";
 }
-#line 1512 "y.tab.c"
+#line 2224 "y.tab.c"
     break;
 
-  case 20: /* MulExp: UnaryExp  */
-#line 249 "parser.y"
+  case 27: /* UnaryExp: PrimaryExp  */
+#line 355 "parser.y"
+                     {
+  if(debug) llvm::outs()<<"primary 2 unaryexp\n";
+  if(debug) print_stack();
+}
+#line 2233 "y.tab.c"
+    break;
+
+  case 28: /* UnaryExp: T_PLUS UnaryExp  */
+#line 358 "parser.y"
                  {
-  print_stack();
-  llvm::outs()<<"UnaryExp 2 MulExp\n";
+  if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+  {"opcode",""},
+  {"inner",llvm::json::Array{inner}}};
 }
-#line 1521 "y.tab.c"
+#line 2245 "y.tab.c"
     break;
 
-  case 23: /* MulExp: MulExp T_PERCENT UnaryExp  */
-#line 252 "parser.y"
-                                                                          {
+  case 29: /* UnaryExp: T_MINUS UnaryExp  */
+#line 364 "parser.y"
+                  {
+  if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+  {"opcode","-"},
+  {"inner",llvm::json::Array{inner}}};
+}
+#line 2257 "y.tab.c"
+    break;
+
+  case 30: /* UnaryExp: T_EXCLAIM UnaryExp  */
+#line 370 "parser.y"
+                    {
+  if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  auto inner = stak.back();
+  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+  {"opcode","!"},
+  {"inner",llvm::json::Array{inner}}};
+}
+#line 2269 "y.tab.c"
+    break;
+
+  case 31: /* Number: T_NUMERIC_CONSTANT  */
+#line 378 "parser.y"
+                           {
+  if(debug) llvm::outs()<<"T_NUMERIC_CONSTANT 2 number\n";
+}
+#line 2277 "y.tab.c"
+    break;
+
+  case 32: /* MulExp: UnaryExp  */
+#line 386 "parser.y"
+        {
+  if(debug) llvm::outs()<<"UnaryExp 2 MulExp\n";
   print_stack();
+}
+#line 2286 "y.tab.c"
+    break;
+
+  case 33: /* MulExp: MulExp T_STAR UnaryExp  */
+#line 389 "parser.y"
+                        {
+  if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
+  if(debug) print_stack();
   auto unary_exp = stak.back();
   stak.pop_back();
-  auto binary_op = stak.back();
-  auto op = binary_op.getAsObject()->get("value")->getAsString()->str();
-  llvm::outs()<<"MulExp 2 MulExp\n";
+  auto mul_exp = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","*"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+}
+#line 2299 "y.tab.c"
+    break;
+
+  case 34: /* MulExp: MulExp T_SLASH UnaryExp  */
+#line 396 "parser.y"
+                         {
+  if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
+  if(debug) print_stack();
+  auto unary_exp = stak.back();
   stak.pop_back();
   auto mul_exp = stak.back();
-  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",op},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","/"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
 }
-#line 1537 "y.tab.c"
+#line 2312 "y.tab.c"
     break;
 
-  case 24: /* EXP: MulExp  */
-#line 267 "parser.y"
-            {
-  llvm::outs()<<"MulExp 2 EXP\n";
+  case 35: /* MulExp: MulExp T_PERCENT UnaryExp  */
+#line 403 "parser.y"
+                           {
+  if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
+  if(debug) print_stack();
+  auto unary_exp = stak.back();
+  stak.pop_back();
+  auto mul_exp = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","%"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
 }
-#line 1545 "y.tab.c"
+#line 2325 "y.tab.c"
+    break;
+
+  case 36: /* AddExp: MulExp  */
+#line 414 "parser.y"
+      {
+  if(debug) llvm::outs()<<"MulExp 2 AddExp\n";
+}
+#line 2333 "y.tab.c"
+    break;
+
+  case 37: /* AddExp: AddExp T_PLUS MulExp  */
+#line 416 "parser.y"
+                       {
+  if(debug) llvm::outs()<<"exp1 2 AddExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","+"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2345 "y.tab.c"
+    break;
+
+  case 38: /* AddExp: AddExp T_MINUS MulExp  */
+#line 422 "parser.y"
+                        {
+  if(debug) llvm::outs()<<"exp2 2 AddExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","-"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2357 "y.tab.c"
+    break;
+
+  case 39: /* RelExp: AddExp  */
+#line 431 "parser.y"
+      {
+  if(debug) llvm::outs()<<"AddExp 2 RelExp\n";
+}
+#line 2365 "y.tab.c"
+    break;
+
+  case 40: /* RelExp: RelExp T_LESS AddExp  */
+#line 433 "parser.y"
+                       {
+  if(debug) llvm::outs()<<"exp1 2 RelExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2377 "y.tab.c"
+    break;
+
+  case 41: /* RelExp: RelExp T_GREATER AddExp  */
+#line 439 "parser.y"
+                          {
+  if(debug) llvm::outs()<<"exp2 2 RelExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2389 "y.tab.c"
+    break;
+
+  case 42: /* RelExp: RelExp T_LESSEQUAL AddExp  */
+#line 445 "parser.y"
+                            {
+  if(debug) llvm::outs()<<"exp3 2 RelExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<="},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2401 "y.tab.c"
+    break;
+
+  case 43: /* RelExp: RelExp T_GREATEREQUAL AddExp  */
+#line 451 "parser.y"
+                               {
+  if(debug) llvm::outs()<<"exp4 2 RelExp\n";
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">="},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2413 "y.tab.c"
+    break;
+
+  case 44: /* EqExp: RelExp  */
+#line 460 "parser.y"
+      {
+
+}
+#line 2421 "y.tab.c"
+    break;
+
+  case 45: /* EqExp: EqExp T_EQUALEQUAL RelExp  */
+#line 462 "parser.y"
+                           {
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","=="},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2432 "y.tab.c"
+    break;
+
+  case 46: /* EqExp: EqExp T_EXCLAIMEQUAL RelExp  */
+#line 467 "parser.y"
+                             {
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","!="},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2443 "y.tab.c"
+    break;
+
+  case 47: /* LAndExp: EqExp  */
+#line 475 "parser.y"
+     {
+
+}
+#line 2451 "y.tab.c"
+    break;
+
+  case 48: /* LAndExp: LAndExp T_AMPAMP EqExp  */
+#line 477 "parser.y"
+                        {
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","&&"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2462 "y.tab.c"
+    break;
+
+  case 49: /* LOrExp: LAndExp  */
+#line 484 "parser.y"
+               {
+
+}
+#line 2470 "y.tab.c"
+    break;
+
+  case 50: /* LOrExp: LOrExp T_PIPEPIPE LAndExp  */
+#line 486 "parser.y"
+                           {
+  auto exp2 = stak.back();
+  stak.pop_back();
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","||"},{"inner",llvm::json::Array{exp1,exp2}}};
+}
+#line 2481 "y.tab.c"
+    break;
+
+  case 51: /* ConstExp: Exp  */
+#line 493 "parser.y"
+             {
+  if(debug) llvm::outs()<<"ConstExp 2 Exp\n";
+}
+#line 2489 "y.tab.c"
     break;
 
 
-#line 1549 "y.tab.c"
+#line 2493 "y.tab.c"
 
-      default: break;
-    }
+        default: break;
+      }
+    if (yychar_backup != yychar)
+      YY_LAC_DISCARD ("yychar change");
+  }
   /* User semantic actions sometimes alter yychar, and that requires
      that yytoken be updated with the new translation.  We take the
      approach of translating immediately before every use of yytoken.
@@ -1592,7 +2539,39 @@ yyerrlab:
   if (!yyerrstatus)
     {
       ++yynerrs;
-      yyerror (YY_("syntax error"));
+      {
+        yypcontext_t yyctx
+          = {yyssp, yyesa, &yyes, &yyes_capacity, yytoken};
+        char const *yymsgp = YY_("syntax error");
+        int yysyntax_error_status;
+        if (yychar != YYEMPTY)
+          YY_LAC_ESTABLISH;
+        yysyntax_error_status = yysyntax_error (&yymsg_alloc, &yymsg, &yyctx);
+        if (yysyntax_error_status == 0)
+          yymsgp = yymsg;
+        else if (yysyntax_error_status == -1)
+          {
+            if (yymsg != yymsgbuf)
+              YYSTACK_FREE (yymsg);
+            yymsg = YY_CAST (char *,
+                             YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
+            if (yymsg)
+              {
+                yysyntax_error_status
+                  = yysyntax_error (&yymsg_alloc, &yymsg, &yyctx);
+                yymsgp = yymsg;
+              }
+            else
+              {
+                yymsg = yymsgbuf;
+                yymsg_alloc = sizeof yymsgbuf;
+                yysyntax_error_status = YYENOMEM;
+              }
+          }
+        yyerror (yymsgp);
+        if (yysyntax_error_status == YYENOMEM)
+          YYNOMEM;
+      }
     }
 
   if (yyerrstatus == 3)
@@ -1671,6 +2650,10 @@ yyerrlab1:
       YY_STACK_PRINT (yyss, yyssp);
     }
 
+  /* If the stack popping above didn't lose the initial context for the
+     current lookahead token, the shift below will for sure.  */
+  YY_LAC_DISCARD ("error recovery");
+
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
@@ -1734,8 +2717,11 @@ yyreturnlab:
   if (yyss != yyssa)
     YYSTACK_FREE (yyss);
 #endif
-
+  if (yyes != yyesa)
+    YYSTACK_FREE (yyes);
+  if (yymsg != yymsgbuf)
+    YYSTACK_FREE (yymsg);
   return yyresult;
 }
 
-#line 272 "parser.y"
+#line 498 "parser.y"
