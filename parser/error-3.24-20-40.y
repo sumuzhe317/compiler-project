@@ -677,7 +677,7 @@ OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN Stmt {
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt}}});
 }|T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE OpenStmt {
-  if(debug) llvm::outs()<<"open stmt no else 2 if\n";
+  if(debug) llvm::outs()<<"open stmt 2 if\n";
   if(debug) print_stack();
   auto elseStmt = stak.back();
   stak.pop_back();
