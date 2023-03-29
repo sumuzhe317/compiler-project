@@ -1,5 +1,5 @@
 {
-  "id": "0xa63c9e8",
+  "id": "0xa814338",
   "kind": "TranslationUnitDecl",
   "loc": {},
   "range": {
@@ -8,7 +8,7 @@
   },
   "inner": [
     {
-      "id": "0xa63d210",
+      "id": "0xa814b60",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -22,7 +22,7 @@
       },
       "inner": [
         {
-          "id": "0xa63cfb0",
+          "id": "0xa814900",
           "kind": "BuiltinType",
           "type": {
             "qualType": "__int128"
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": "0xa63d280",
+      "id": "0xa814bd0",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -45,7 +45,7 @@
       },
       "inner": [
         {
-          "id": "0xa63cfd0",
+          "id": "0xa814920",
           "kind": "BuiltinType",
           "type": {
             "qualType": "unsigned __int128"
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "0xa63d588",
+      "id": "0xa814ed8",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -68,13 +68,13 @@
       },
       "inner": [
         {
-          "id": "0xa63d360",
+          "id": "0xa814cb0",
           "kind": "RecordType",
           "type": {
             "qualType": "struct __NSConstantString_tag"
           },
           "decl": {
-            "id": "0xa63d2d8",
+            "id": "0xa814c28",
             "kind": "RecordDecl",
             "name": "__NSConstantString_tag"
           }
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "id": "0xa63d620",
+      "id": "0xa814f70",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -96,14 +96,14 @@
       },
       "inner": [
         {
-          "id": "0xa63d5e0",
+          "id": "0xa814f30",
           "kind": "PointerType",
           "type": {
             "qualType": "char *"
           },
           "inner": [
             {
-              "id": "0xa63ca90",
+              "id": "0xa8143e0",
               "kind": "BuiltinType",
               "type": {
                 "qualType": "char"
@@ -114,7 +114,7 @@
       ]
     },
     {
-      "id": "0xa63d918",
+      "id": "0xa815268",
       "kind": "TypedefDecl",
       "loc": {},
       "range": {
@@ -128,7 +128,7 @@
       },
       "inner": [
         {
-          "id": "0xa63d8c0",
+          "id": "0xa815210",
           "kind": "ConstantArrayType",
           "type": {
             "qualType": "struct __va_list_tag[1]"
@@ -136,13 +136,13 @@
           "size": 1,
           "inner": [
             {
-              "id": "0xa63d700",
+              "id": "0xa815050",
               "kind": "RecordType",
               "type": {
                 "qualType": "struct __va_list_tag"
               },
               "decl": {
-                "id": "0xa63d678",
+                "id": "0xa814fc8",
                 "kind": "RecordDecl",
                 "name": "__va_list_tag"
               }
@@ -152,24 +152,27 @@
       ]
     },
     {
-      "id": "0xa693ca0",
+      "id": "0xa86b6f0",
       "kind": "FunctionDecl",
       "loc": {
-        "offset": 4,
-        "file": "test.c",
-        "line": 1,
+        "offset": 133,
+        "file": "<stdin>",
+        "line": 8,
+        "presumedFile": "test.c",
+        "presumedLine": 1,
         "col": 5,
         "tokLen": 4
       },
       "range": {
         "begin": {
-          "offset": 0,
+          "offset": 129,
           "col": 1,
           "tokLen": 3
         },
         "end": {
-          "offset": 119,
-          "line": 12,
+          "offset": 155,
+          "line": 10,
+          "presumedLine": 3,
           "col": 1,
           "tokLen": 1
         }
@@ -181,302 +184,54 @@
       },
       "inner": [
         {
-          "id": "0xa693f58",
+          "id": "0xa86b808",
           "kind": "CompoundStmt",
           "range": {
             "begin": {
-              "offset": 10,
-              "line": 1,
+              "offset": 139,
+              "line": 8,
+              "presumedLine": 1,
               "col": 11,
               "tokLen": 1
             },
             "end": {
-              "offset": 119,
-              "line": 12,
+              "offset": 155,
+              "line": 10,
+              "presumedLine": 3,
               "col": 1,
               "tokLen": 1
             }
           },
           "inner": [
             {
-              "id": "0xa693e08",
-              "kind": "DeclStmt",
-              "range": {
-                "begin": {
-                  "offset": 16,
-                  "line": 2,
-                  "col": 5,
-                  "tokLen": 3
-                },
-                "end": {
-                  "offset": 21,
-                  "col": 10,
-                  "tokLen": 1
-                }
-              },
-              "inner": [
-                {
-                  "id": "0xa693da0",
-                  "kind": "VarDecl",
-                  "loc": {
-                    "offset": 20,
-                    "col": 9,
-                    "tokLen": 1
-                  },
-                  "range": {
-                    "begin": {
-                      "offset": 16,
-                      "col": 5,
-                      "tokLen": 3
-                    },
-                    "end": {
-                      "offset": 20,
-                      "col": 9,
-                      "tokLen": 1
-                    }
-                  },
-                  "isUsed": true,
-                  "name": "i",
-                  "type": {
-                    "qualType": "int"
-                  }
-                }
-              ]
-            },
-            {
-              "id": "0xa693ea8",
-              "kind": "IfStmt",
-              "range": {
-                "begin": {
-                  "offset": 63,
-                  "line": 6,
-                  "col": 9,
-                  "tokLen": 2
-                },
-                "end": {
-                  "offset": 81,
-                  "line": 8,
-                  "col": 9,
-                  "tokLen": 1
-                }
-              },
-              "inner": [
-                {
-                  "id": "0xa693e78",
-                  "kind": "BinaryOperator",
-                  "range": {
-                    "begin": {
-                      "offset": 66,
-                      "line": 6,
-                      "col": 12,
-                      "tokLen": 1
-                    },
-                    "end": {
-                      "offset": 68,
-                      "col": 14,
-                      "tokLen": 1
-                    }
-                  },
-                  "type": {
-                    "qualType": "int"
-                  },
-                  "valueCategory": "prvalue",
-                  "opcode": ">",
-                  "inner": [
-                    {
-                      "id": "0xa693e60",
-                      "kind": "ImplicitCastExpr",
-                      "range": {
-                        "begin": {
-                          "offset": 66,
-                          "col": 12,
-                          "tokLen": 1
-                        },
-                        "end": {
-                          "offset": 66,
-                          "col": 12,
-                          "tokLen": 1
-                        }
-                      },
-                      "type": {
-                        "qualType": "int"
-                      },
-                      "valueCategory": "prvalue",
-                      "castKind": "LValueToRValue",
-                      "inner": [
-                        {
-                          "id": "0xa693e20",
-                          "kind": "DeclRefExpr",
-                          "range": {
-                            "begin": {
-                              "offset": 66,
-                              "col": 12,
-                              "tokLen": 1
-                            },
-                            "end": {
-                              "offset": 66,
-                              "col": 12,
-                              "tokLen": 1
-                            }
-                          },
-                          "type": {
-                            "qualType": "int"
-                          },
-                          "valueCategory": "lvalue",
-                          "referencedDecl": {
-                            "id": "0xa693da0",
-                            "kind": "VarDecl",
-                            "name": "i",
-                            "type": {
-                              "qualType": "int"
-                            }
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "id": "0xa693e40",
-                      "kind": "IntegerLiteral",
-                      "range": {
-                        "begin": {
-                          "offset": 68,
-                          "col": 14,
-                          "tokLen": 1
-                        },
-                        "end": {
-                          "offset": 68,
-                          "col": 14,
-                          "tokLen": 1
-                        }
-                      },
-                      "type": {
-                        "qualType": "int"
-                      },
-                      "valueCategory": "prvalue",
-                      "value": "1"
-                    }
-                  ]
-                },
-                {
-                  "id": "0xa693e98",
-                  "kind": "CompoundStmt",
-                  "range": {
-                    "begin": {
-                      "offset": 70,
-                      "col": 16,
-                      "tokLen": 1
-                    },
-                    "end": {
-                      "offset": 81,
-                      "line": 8,
-                      "col": 9,
-                      "tokLen": 1
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "id": "0xa693f08",
-              "kind": "BinaryOperator",
-              "range": {
-                "begin": {
-                  "offset": 100,
-                  "line": 10,
-                  "col": 9,
-                  "tokLen": 1
-                },
-                "end": {
-                  "offset": 102,
-                  "col": 11,
-                  "tokLen": 1
-                }
-              },
-              "type": {
-                "qualType": "int"
-              },
-              "valueCategory": "prvalue",
-              "opcode": "=",
-              "inner": [
-                {
-                  "id": "0xa693ec8",
-                  "kind": "DeclRefExpr",
-                  "range": {
-                    "begin": {
-                      "offset": 100,
-                      "col": 9,
-                      "tokLen": 1
-                    },
-                    "end": {
-                      "offset": 100,
-                      "col": 9,
-                      "tokLen": 1
-                    }
-                  },
-                  "type": {
-                    "qualType": "int"
-                  },
-                  "valueCategory": "lvalue",
-                  "referencedDecl": {
-                    "id": "0xa693da0",
-                    "kind": "VarDecl",
-                    "name": "i",
-                    "type": {
-                      "qualType": "int"
-                    }
-                  }
-                },
-                {
-                  "id": "0xa693ee8",
-                  "kind": "IntegerLiteral",
-                  "range": {
-                    "begin": {
-                      "offset": 102,
-                      "col": 11,
-                      "tokLen": 1
-                    },
-                    "end": {
-                      "offset": 102,
-                      "col": 11,
-                      "tokLen": 1
-                    }
-                  },
-                  "type": {
-                    "qualType": "int"
-                  },
-                  "valueCategory": "prvalue",
-                  "value": "1"
-                }
-              ]
-            },
-            {
-              "id": "0xa693f48",
+              "id": "0xa86b7f8",
               "kind": "ReturnStmt",
               "range": {
                 "begin": {
-                  "offset": 109,
-                  "line": 11,
+                  "offset": 145,
+                  "line": 9,
+                  "presumedLine": 2,
                   "col": 5,
                   "tokLen": 6
                 },
                 "end": {
-                  "offset": 116,
+                  "offset": 152,
                   "col": 12,
                   "tokLen": 1
                 }
               },
               "inner": [
                 {
-                  "id": "0xa693f28",
+                  "id": "0xa86b7d8",
                   "kind": "IntegerLiteral",
                   "range": {
                     "begin": {
-                      "offset": 116,
+                      "offset": 152,
                       "col": 12,
                       "tokLen": 1
                     },
                     "end": {
-                      "offset": 116,
+                      "offset": 152,
                       "col": 12,
                       "tokLen": 1
                     }
@@ -485,7 +240,7 @@
                     "qualType": "int"
                   },
                   "valueCategory": "prvalue",
-                  "value": "0"
+                  "value": "3"
                 }
               ]
             }
@@ -494,4 +249,22 @@
       ]
     }
   ]
-}
+}TranslationUnitDecl 0xb27f308 <<invalid sloc>> <invalid sloc>
+|-TypedefDecl 0xb27fb30 <<invalid sloc>> <invalid sloc> implicit __int128_t '__int128'
+| `-BuiltinType 0xb27f8d0 '__int128'
+|-TypedefDecl 0xb27fba0 <<invalid sloc>> <invalid sloc> implicit __uint128_t 'unsigned __int128'
+| `-BuiltinType 0xb27f8f0 'unsigned __int128'
+|-TypedefDecl 0xb27fea8 <<invalid sloc>> <invalid sloc> implicit __NSConstantString 'struct __NSConstantString_tag'
+| `-RecordType 0xb27fc80 'struct __NSConstantString_tag'
+|   `-Record 0xb27fbf8 '__NSConstantString_tag'
+|-TypedefDecl 0xb27ff40 <<invalid sloc>> <invalid sloc> implicit __builtin_ms_va_list 'char *'
+| `-PointerType 0xb27ff00 'char *'
+|   `-BuiltinType 0xb27f3b0 'char'
+|-TypedefDecl 0xb280238 <<invalid sloc>> <invalid sloc> implicit __builtin_va_list 'struct __va_list_tag[1]'
+| `-ConstantArrayType 0xb2801e0 'struct __va_list_tag[1]' 1 
+|   `-RecordType 0xb280020 'struct __va_list_tag'
+|     `-Record 0xb27ff98 '__va_list_tag'
+`-FunctionDecl 0xb2d66c0 <test.c:1:1, line:3:1> line:1:5 main 'int ()'
+  `-CompoundStmt 0xb2d67d8 <col:11, line:3:1>
+    `-ReturnStmt 0xb2d67c8 <line:2:5, col:12>
+      `-IntegerLiteral 0xb2d67a8 <col:12> 'int' 3

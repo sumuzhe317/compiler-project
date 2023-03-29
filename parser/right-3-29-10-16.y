@@ -4,8 +4,15 @@
 #include <llvm/Support/MemoryBuffer.h>
 #include <llvm/Support/raw_ostream.h>
 #include <stdio.h>
+#include <queue>
+#include <stack>
+#include <stdlib.h>
+#include <iostream>
+#include <sstream>
+int token_idx = -1;
 #define yyerror(x)                                                             \
   do {                                                                         \
+    llvm::errs() <<"token idx "<<token_idx<<"\n";                              \
     llvm::errs() << (x);                                                       \
   } while (0)
 namespace {
@@ -21,24 +28,27 @@ auto wk_getline(char endline = "\n"[0]) {
     ++it;
   return llvm::StringRef(beg, len);
 }
-auto debug = false;
+bool debug = false;
 llvm::json::Array stak;
 int def_num = 0;
 bool global_decl = false;
+std::stack<bool> lvalStack;
 int func_FPara_num = 0;
-int func_RPara_num = 0;
+// std::stack<int> func_RPara_num;
 int init_stak_level = 1;
 llvm::json::Array initStak;
+llvm::json::Array lexStack;
 }  //namespace
-auto print_stack(){
+int print_stack(){
   if(debug) llvm::outs()<<"\n-------------------------------printf stak-------------------------------\n";
-  for(auto i=0;i<stak.size();i++){
+  for(int i=0;i<stak.size();i++){
     if(debug) llvm::outs()<<stak[i]<<"\n";
   }
   if(debug) llvm::outs()<<"\n-----------------------------printf stak end-----------------------------\n";
   return 0;
 }
 auto yylex() {
+  token_idx ++;
   auto tk = wk_getline();
   auto b = tk.find("'") + 1, e = tk.rfind("'");
   auto s = tk.substr(b, e - b).str(), t = tk.substr(0, tk.find(" ")).str();
@@ -52,6 +62,8 @@ auto yylex() {
     return T_COMMA;
   if (t == "semi")
     return T_SEMI;
+  if (t == "float")
+    return T_FLOAT;
   if (t == "int")
     return T_INT;
   if (t == "char")
@@ -69,7 +81,8 @@ auto yylex() {
   if (t == "r_brace")
     return T_R_BRACE;
   if (t == "identifier") {
-    stak.push_back(llvm::json::Object{{"value", s}});
+    lexStack.push_back(llvm::json::Object{{"value", s}});
+    // stak.push_back(llvm::json::Object{{"value", s}});
     return T_IDENTIFIER;
   }
   if (t == "l_paren")
@@ -93,8 +106,16 @@ auto yylex() {
   if (t == "return")
     return T_RETURN;
   if (t == "numeric_constant") {
-    stak.push_back(
-        llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", s}});
+    int tttnum;
+    if(s[0]=='0'&&(s[1]=='x'||s[1]=='X')){
+      tttnum = strtol(s.c_str(),0,16);
+    }else if(s[0]=='0'){
+      tttnum = strtol(s.c_str(),0,8);
+    }else{
+      tttnum = strtol(s.c_str(),0,10);
+    }
+    lexStack.push_back(llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", std::to_string(tttnum)}});
+    // stak.push_back(llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", s}});
     return T_NUMERIC_CONSTANT;
   }
   if (t == "plus"){
@@ -186,6 +207,7 @@ int main() {
 %token T_CONST
 %token T_COMMA
 %token T_SEMI
+%token T_FLOAT
 %token T_INT
 %token T_CHAR
 %token T_LONGLONG
@@ -231,13 +253,13 @@ int main() {
 %%
 CompUnit: CompUnit CompUnitItem {
   if(global_decl){
-    auto json_inner = llvm::json::Array{};
-    for(auto i = 0; i < def_num; i++){
+    llvm::json::Array json_inner = llvm::json::Array{};
+    for(int i = 0; i < def_num; i++){
       json_inner.push_back(stak.back());
       stak.pop_back();
     }
-    auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-    for(auto i = def_num-1; i >= 0; i--){
+    llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+    for(int i = def_num-1; i >= 0; i--){
       array_inner->push_back(json_inner[i]);
     }
     global_decl = false;
@@ -249,15 +271,15 @@ CompUnit: CompUnit CompUnitItem {
   }
 }|CompUnitItem {
   if(global_decl){
-    auto json_inner = llvm::json::Array{};
-    for(auto i = 0; i < def_num; i++){
+    llvm::json::Array json_inner = llvm::json::Array{};
+    for(int i = 0; i < def_num; i++){
       json_inner.push_back(stak.back());
       stak.pop_back();
     }
     stak.push_back(llvm::json::Object{{"kind", "TranslationUnitDecl"},
                                     {"inner", llvm::json::Array{}}});
-    auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-    for(auto i = def_num-1; i >= 0; i--){
+    llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+    for(int i = def_num-1; i >= 0; i--){
       array_inner->push_back(json_inner[i]);
     }
     global_decl = false;
@@ -278,6 +300,8 @@ Decl: ConstDecl{
   
 }| VarDecl{
 
+}| FuncDecl{
+
 }
 
 ConstDecl: T_CONST T_INT ConstDefChain T_SEMI{
@@ -290,9 +314,11 @@ ConstDecl: T_CONST T_INT ConstDefChain T_SEMI{
 
 ConstExpChain:T_L_SQUARE ConstExp T_R_SQUARE {
   // todo
+  lvalStack.pop();
   stak.pop_back();
 }| ConstExpChain T_L_SQUARE ConstExp T_R_SQUARE{
   // todo
+  lvalStack.pop();
   stak.pop_back();
 }
 
@@ -306,26 +332,38 @@ ConstDefChain: ConstDef{
 
 ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal{
   // todo
+  auto exp1 = lexStack.back();
+  lexStack.pop_back();
   auto exp2 = stak.back();
   stak.pop_back();
-  auto exp1 = stak.back();
+  initStak.pop_back();
   auto exp1_name = exp1.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"},
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"},
                                   {"name",exp1_name},
-                                  {"inner", llvm::json::Array{exp2}}};
+                                  {"inner", llvm::json::Array{exp2}}});
 }|T_IDENTIFIER ConstExpChain T_EQUAL ConstInitVal{
   // todo
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto init_val = stak.back();
   stak.pop_back();
   initStak.pop_back();
   // to compute constexp
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}};
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}});
 }
 
 ConstInitVal: ConstExp{
   // todo
   if(debug) llvm::outs()<<"constexp 2 ConstInitVal\n";
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
+                                   {"inner", llvm::json::Array{rvalexp}}};
+  }
+
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",1}});
 }| T_L_BRACE T_R_BRACE {
@@ -337,22 +375,27 @@ ConstInitVal: ConstExp{
   // todo
   auto json_inner = llvm::json::Array{};
   int initStakSize = initStak.size();
+  // while(initStakSize--){
+  //   auto level_number = initStak.back().getAsObject()->get("value")->getAsInteger();
+  //   if(level_number.value() == init_stak_level){
+  //     json_inner.push_back(stak.back());
+  //     stak.pop_back();
+  //     initStak.pop_back();
+  //   }else{
+  //     break;
+  //   }
+  // }
   while(initStakSize--){
-    auto level_number = initStak.back().getAsObject()->get("value")->getAsInteger();
-    if(level_number.value() == init_stak_level){
-      json_inner.push_back(stak.back());
-      stak.pop_back();
-      initStak.pop_back();
-    }else{
-      break;
-    }
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+    initStak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"},
                                    {"inner", llvm::json::Array{}}});
-  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = json_inner.size()-1; i >= 0; i--){
-    array_inner->push_back(json_inner[i]);
-  }
+  // llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  // for(int i = json_inner.size()-1; i >= 0; i--){
+  //   array_inner->push_back(json_inner[i]);
+  // }
   init_stak_level++;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
@@ -376,32 +419,52 @@ VarDefChain: VarDef{
 }
 
 VarDef: T_IDENTIFIER{
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name}};
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name}});
 }|T_IDENTIFIER T_EQUAL InitVal{
+  // todo
+  initStak.pop_back();
   auto init_val = stak.back();
   stak.pop_back();
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}};
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}});
 }|T_IDENTIFIER ConstExpChain {
   // todo
   // to compute constexp
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name}};
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name}});
 }|T_IDENTIFIER ConstExpChain T_EQUAL InitVal{
   // todo
   auto init_val = stak.back();
   stak.pop_back();
   initStak.pop_back();
   // to compute constexp
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}};
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}})
+  ;
 }
 
 
 InitVal: Exp{
   if(debug) llvm::outs()<<"Exp 2 InitVal\n";
   if(debug) print_stack();
+  
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
+                                   {"inner", llvm::json::Array{rvalexp}}};
+  }
+
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",1}});
 }| T_L_BRACE T_R_BRACE {
@@ -417,22 +480,27 @@ InitVal: Exp{
   if(debug) print_stack();
   auto json_inner = llvm::json::Array{};
   int initStakSize = initStak.size();
+  // while(initStakSize--){
+  //   auto level_number = initStak.back().getAsObject()->get("value")->getAsInteger();
+  //   if(level_number.value() == init_stak_level){
+  //     json_inner.push_back(stak.back());
+  //     stak.pop_back();
+  //     initStak.pop_back();
+  //   }else{
+  //     break;
+  //   }
+  // }
   while(initStakSize--){
-    auto level_number = initStak.back().getAsObject()->get("value")->getAsInteger();
-    if(level_number.value() == init_stak_level){
-      json_inner.push_back(stak.back());
-      stak.pop_back();
-      initStak.pop_back();
-    }else{
-      break;
-    }
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+    initStak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"},
                                    {"inner", llvm::json::Array{}}});
-  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = json_inner.size()-1; i >= 0; i--){
-    array_inner->push_back(json_inner[i]);
-  }
+  // llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  // for(int i = json_inner.size()-1; i >= 0; i--){
+  //   array_inner->push_back(json_inner[i]);
+  // }
   init_stak_level++;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
@@ -447,36 +515,97 @@ InitValChain: InitVal {
   if(debug) print_stack();
 }
 
+FuncDecl: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI {
+  def_num = 1;
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                   {"name", name}});
+}| T_VOID T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI{
+  def_num = 1;
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                   {"name", name}});
+}| T_INT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI {
+  def_num = 1;
+
+  auto json_inner = llvm::json::Array{};
+  for(int i = 0; i < func_FPara_num; i++){
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+  }
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                    {"name",name},
+                                    {"inner", llvm::json::Array{}}});
+  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  for(int i = func_FPara_num-1; i >= 0; i--){
+    array_inner->push_back(json_inner[i]);
+  }
+
+}| T_VOID T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI{
+  def_num = 1;
+  
+  auto json_inner = llvm::json::Array{};
+  for(int i = 0; i < func_FPara_num; i++){
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+  }
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                    {"name",name},
+                                    {"inner", llvm::json::Array{}}});
+  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  for(int i = func_FPara_num-1; i >= 0; i--){
+    array_inner->push_back(json_inner[i]);
+  }
+}
+
 FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block {
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto inner = stak.back();
   stak.pop_back();
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "FunctionDecl"},
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
                                    {"name", name},
-                                   {"inner", llvm::json::Array{inner}}};
+                                   {"inner", llvm::json::Array{inner}}});
 }| T_VOID T_IDENTIFIER T_L_PAREN T_R_PAREN Block{
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto inner = stak.back();
   stak.pop_back();
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "FunctionDecl"},
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
                                    {"name", name},
-                                   {"inner", llvm::json::Array{inner}}};
+                                   {"inner", llvm::json::Array{inner}}});
 }| T_INT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN Block {
   auto inner = stak.back();
   stak.pop_back();
 
   auto json_inner = llvm::json::Array{};
-  for(auto i = 0; i < func_FPara_num; i++){
+  for(int i = 0; i < func_FPara_num; i++){
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
 
-  stak.back() = llvm::json::Object{{"kind", "FunctionDecl"},
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
                                     {"name",name},
-                                    {"inner", llvm::json::Array{}}};
+                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = func_FPara_num-1; i >= 0; i--){
+  for(int i = func_FPara_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
   array_inner->push_back(inner);
@@ -485,17 +614,19 @@ FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block {
   stak.pop_back();
 
   auto json_inner = llvm::json::Array{};
-  for(auto i = 0; i < func_FPara_num; i++){
+  for(int i = 0; i < func_FPara_num; i++){
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
 
-  stak.back() = llvm::json::Object{{"kind", "FunctionDecl"},
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
                                     {"name",name},
-                                    {"inner", llvm::json::Array{}}};
+                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = func_FPara_num-1; i >= 0; i--){
+  for(int i = func_FPara_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
   array_inner->push_back(inner);
@@ -512,40 +643,49 @@ FuncFParams : FuncFParam {
 
 FuncFParam : T_INT T_IDENTIFIER{
 
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }|T_CHAR T_IDENTIFIER{
 
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }T_LONGLONG T_IDENTIFIER{
 
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }|T_INT T_IDENTIFIER ArrayFuncFParam{
   // todo
+
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }|T_CHAR T_IDENTIFIER ArrayFuncFParam{
   // todo
+
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }T_LONGLONG T_IDENTIFIER ArrayFuncFParam{
+
   // todo
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}};
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }
 
 ArrayFuncFParam: T_L_SQUARE T_R_SQUARE {
@@ -553,6 +693,8 @@ ArrayFuncFParam: T_L_SQUARE T_R_SQUARE {
   stak.push_back(llvm::json::Object{{"kind","ArrayFuncFParam"}});
 }|ArrayFuncFParam T_L_SQUARE ConstExp T_R_SQUARE {
   // todo
+  lvalStack.pop();
+
   auto constExp = stak.back();
   stak.pop_back();
   auto ArrayFuncFParam = stak.back();
@@ -575,14 +717,14 @@ BlockItemChain:BlockItem{
   stak.back().getAsObject()->get("inner")->getAsArray()->push_back(stmt);
 }|BlockItemChain Decl{
   auto json_inner = llvm::json::Array{};
-  for(auto i = 0; i < def_num; i++){
+  for(int i = 0; i < def_num; i++){
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "DeclStmt"},
                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = def_num-1; i >= 0; i--){
+  for(int i = def_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
   auto decl = stak.back();
@@ -598,14 +740,14 @@ Stmt {
                                    {"inner", llvm::json::Array{inner}}};
 }|Decl{
   auto json_inner = llvm::json::Array{};
-  for(auto i = 0; i < def_num; i++){
+  for(int i = 0; i < def_num; i++){
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "DeclStmt"},
                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = def_num-1; i >= 0; i--){
+  for(int i = def_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
   auto inner = stak.back();
@@ -621,6 +763,13 @@ Stmt: MatchedStmt{
 }
 
 MatchedStmt:LVal T_EQUAL Exp T_SEMI {
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
   auto exp = stak.back();
   stak.pop_back();
   auto lval = stak.back();
@@ -629,7 +778,12 @@ MatchedStmt:LVal T_EQUAL Exp T_SEMI {
 }|T_SEMI{
   stak.push_back(llvm::json::Object{{"kind","NullStmt"}});
 }|Exp T_SEMI{
-
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
 }|Block{
 
 }|T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE MatchedStmt {
@@ -639,12 +793,28 @@ MatchedStmt:LVal T_EQUAL Exp T_SEMI {
   stak.pop_back();
   auto thenStmt = stak.back();
   stak.pop_back();
+  
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto ifExp = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt,elseStmt}}});
 }|T_WHILE T_L_PAREN Exp T_R_PAREN Stmt {
   auto loopStmt = stak.back();
   stak.pop_back();
+
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto whileExp = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","WhileStmt"},{"inner",llvm::json::Array{whileExp,loopStmt}}});
@@ -657,10 +827,26 @@ MatchedStmt:LVal T_EQUAL Exp T_SEMI {
 }|T_RETURN Exp T_SEMI {
   if(debug) llvm::outs()<<"return 2 stmt\n";
   if(debug) print_stack();
+
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
                                    {"inner", llvm::json::Array{inner}}};
 }|T_DO Block T_WHILE T_L_PAREN Exp T_R_PAREN T_SEMI {
+
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto whileExp = stak.back();
   stak.pop_back();
   auto blockStmt = stak.back();
@@ -673,6 +859,14 @@ OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN Stmt {
   if(debug) print_stack();
   auto thenStmt = stak.back();
   stak.pop_back();
+
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto ifExp = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt}}});
@@ -683,6 +877,14 @@ OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN Stmt {
   stak.pop_back();
   auto thenStmt = stak.back();
   stak.pop_back();
+
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto ifExp = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt,elseStmt}}});
@@ -697,19 +899,31 @@ Exp : LOrExp{
 }
 
 LVal : T_IDENTIFIER{
-  auto ident = stak.back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.back() = llvm::json::Object{{"kind", "DeclRefExpr"},
-                                   {"name", name}};
+  stak.push_back(llvm::json::Object{{"kind","DeclRefExpr"},{"name",name}});
+  
+  lvalStack.push(true);
 }|LVal T_L_SQUARE Exp T_R_SQUARE{
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto exp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp}}};
+  }
+  lvalStack.pop();
+
   auto exp = stak.back();
   stak.pop_back();
-  auto lval = stak.back();
+  auto be_lval = stak.back();
   stak.pop_back();
-  stak.push_back(llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{lval}}});
+  stak.push_back(llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{be_lval}}});
   auto ImplicitCastExpr = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","ArraySubscriptExpr"},{"inner",llvm::json::Array{ImplicitCastExpr,exp}}});
+  
+  lvalStack.push(true);
 }//todo
 
 PrimaryExp : T_L_PAREN Exp T_R_PAREN{
@@ -717,9 +931,7 @@ PrimaryExp : T_L_PAREN Exp T_R_PAREN{
   stak.back() = llvm::json::Object{{"kind","ParenExpr"},
   {"inner", llvm::json::Array{inner}}};
 }|LVal{
-  auto lval = stak.back();
-  stak.pop_back();
-  stak.push_back(llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{lval}}});
+  // todo
 }|Number{
   if(debug) llvm::outs()<<"number 2 primary\n";
 }
@@ -728,9 +940,10 @@ UnaryExp : PrimaryExp{
   if(debug) llvm::outs()<<"primary 2 unaryexp\n";
   if(debug) print_stack();
 }|T_IDENTIFIER T_L_PAREN T_R_PAREN {
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
 
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
-  stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","DeclRefExpr"}});
   auto DeclRefExpr =  stak.back();
   stak.pop_back();
@@ -740,59 +953,138 @@ UnaryExp : PrimaryExp{
   stak.back() = llvm::json::Object{{"kind", "CallExpr"},
                                     {"name",name},
                                     {"inner", llvm::json::Array{ImplicitCastExpr}}};
+  
+  lvalStack.push(false);
 }|T_IDENTIFIER T_L_PAREN FuncRParams T_R_PAREN {
 
-  
-  auto json_inner = llvm::json::Array{};
-  for(auto i = 0; i < func_RPara_num; i++){
-    json_inner.push_back(stak.back());
-    stak.pop_back();
-  }
-  auto name = stak.back().getAsObject()->get("value")->getAsString()->str();
+  llvm::json::Value funcRParams(stak.back());
   stak.pop_back();
+
+  // auto json_inner = llvm::json::Array{};
+  // for(int i = 0; i < func_RPara_num; i++){
+  //   bool lval2rval = lvalStack.top();
+  //   if(lval2rval){
+  //     auto rvalexp = stak.back();
+  //     json_inner.push_back(llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}});
+  //   }else{
+  //     auto rvalexp = stak.back();
+  //     json_inner.push_back(rvalexp);
+  //   }
+  //   stak.pop_back();
+  //   lvalStack.pop();
+  // }
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+
   stak.push_back(llvm::json::Object{{"kind","DeclRefExpr"}});
   auto DeclRefExpr =  stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{DeclRefExpr}}});
   auto ImplicitCastExpr = stak.back();
-
-  stak.back() = llvm::json::Object{{"kind", "CallExpr"},
-                                    {"name",name},
-                                    {"inner", llvm::json::Array{ImplicitCastExpr}}};
+  stak.back() = funcRParams;
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(auto i = func_RPara_num-1; i >= 0; i--){
-    array_inner->push_back(json_inner[i]);
-  }
+  array_inner->insert(array_inner->begin(),ImplicitCastExpr);
+  lvalStack.push(false);
+
+
+  // stak.back() = llvm::json::Object{{"kind", "CallExpr"},
+  //                                   {"name",name},
+  //                                   {"inner", llvm::json::Array{ImplicitCastExpr}}};
+  // auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  // for(int i = func_RPara_num-1; i >= 0; i--){
+  //   array_inner->push_back(json_inner[i]);
+  // }
 }|T_PLUS UnaryExp{
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+
   auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
-  {"opcode",""},
-  {"inner",llvm::json::Array{inner}}};
+  if(lval2rval){
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{inner}}};
+    inner = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","+"},
+    {"inner",llvm::json::Array{inner}}};
+  }else{
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","+"},
+    {"inner",llvm::json::Array{inner}}};
+  }
+  lvalStack.push(false);
 }|T_MINUS UnaryExp{
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+
   auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
-  {"opcode","-"},
-  {"inner",llvm::json::Array{inner}}};
+  if(lval2rval){
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{inner}}};
+    inner = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","-"},
+    {"inner",llvm::json::Array{inner}}};
+  }else{
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","-"},
+    {"inner",llvm::json::Array{inner}}};
+  }
+  lvalStack.push(false);
 }|T_EXCLAIM UnaryExp{
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+
   auto inner = stak.back();
-  stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
-  {"opcode","!"},
-  {"inner",llvm::json::Array{inner}}};
+  if(lval2rval){
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{inner}}};
+    inner = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","!"},
+    {"inner",llvm::json::Array{inner}}};
+  }else{
+    stak.back() = llvm::json::Object{{"kind", "UnaryOperator"},
+    {"opcode","!"},
+    {"inner",llvm::json::Array{inner}}};
+  }
+  lvalStack.push(false);
 };
 
 Number : T_NUMERIC_CONSTANT{
+  auto number = lexStack.back();
+  lexStack.pop_back();
+  stak.push_back(number);
   if(debug) llvm::outs()<<"T_NUMERIC_CONSTANT 2 number\n";
+
+  lvalStack.push(false);
 }
 
+
 FuncRParams : Exp{
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+  auto exp = stak.back();
+  stak.back() = llvm::json::Object{{"kind","CallExpr"},{"inner",llvm::json::Array{exp}}};
 
-  func_RPara_num = 1;
+  // func_RPara_num = 1;
 }| FuncRParams T_COMMA Exp{
+  bool lval2rval = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+  auto exp = stak.back();
+  stak.pop_back();
+  llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  array_inner->push_back(exp);
 
-  func_RPara_num ++;
+  // func_RPara_num ++;
 }
 
 
@@ -804,24 +1096,66 @@ UnaryExp{
 }|MulExp T_STAR UnaryExp{
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+
+  if(lval2rval2){
+    auto exp2 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+  }
   auto unary_exp = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto exp1 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+  }
   auto mul_exp = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","*"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+  lvalStack.push(false);
 }|MulExp T_SLASH UnaryExp{
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+
+  if(lval2rval2){
+    auto exp2 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+  }
   auto unary_exp = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto exp1 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+  }
   auto mul_exp = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","/"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+  lvalStack.push(false);
 }|MulExp T_PERCENT UnaryExp{
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+
+  if(lval2rval2){
+    auto exp2 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+  }
   auto unary_exp = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto exp1 = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+  }
   auto mul_exp = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","%"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+  lvalStack.push(false);
 }
 
 
@@ -830,16 +1164,44 @@ MulExp{
   if(debug) llvm::outs()<<"MulExp 2 AddExp\n";
 }| AddExp T_PLUS MulExp{
   if(debug) llvm::outs()<<"exp1 2 AddExp\n";
+
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","+"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }| AddExp T_MINUS MulExp{
   if(debug) llvm::outs()<<"exp2 2 AddExp\n";
+
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","-"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }
 
 RelExp:
@@ -847,62 +1209,170 @@ AddExp{
   if(debug) llvm::outs()<<"AddExp 2 RelExp\n";
 }| RelExp T_LESS AddExp{
   if(debug) llvm::outs()<<"exp1 2 RelExp\n";
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }| RelExp T_GREATER AddExp{
   if(debug) llvm::outs()<<"exp2 2 RelExp\n";
+
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
+
 }| RelExp T_LESSEQUAL AddExp{
   if(debug) llvm::outs()<<"exp3 2 RelExp\n";
+
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<="},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }| RelExp T_GREATEREQUAL AddExp{
   if(debug) llvm::outs()<<"exp4 2 RelExp\n";
+
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">="},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }
 
 EqExp:
 RelExp{
 
 }|EqExp T_EQUALEQUAL RelExp{
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","=="},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }|EqExp T_EXCLAIMEQUAL RelExp{
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","!="},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }
 
 LAndExp:
 EqExp{
 
 }|LAndExp T_AMPAMP EqExp{
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","&&"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }
 
 LOrExp: LAndExp{
 
 }|LOrExp T_PIPEPIPE LAndExp{
+  auto lval2rval2 = lvalStack.top();
+  lvalStack.pop();
+  auto lval2rval1 = lvalStack.top();
+  lvalStack.pop();
+  if(lval2rval2){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp2 = stak.back();
   stak.pop_back();
+  if(lval2rval1){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","||"},{"inner",llvm::json::Array{exp1,exp2}}};
+  lvalStack.push(false);
 }
 
 ConstExp: Exp{
