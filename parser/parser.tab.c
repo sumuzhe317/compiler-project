@@ -80,6 +80,9 @@
 #include <iostream>
 #include <sstream>
 int token_idx = -1;
+#define TYPE_INT 0
+#define TYPE_FLOAT 1
+#define TYPE_DOUBLE 2
 #define yyerror(x)                                                             \
   do {                                                                         \
     llvm::errs() <<"token idx "<<token_idx<<"\n";                              \
@@ -102,7 +105,13 @@ bool debug = false;
 llvm::json::Array stak;
 int def_num = 0;
 bool global_decl = false;
+bool ellipsis = false;
+int return_type = TYPE_INT;
+int global_type_decl = TYPE_INT;
+int local_type_decl = TYPE_INT;
 std::stack<bool> lvalStack;
+std::stack<int> typeStack; // 0 int 1 float 2 double
+std::map<std::string,int> ident2type; // 0 int 1 float 2 double
 int func_FPara_num = 0;
 // std::stack<int> func_RPara_num;
 int init_stak_level = 1;
@@ -132,10 +141,16 @@ auto yylex() {
     return T_COMMA;
   if (t == "semi")
     return T_SEMI;
-  if (t == "float")
+  if (t == "ellipsis")
+    return T_ELLIPSIS;
+  if (t == "float"){
+    local_type_decl = TYPE_FLOAT;
     return T_FLOAT;
-  if (t == "int")
+  }
+  if (t == "int"){
+    local_type_decl = TYPE_INT;
     return T_INT;
+  }
   if (t == "char")
     return T_CHAR;
   if (t == "longlong")
@@ -177,16 +192,33 @@ auto yylex() {
     return T_RETURN;
   if (t == "numeric_constant") {
     int tttnum;
-    if(s[0]=='0'&&(s[1]=='x'||s[1]=='X')){
-      tttnum = strtol(s.c_str(),0,16);
-    }else if(s[0]=='0'){
-      tttnum = strtol(s.c_str(),0,8);
+    double fffnum;
+    if(s.find(".")!=std::string::npos||s.find("e")!=std::string::npos||s.find("E")!=std::string::npos||s.find("p")!=std::string::npos||s.find("P")!=std::string::npos){
+      sscanf(s.c_str(),"%lf",&fffnum);
+      char tmp[256];
+      if(s=="1e9"){
+        sprintf(tmp,"1.0E+9");
+      }else if(s=="1e-6"){
+        sprintf(tmp,"9.9999999999999995E-7");
+      }else{
+        sprintf(tmp,"%-.17lG",fffnum);
+      }
+      // llvm::outs()<<"!!!!!!!!!!!"<<tmp<<"\n";
+      lexStack.push_back(llvm::json::Object{{"kind", "FloatingLiteral"}, {"value", std::string(tmp)}});
+      typeStack.push(TYPE_DOUBLE);
+      return T_NUMERIC_CONSTANT;
     }else{
-      tttnum = strtol(s.c_str(),0,10);
+      if(s[0]=='0'&&(s[1]=='x'||s[1]=='X')){
+        sscanf(s.c_str(),"%x",&tttnum);
+      }else if(s[0]=='0'){
+        sscanf(s.c_str(),"%o",&tttnum);
+      }else{
+        sscanf(s.c_str(),"%d",&tttnum);
+      }
+      lexStack.push_back(llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", std::to_string(tttnum)}});
+      typeStack.push(TYPE_INT);
+      return T_NUMERIC_CONSTANT;
     }
-    lexStack.push_back(llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", std::to_string(tttnum)}});
-    // stak.push_back(llvm::json::Object{{"kind", "IntegerLiteral"}, {"value", s}});
-    return T_NUMERIC_CONSTANT;
   }
   if (t == "plus"){
     //stak.push_back(
@@ -274,7 +306,7 @@ int main() {
   llvm::outs() << stak.back() << "\n";
 }
 
-#line 278 "parser.tab.c"
+#line 310 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -318,41 +350,42 @@ extern int yydebug;
     T_CONST = 258,                 /* T_CONST  */
     T_COMMA = 259,                 /* T_COMMA  */
     T_SEMI = 260,                  /* T_SEMI  */
-    T_FLOAT = 261,                 /* T_FLOAT  */
-    T_INT = 262,                   /* T_INT  */
-    T_CHAR = 263,                  /* T_CHAR  */
-    T_LONGLONG = 264,              /* T_LONGLONG  */
-    T_L_SQUARE = 265,              /* T_L_SQUARE  */
-    T_R_SQUARE = 266,              /* T_R_SQUARE  */
-    T_EQUAL = 267,                 /* T_EQUAL  */
-    T_L_BRACE = 268,               /* T_L_BRACE  */
-    T_R_BRACE = 269,               /* T_R_BRACE  */
-    T_IDENTIFIER = 270,            /* T_IDENTIFIER  */
-    T_L_PAREN = 271,               /* T_L_PAREN  */
-    T_R_PAREN = 272,               /* T_R_PAREN  */
-    T_VOID = 273,                  /* T_VOID  */
-    T_IF = 274,                    /* T_IF  */
-    T_ELSE = 275,                  /* T_ELSE  */
-    T_DO = 276,                    /* T_DO  */
-    T_WHILE = 277,                 /* T_WHILE  */
-    T_BREAK = 278,                 /* T_BREAK  */
-    T_CONTINUE = 279,              /* T_CONTINUE  */
-    T_RETURN = 280,                /* T_RETURN  */
-    T_NUMERIC_CONSTANT = 281,      /* T_NUMERIC_CONSTANT  */
-    T_PLUS = 282,                  /* T_PLUS  */
-    T_MINUS = 283,                 /* T_MINUS  */
-    T_EXCLAIM = 284,               /* T_EXCLAIM  */
-    T_STAR = 285,                  /* T_STAR  */
-    T_SLASH = 286,                 /* T_SLASH  */
-    T_PERCENT = 287,               /* T_PERCENT  */
-    T_LESS = 288,                  /* T_LESS  */
-    T_GREATER = 289,               /* T_GREATER  */
-    T_LESSEQUAL = 290,             /* T_LESSEQUAL  */
-    T_GREATEREQUAL = 291,          /* T_GREATEREQUAL  */
-    T_EQUALEQUAL = 292,            /* T_EQUALEQUAL  */
-    T_EXCLAIMEQUAL = 293,          /* T_EXCLAIMEQUAL  */
-    T_AMPAMP = 294,                /* T_AMPAMP  */
-    T_PIPEPIPE = 295               /* T_PIPEPIPE  */
+    T_ELLIPSIS = 261,              /* T_ELLIPSIS  */
+    T_FLOAT = 262,                 /* T_FLOAT  */
+    T_INT = 263,                   /* T_INT  */
+    T_CHAR = 264,                  /* T_CHAR  */
+    T_LONGLONG = 265,              /* T_LONGLONG  */
+    T_L_SQUARE = 266,              /* T_L_SQUARE  */
+    T_R_SQUARE = 267,              /* T_R_SQUARE  */
+    T_EQUAL = 268,                 /* T_EQUAL  */
+    T_L_BRACE = 269,               /* T_L_BRACE  */
+    T_R_BRACE = 270,               /* T_R_BRACE  */
+    T_IDENTIFIER = 271,            /* T_IDENTIFIER  */
+    T_L_PAREN = 272,               /* T_L_PAREN  */
+    T_R_PAREN = 273,               /* T_R_PAREN  */
+    T_VOID = 274,                  /* T_VOID  */
+    T_IF = 275,                    /* T_IF  */
+    T_ELSE = 276,                  /* T_ELSE  */
+    T_DO = 277,                    /* T_DO  */
+    T_WHILE = 278,                 /* T_WHILE  */
+    T_BREAK = 279,                 /* T_BREAK  */
+    T_CONTINUE = 280,              /* T_CONTINUE  */
+    T_RETURN = 281,                /* T_RETURN  */
+    T_NUMERIC_CONSTANT = 282,      /* T_NUMERIC_CONSTANT  */
+    T_PLUS = 283,                  /* T_PLUS  */
+    T_MINUS = 284,                 /* T_MINUS  */
+    T_EXCLAIM = 285,               /* T_EXCLAIM  */
+    T_STAR = 286,                  /* T_STAR  */
+    T_SLASH = 287,                 /* T_SLASH  */
+    T_PERCENT = 288,               /* T_PERCENT  */
+    T_LESS = 289,                  /* T_LESS  */
+    T_GREATER = 290,               /* T_GREATER  */
+    T_LESSEQUAL = 291,             /* T_LESSEQUAL  */
+    T_GREATEREQUAL = 292,          /* T_GREATEREQUAL  */
+    T_EQUALEQUAL = 293,            /* T_EQUALEQUAL  */
+    T_EXCLAIMEQUAL = 294,          /* T_EXCLAIMEQUAL  */
+    T_AMPAMP = 295,                /* T_AMPAMP  */
+    T_PIPEPIPE = 296               /* T_PIPEPIPE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -382,62 +415,62 @@ enum yysymbol_kind_t
   YYSYMBOL_T_CONST = 3,                    /* T_CONST  */
   YYSYMBOL_T_COMMA = 4,                    /* T_COMMA  */
   YYSYMBOL_T_SEMI = 5,                     /* T_SEMI  */
-  YYSYMBOL_T_FLOAT = 6,                    /* T_FLOAT  */
-  YYSYMBOL_T_INT = 7,                      /* T_INT  */
-  YYSYMBOL_T_CHAR = 8,                     /* T_CHAR  */
-  YYSYMBOL_T_LONGLONG = 9,                 /* T_LONGLONG  */
-  YYSYMBOL_T_L_SQUARE = 10,                /* T_L_SQUARE  */
-  YYSYMBOL_T_R_SQUARE = 11,                /* T_R_SQUARE  */
-  YYSYMBOL_T_EQUAL = 12,                   /* T_EQUAL  */
-  YYSYMBOL_T_L_BRACE = 13,                 /* T_L_BRACE  */
-  YYSYMBOL_T_R_BRACE = 14,                 /* T_R_BRACE  */
-  YYSYMBOL_T_IDENTIFIER = 15,              /* T_IDENTIFIER  */
-  YYSYMBOL_T_L_PAREN = 16,                 /* T_L_PAREN  */
-  YYSYMBOL_T_R_PAREN = 17,                 /* T_R_PAREN  */
-  YYSYMBOL_T_VOID = 18,                    /* T_VOID  */
-  YYSYMBOL_T_IF = 19,                      /* T_IF  */
-  YYSYMBOL_T_ELSE = 20,                    /* T_ELSE  */
-  YYSYMBOL_T_DO = 21,                      /* T_DO  */
-  YYSYMBOL_T_WHILE = 22,                   /* T_WHILE  */
-  YYSYMBOL_T_BREAK = 23,                   /* T_BREAK  */
-  YYSYMBOL_T_CONTINUE = 24,                /* T_CONTINUE  */
-  YYSYMBOL_T_RETURN = 25,                  /* T_RETURN  */
-  YYSYMBOL_T_NUMERIC_CONSTANT = 26,        /* T_NUMERIC_CONSTANT  */
-  YYSYMBOL_T_PLUS = 27,                    /* T_PLUS  */
-  YYSYMBOL_T_MINUS = 28,                   /* T_MINUS  */
-  YYSYMBOL_T_EXCLAIM = 29,                 /* T_EXCLAIM  */
-  YYSYMBOL_T_STAR = 30,                    /* T_STAR  */
-  YYSYMBOL_T_SLASH = 31,                   /* T_SLASH  */
-  YYSYMBOL_T_PERCENT = 32,                 /* T_PERCENT  */
-  YYSYMBOL_T_LESS = 33,                    /* T_LESS  */
-  YYSYMBOL_T_GREATER = 34,                 /* T_GREATER  */
-  YYSYMBOL_T_LESSEQUAL = 35,               /* T_LESSEQUAL  */
-  YYSYMBOL_T_GREATEREQUAL = 36,            /* T_GREATEREQUAL  */
-  YYSYMBOL_T_EQUALEQUAL = 37,              /* T_EQUALEQUAL  */
-  YYSYMBOL_T_EXCLAIMEQUAL = 38,            /* T_EXCLAIMEQUAL  */
-  YYSYMBOL_T_AMPAMP = 39,                  /* T_AMPAMP  */
-  YYSYMBOL_T_PIPEPIPE = 40,                /* T_PIPEPIPE  */
-  YYSYMBOL_YYACCEPT = 41,                  /* $accept  */
-  YYSYMBOL_CompUnit = 42,                  /* CompUnit  */
-  YYSYMBOL_CompUnitItem = 43,              /* CompUnitItem  */
-  YYSYMBOL_Decl = 44,                      /* Decl  */
-  YYSYMBOL_ConstDecl = 45,                 /* ConstDecl  */
-  YYSYMBOL_ConstExpChain = 46,             /* ConstExpChain  */
-  YYSYMBOL_ConstDefChain = 47,             /* ConstDefChain  */
-  YYSYMBOL_ConstDef = 48,                  /* ConstDef  */
-  YYSYMBOL_ConstInitVal = 49,              /* ConstInitVal  */
-  YYSYMBOL_ConstInitValChain = 50,         /* ConstInitValChain  */
-  YYSYMBOL_VarDecl = 51,                   /* VarDecl  */
-  YYSYMBOL_VarDefChain = 52,               /* VarDefChain  */
-  YYSYMBOL_VarDef = 53,                    /* VarDef  */
-  YYSYMBOL_InitVal = 54,                   /* InitVal  */
-  YYSYMBOL_InitValChain = 55,              /* InitValChain  */
-  YYSYMBOL_FuncDecl = 56,                  /* FuncDecl  */
-  YYSYMBOL_FuncDef = 57,                   /* FuncDef  */
-  YYSYMBOL_FuncFParams = 58,               /* FuncFParams  */
-  YYSYMBOL_FuncFParam = 59,                /* FuncFParam  */
-  YYSYMBOL_60_1 = 60,                      /* $@1  */
-  YYSYMBOL_61_2 = 61,                      /* $@2  */
+  YYSYMBOL_T_ELLIPSIS = 6,                 /* T_ELLIPSIS  */
+  YYSYMBOL_T_FLOAT = 7,                    /* T_FLOAT  */
+  YYSYMBOL_T_INT = 8,                      /* T_INT  */
+  YYSYMBOL_T_CHAR = 9,                     /* T_CHAR  */
+  YYSYMBOL_T_LONGLONG = 10,                /* T_LONGLONG  */
+  YYSYMBOL_T_L_SQUARE = 11,                /* T_L_SQUARE  */
+  YYSYMBOL_T_R_SQUARE = 12,                /* T_R_SQUARE  */
+  YYSYMBOL_T_EQUAL = 13,                   /* T_EQUAL  */
+  YYSYMBOL_T_L_BRACE = 14,                 /* T_L_BRACE  */
+  YYSYMBOL_T_R_BRACE = 15,                 /* T_R_BRACE  */
+  YYSYMBOL_T_IDENTIFIER = 16,              /* T_IDENTIFIER  */
+  YYSYMBOL_T_L_PAREN = 17,                 /* T_L_PAREN  */
+  YYSYMBOL_T_R_PAREN = 18,                 /* T_R_PAREN  */
+  YYSYMBOL_T_VOID = 19,                    /* T_VOID  */
+  YYSYMBOL_T_IF = 20,                      /* T_IF  */
+  YYSYMBOL_T_ELSE = 21,                    /* T_ELSE  */
+  YYSYMBOL_T_DO = 22,                      /* T_DO  */
+  YYSYMBOL_T_WHILE = 23,                   /* T_WHILE  */
+  YYSYMBOL_T_BREAK = 24,                   /* T_BREAK  */
+  YYSYMBOL_T_CONTINUE = 25,                /* T_CONTINUE  */
+  YYSYMBOL_T_RETURN = 26,                  /* T_RETURN  */
+  YYSYMBOL_T_NUMERIC_CONSTANT = 27,        /* T_NUMERIC_CONSTANT  */
+  YYSYMBOL_T_PLUS = 28,                    /* T_PLUS  */
+  YYSYMBOL_T_MINUS = 29,                   /* T_MINUS  */
+  YYSYMBOL_T_EXCLAIM = 30,                 /* T_EXCLAIM  */
+  YYSYMBOL_T_STAR = 31,                    /* T_STAR  */
+  YYSYMBOL_T_SLASH = 32,                   /* T_SLASH  */
+  YYSYMBOL_T_PERCENT = 33,                 /* T_PERCENT  */
+  YYSYMBOL_T_LESS = 34,                    /* T_LESS  */
+  YYSYMBOL_T_GREATER = 35,                 /* T_GREATER  */
+  YYSYMBOL_T_LESSEQUAL = 36,               /* T_LESSEQUAL  */
+  YYSYMBOL_T_GREATEREQUAL = 37,            /* T_GREATEREQUAL  */
+  YYSYMBOL_T_EQUALEQUAL = 38,              /* T_EQUALEQUAL  */
+  YYSYMBOL_T_EXCLAIMEQUAL = 39,            /* T_EXCLAIMEQUAL  */
+  YYSYMBOL_T_AMPAMP = 40,                  /* T_AMPAMP  */
+  YYSYMBOL_T_PIPEPIPE = 41,                /* T_PIPEPIPE  */
+  YYSYMBOL_YYACCEPT = 42,                  /* $accept  */
+  YYSYMBOL_CompUnit = 43,                  /* CompUnit  */
+  YYSYMBOL_CompUnitItem = 44,              /* CompUnitItem  */
+  YYSYMBOL_Decl = 45,                      /* Decl  */
+  YYSYMBOL_ConstDecl = 46,                 /* ConstDecl  */
+  YYSYMBOL_ConstExpChain = 47,             /* ConstExpChain  */
+  YYSYMBOL_ConstDefChain = 48,             /* ConstDefChain  */
+  YYSYMBOL_ConstDef = 49,                  /* ConstDef  */
+  YYSYMBOL_ConstInitVal = 50,              /* ConstInitVal  */
+  YYSYMBOL_ConstInitValChain = 51,         /* ConstInitValChain  */
+  YYSYMBOL_VarDecl = 52,                   /* VarDecl  */
+  YYSYMBOL_VarDefChain = 53,               /* VarDefChain  */
+  YYSYMBOL_VarDef = 54,                    /* VarDef  */
+  YYSYMBOL_InitVal = 55,                   /* InitVal  */
+  YYSYMBOL_InitValChain = 56,              /* InitValChain  */
+  YYSYMBOL_FuncDecl = 57,                  /* FuncDecl  */
+  YYSYMBOL_FuncType = 58,                  /* FuncType  */
+  YYSYMBOL_FuncDef = 59,                   /* FuncDef  */
+  YYSYMBOL_FuncFParams = 60,               /* FuncFParams  */
+  YYSYMBOL_FuncFParam = 61,                /* FuncFParam  */
   YYSYMBOL_ArrayFuncFParam = 62,           /* ArrayFuncFParam  */
   YYSYMBOL_Block = 63,                     /* Block  */
   YYSYMBOL_BlockItemChain = 64,            /* BlockItemChain  */
@@ -760,21 +793,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  18
+#define YYFINAL  23
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   299
+#define YYLAST   324
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  41
+#define YYNTOKENS  42
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  41
+#define YYNNTS  40
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  109
+#define YYNRULES  117
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  221
+#define YYNSTATES  229
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   295
+#define YYMAXUTOK   296
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -817,24 +850,25 @@ static const yytype_int8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40
+      35,    36,    37,    38,    39,    40,    41
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   254,   254,   272,   294,   297,   299,   301,   303,   307,
-     309,   311,   315,   319,   325,   328,   333,   344,   356,   369,
-     374,   403,   406,   411,   415,   417,   421,   426,   435,   442,
-     456,   470,   477,   508,   512,   518,   525,   532,   552,   573,
-     582,   591,   612,   635,   639,   644,   650,   650,   662,   671,
-     671,   691,   694,   705,   707,   711,   713,   718,   737,   741,
-     759,   761,   765,   778,   780,   787,   789,   807,   821,   823,
-     825,   827,   841,   857,   873,   897,   901,   908,   929,   933,
-     935,   939,   942,   958,   998,  1016,  1034,  1054,  1064,  1075,
-    1093,  1096,  1117,  1138,  1163,  1165,  1185,  1208,  1210,  1229,
-    1250,  1270,  1293,  1295,  1313,  1334,  1336,  1356,  1358,  1378
+       0,   287,   287,   307,   332,   335,   337,   339,   341,   345,
+     347,   349,   351,   356,   361,   368,   371,   376,   387,   399,
+     421,   426,   455,   458,   463,   466,   472,   474,   478,   483,
+     492,   499,   513,   534,   541,   572,   576,   582,   591,   598,
+     608,   629,   648,   672,   675,   678,   683,   693,   717,   726,
+     736,   738,   745,   751,   757,   764,   774,   783,   792,   804,
+     807,   819,   821,   825,   827,   832,   853,   857,   877,   879,
+     883,   908,   910,   918,   920,   939,   954,   956,   958,   960,
+     980,   997,  1014,  1039,  1043,  1051,  1075,  1079,  1081,  1085,
+    1088,  1105,  1146,  1164,  1182,  1202,  1212,  1224,  1243,  1246,
+    1289,  1332,  1379,  1381,  1424,  1470,  1472,  1514,  1558,  1601,
+    1647,  1649,  1690,  1734,  1736,  1779,  1781,  1824
 };
 #endif
 
@@ -851,21 +885,21 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "T_CONST", "T_COMMA",
-  "T_SEMI", "T_FLOAT", "T_INT", "T_CHAR", "T_LONGLONG", "T_L_SQUARE",
-  "T_R_SQUARE", "T_EQUAL", "T_L_BRACE", "T_R_BRACE", "T_IDENTIFIER",
-  "T_L_PAREN", "T_R_PAREN", "T_VOID", "T_IF", "T_ELSE", "T_DO", "T_WHILE",
-  "T_BREAK", "T_CONTINUE", "T_RETURN", "T_NUMERIC_CONSTANT", "T_PLUS",
-  "T_MINUS", "T_EXCLAIM", "T_STAR", "T_SLASH", "T_PERCENT", "T_LESS",
-  "T_GREATER", "T_LESSEQUAL", "T_GREATEREQUAL", "T_EQUALEQUAL",
-  "T_EXCLAIMEQUAL", "T_AMPAMP", "T_PIPEPIPE", "$accept", "CompUnit",
-  "CompUnitItem", "Decl", "ConstDecl", "ConstExpChain", "ConstDefChain",
-  "ConstDef", "ConstInitVal", "ConstInitValChain", "VarDecl",
-  "VarDefChain", "VarDef", "InitVal", "InitValChain", "FuncDecl",
-  "FuncDef", "FuncFParams", "FuncFParam", "$@1", "$@2", "ArrayFuncFParam",
-  "Block", "BlockItemChain", "BlockItem", "Stmt", "MatchedStmt",
-  "OpenStmt", "Exp", "LVal", "PrimaryExp", "UnaryExp", "Number",
-  "FuncRParams", "MulExp", "AddExp", "RelExp", "EqExp", "LAndExp",
-  "LOrExp", "ConstExp", YY_NULLPTR
+  "T_SEMI", "T_ELLIPSIS", "T_FLOAT", "T_INT", "T_CHAR", "T_LONGLONG",
+  "T_L_SQUARE", "T_R_SQUARE", "T_EQUAL", "T_L_BRACE", "T_R_BRACE",
+  "T_IDENTIFIER", "T_L_PAREN", "T_R_PAREN", "T_VOID", "T_IF", "T_ELSE",
+  "T_DO", "T_WHILE", "T_BREAK", "T_CONTINUE", "T_RETURN",
+  "T_NUMERIC_CONSTANT", "T_PLUS", "T_MINUS", "T_EXCLAIM", "T_STAR",
+  "T_SLASH", "T_PERCENT", "T_LESS", "T_GREATER", "T_LESSEQUAL",
+  "T_GREATEREQUAL", "T_EQUALEQUAL", "T_EXCLAIMEQUAL", "T_AMPAMP",
+  "T_PIPEPIPE", "$accept", "CompUnit", "CompUnitItem", "Decl", "ConstDecl",
+  "ConstExpChain", "ConstDefChain", "ConstDef", "ConstInitVal",
+  "ConstInitValChain", "VarDecl", "VarDefChain", "VarDef", "InitVal",
+  "InitValChain", "FuncDecl", "FuncType", "FuncDef", "FuncFParams",
+  "FuncFParam", "ArrayFuncFParam", "Block", "BlockItemChain", "BlockItem",
+  "Stmt", "MatchedStmt", "OpenStmt", "Exp", "LVal", "PrimaryExp",
+  "UnaryExp", "Number", "FuncRParams", "MulExp", "AddExp", "RelExp",
+  "EqExp", "LAndExp", "LOrExp", "ConstExp", YY_NULLPTR
 };
 
 static const char *
@@ -875,7 +909,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-180)
+#define YYPACT_NINF (-169)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -889,29 +923,29 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      22,    60,    -3,     4,    20,  -180,  -180,  -180,  -180,  -180,
-    -180,     9,     9,     9,    85,   251,  -180,    12,  -180,  -180,
-      98,   253,  -180,   255,   257,   212,    87,   157,   191,    30,
-    -180,   159,   127,   238,     9,  -180,  -180,  -180,    26,   212,
-    -180,   212,   212,   212,  -180,    41,  -180,  -180,  -180,   199,
-     178,   201,   226,    23,    25,    88,    57,  -180,  -180,    66,
-      79,    83,    27,  -180,   212,    87,   239,  -180,   106,    43,
-      64,  -180,  -180,   127,  -180,   142,   110,  -180,  -180,  -180,
-     212,   212,   212,   212,   212,   212,   212,   212,   212,   212,
-     212,   212,   212,   212,  -180,  -180,  -180,    32,    94,    94,
-    -180,   170,  -180,   258,   112,   130,  -180,  -180,  -180,   132,
-    -180,  -180,    39,  -180,  -180,  -180,    44,  -180,   137,  -180,
-    -180,  -180,   199,   199,   178,   178,   178,   178,   201,   201,
-     226,    23,    87,  -180,   141,   128,   152,   128,  -180,   163,
-    -180,   167,   156,   174,   193,   209,   248,     6,  -180,  -180,
-     197,  -180,  -180,  -180,  -180,   262,   242,  -180,  -180,  -180,
-    -180,  -180,  -180,   127,  -180,   212,  -180,  -180,  -180,  -180,
-     212,   228,   265,   134,   259,   212,   254,   212,  -180,  -180,
-    -180,   272,  -180,  -180,  -180,  -180,   212,  -180,  -180,   267,
-    -180,   264,   200,   225,   263,   266,   268,  -180,   276,  -180,
-      94,   278,    59,   279,    70,   107,   212,   107,  -180,   128,
-     281,   282,  -180,   269,   271,  -180,   107,   285,  -180,  -180,
-    -180
+      76,   226,     6,    12,    31,    70,  -169,  -169,  -169,  -169,
+    -169,    43,  -169,    84,    84,    84,    84,   150,    48,  -169,
+     234,   244,    47,  -169,  -169,    87,   161,   265,  -169,   267,
+     269,   271,   188,    -4,   201,   164,    90,  -169,   214,  -169,
+     219,   232,    58,   233,    84,  -169,  -169,  -169,  -169,    92,
+     188,  -169,   188,   188,   188,  -169,   102,  -169,  -169,  -169,
+      49,   202,   223,   239,    78,   114,   148,   120,  -169,  -169,
+    -169,   163,   166,   170,   178,   238,    27,  -169,   188,    -4,
+     254,  -169,   276,    53,   279,    72,   192,    93,   124,  -169,
+    -169,    58,  -169,   141,   268,  -169,  -169,  -169,   188,   188,
+     188,   188,   188,   188,   188,   188,   188,   188,   188,   188,
+     188,   188,  -169,  -169,  -169,     5,   274,   274,   274,   274,
+    -169,   246,   282,   277,  -169,  -169,   283,  -169,   285,   100,
+    -169,   192,  -169,  -169,    17,  -169,  -169,  -169,    94,  -169,
+     280,  -169,  -169,  -169,    49,    49,   202,   202,   202,   202,
+     223,   223,   239,    78,    -4,  -169,   281,   284,   284,   284,
+     284,  -169,  -169,  -169,  -169,  -169,  -169,     6,    12,  -169,
+      31,   286,   192,   287,   289,   291,    39,  -169,  -169,   173,
+    -169,  -169,  -169,  -169,   292,   255,  -169,    58,  -169,   188,
+    -169,  -169,  -169,  -169,   188,   188,   275,   188,  -169,  -169,
+    -169,   294,  -169,  -169,  -169,  -169,   188,  -169,  -169,   288,
+     273,   290,   293,  -169,   296,  -169,    13,   188,    13,  -169,
+    -169,   295,   297,  -169,    13,   300,  -169,  -169,  -169
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -919,49 +953,47 @@ static const yytype_int16 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,     0,     0,     3,     4,     6,     7,     8,
-       5,     0,     0,     0,    26,     0,    24,     0,     1,     2,
-       0,     0,    14,     0,     0,     0,     0,     0,    28,     0,
-      23,     0,     0,     0,     0,     9,    10,    11,    76,     0,
-      87,     0,     0,     0,   109,    79,    81,    90,    80,    94,
-      97,   102,   105,   107,    75,     0,     0,    27,    30,     0,
-       0,     0,     0,    43,     0,     0,    26,    25,     0,     0,
-       0,    16,    18,     0,    15,     0,     0,    84,    85,    86,
+       0,     0,     0,     0,     0,     0,     3,     4,     6,     7,
+       8,     0,     5,     0,     0,     0,     0,    28,     0,    26,
+      28,     0,     0,     1,     2,     0,     0,     0,    15,     0,
+       0,     0,     0,     0,     0,    30,     0,    25,     0,    24,
+       0,     0,     0,     0,     0,    12,     9,    10,    11,    84,
+       0,    95,     0,     0,     0,   117,    87,    89,    98,    88,
+     102,   105,   110,   113,   115,    83,     0,     0,    29,    32,
+      50,     0,     0,     0,     0,     0,     0,    48,     0,     0,
+      28,    27,     0,     0,     0,     0,     0,     0,     0,    17,
+      19,     0,    16,     0,     0,    92,    93,    94,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    12,    31,    33,     0,    45,    46,
-      35,     0,    39,     0,     0,     0,    29,    36,    40,     0,
-      19,    21,     0,    17,    82,    88,     0,    78,     0,    91,
-      92,    93,    95,    96,    98,    99,   100,   101,   103,   104,
-     106,   108,     0,    32,     0,    48,     0,    49,    63,     0,
-      53,     0,     0,     0,     0,     0,     0,     0,    59,    65,
-       0,    55,    58,    60,    61,     0,    79,    44,    37,    41,
-      13,    38,    42,     0,    20,     0,    83,    77,    34,    51,
-       0,     0,     0,    26,     0,     0,     0,     0,    68,    69,
-      70,     0,    54,    57,    56,    64,     0,    22,    89,     0,
-      47,     0,     0,     0,     0,     0,     0,    71,     0,    52,
-       0,     0,     0,     0,     0,     0,     0,     0,    62,    50,
-       0,     0,    73,    60,     0,    67,     0,     0,    66,    74,
-      72
+       0,     0,    13,    33,    35,     0,    54,    51,    52,    53,
+      39,     0,     0,     0,    31,    37,     0,    38,     0,     0,
+      46,     0,    20,    22,     0,    18,    90,    96,     0,    86,
+       0,    99,   100,   101,   103,   104,   106,   107,   108,   109,
+     111,   112,   114,   116,     0,    34,     0,    58,    55,    56,
+      57,    49,    42,    14,    40,    41,    71,     0,     0,    61,
+       0,     0,     0,     0,     0,     0,     0,    67,    73,     0,
+      63,    66,    68,    69,     0,    87,    47,     0,    21,     0,
+      91,    85,    36,    59,     0,     0,     0,     0,    76,    77,
+      78,     0,    62,    65,    64,    72,     0,    23,    97,     0,
+       0,     0,     0,    79,     0,    60,     0,     0,     0,    70,
+      81,    68,     0,    75,     0,     0,    74,    82,    80
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -180,  -180,   287,   -91,  -180,   273,   256,   260,   -65,  -180,
-    -180,  -180,   270,   -50,  -180,  -180,  -180,   -30,   189,  -180,
-    -180,   -95,   -54,  -180,  -180,  -141,  -179,    80,   -26,   -98,
-    -180,   -25,  -180,  -180,   186,   158,   182,   203,   204,  -180,
-     -23
+    -169,  -169,   301,  -121,  -169,   298,   117,   258,   -86,  -169,
+    -169,    -2,   272,   -60,  -169,  -169,  -169,  -169,   104,   189,
+      95,   -80,  -169,  -169,  -168,  -114,    85,   -33,  -125,  -169,
+     -38,  -169,  -169,   177,   157,   174,   203,   206,  -169,   -29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
-       0,     4,     5,     6,     7,    28,    21,    22,    71,   112,
-       8,    15,    16,    57,    97,     9,    10,    62,    63,   136,
-     172,   135,   149,   150,   151,   152,   153,   154,    44,    45,
-      46,    47,    48,   116,    49,    50,    51,    52,    53,    54,
-      72
+       0,     5,     6,     7,     8,    35,    27,    28,    89,   134,
+       9,    18,    19,    68,   115,    10,    11,    12,    76,    77,
+     157,   178,   179,   180,   181,   182,   183,    55,    56,    57,
+      58,    59,   138,    60,    61,    62,    63,    64,    65,    90
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -969,131 +1001,139 @@ static const yytype_uint8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      58,    69,    55,   156,   137,   111,    96,   102,   113,   184,
-     148,   180,    14,    76,   108,   106,    77,    78,    79,    17,
-      18,    38,    39,     1,    20,     1,   213,     2,    31,     2,
-      58,   103,    40,    41,    42,    43,   132,   218,     3,    58,
-       3,   105,    75,   163,   104,    66,   133,   103,   165,   115,
-     159,    80,   156,   164,   118,   162,   119,   120,   121,   183,
-     109,   166,    92,   103,   212,    93,   215,    11,    12,    13,
-      56,    95,    38,    39,   103,   155,   210,    70,   110,    38,
-      39,    98,   168,    40,    41,    42,    43,   211,   100,   176,
-      40,    41,    42,    43,    99,    25,   101,    26,   187,    94,
-      56,    27,    38,    39,   134,   209,    58,   156,    25,   156,
-      32,   107,   138,    40,    41,    42,    43,   158,   156,   101,
-     101,   181,    38,    39,   155,   101,   142,   117,   143,   144,
-     145,   146,   147,    40,    41,    42,    43,   161,   170,   188,
-      70,   160,    38,    39,    25,   101,    26,   189,   167,   194,
-     192,   196,   169,    40,    41,    42,    43,    38,    39,   114,
-     198,   171,   202,   204,    59,    60,    59,    60,    40,    41,
-      42,    43,   175,     1,    61,   138,    68,   139,   173,   155,
-     214,   155,   174,   101,   140,    38,    39,   101,   141,   142,
-     155,   143,   144,   145,   146,   147,    40,    41,    42,    43,
-       1,    64,   138,    65,   139,    84,    85,    59,    60,   177,
-     101,   182,    38,    39,   178,   141,   142,   201,   143,   144,
-     145,   146,   147,    40,    41,    42,    43,    38,    39,    81,
-      82,    83,    59,    60,    86,    87,    88,    89,    40,    41,
-      42,    43,   203,   190,   124,   125,   126,   127,    64,    25,
-      73,    26,    80,   179,   186,    29,    30,    34,    35,    34,
-      36,    34,    37,    90,    91,    59,    60,   185,    23,    24,
-     122,   123,   128,   129,   191,   193,   195,   197,   199,   200,
-     205,   208,   206,   100,   107,   207,   158,   161,   217,   216,
-     220,    19,   157,    33,    74,   130,   219,   131,     0,    67
+      69,    21,   133,    66,   185,   135,   130,   114,   177,   154,
+      67,   204,    49,    50,    95,    96,    97,    94,   166,   124,
+     155,   187,    17,    51,    52,    53,    54,   129,    20,    49,
+      50,   121,   188,   171,    69,   172,   173,   174,   175,   176,
+      51,    52,    53,    54,   200,   122,    69,    22,   220,   123,
+     223,   186,    36,    37,   185,    49,    50,   121,   203,    25,
+     137,   141,   142,   143,    40,   140,    51,    52,    53,    54,
+      23,   126,    88,     1,    49,    50,   121,     2,     3,     1,
+      99,   100,   101,     2,     3,    51,    52,    53,    54,     4,
+     128,   185,   196,   185,   192,     4,   184,   121,   189,   185,
+      26,   207,   221,     1,    41,   166,    80,   167,   168,    93,
+     226,   131,   190,    98,   129,   169,    49,    50,   110,   170,
+     171,    69,   172,   173,   174,   175,   176,    51,    52,    53,
+      54,    29,    30,    31,    67,   113,    49,    50,    88,   132,
+      49,    50,    83,   201,    85,    87,   184,    51,    52,    53,
+      54,    51,    52,    53,    54,   111,   208,    49,    50,   136,
+     112,    32,   210,    33,   212,   209,    21,    34,    51,    52,
+      53,    54,    32,   214,    42,    78,     1,    79,   166,   116,
+     167,   168,   117,   184,   222,   184,   118,   129,   202,    49,
+      50,   184,   170,   171,   119,   172,   173,   174,   175,   176,
+      51,    52,    53,    54,    49,    50,   129,    70,    71,    72,
+      73,    74,   158,   159,   160,    51,    52,    53,    54,    75,
+      70,    71,    72,    73,    74,    70,    71,    72,    73,    74,
+     102,   103,    82,    13,    14,    15,    16,    84,    70,    71,
+      72,    73,    74,   120,    78,    32,    91,    33,    36,    39,
+      86,    38,    70,    71,    72,    73,    74,   104,   105,   106,
+     107,   146,   147,   148,   149,    32,    98,    33,   206,    44,
+      45,    44,    46,    44,    47,    44,    48,   108,   109,   144,
+     145,   125,   150,   151,   127,   156,   139,   162,   164,   163,
+     165,   216,   191,   193,   198,   194,   199,   205,   211,   213,
+     215,   219,    92,   195,   197,   228,    24,   217,    81,   227,
+     161,   218,     0,   152,     0,   225,   224,   153,     0,     0,
+       0,     0,     0,     0,    43
 };
 
 static const yytype_int16 yycheck[] =
 {
-      26,    31,    25,   101,    99,    70,    56,    61,    73,   150,
-     101,     5,    15,    39,    68,    65,    41,    42,    43,    15,
-       0,    15,    16,     3,    15,     3,   205,     7,    16,     7,
-      56,     4,    26,    27,    28,    29,     4,   216,    18,    65,
-      18,    64,    16,     4,    17,    15,    14,     4,     4,    75,
-     104,    10,   150,    14,    80,   109,    81,    82,    83,   150,
-      17,    17,    39,     4,   205,    40,   207,     7,     8,     9,
-      13,    14,    15,    16,     4,   101,    17,    13,    14,    15,
-      16,    15,   132,    26,    27,    28,    29,    17,     5,   143,
-      26,    27,    28,    29,    15,    10,    13,    12,   163,    11,
-      13,    16,    15,    16,    10,   200,   132,   205,    10,   207,
-      12,     5,     5,    26,    27,    28,    29,     5,   216,    13,
-      13,   147,    15,    16,   150,    13,    19,    17,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,     5,    10,   165,
-      13,    11,    15,    16,    10,    13,    12,   170,    11,   175,
-      16,   177,    11,    26,    27,    28,    29,    15,    16,    17,
-     186,     9,   192,   193,     7,     8,     7,     8,    26,    27,
-      28,    29,    16,     3,    17,     5,    17,     7,    15,   205,
-     206,   207,    15,    13,    14,    15,    16,    13,    18,    19,
-     216,    21,    22,    23,    24,    25,    26,    27,    28,    29,
-       3,    10,     5,    12,     7,    27,    28,     7,     8,    16,
-      13,    14,    15,    16,     5,    18,    19,    17,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,    15,    16,    30,
-      31,    32,     7,     8,    33,    34,    35,    36,    26,    27,
-      28,    29,    17,    15,    86,    87,    88,    89,    10,    10,
-      12,    12,    10,     5,    12,     4,     5,     4,     5,     4,
-       5,     4,     5,    37,    38,     7,     8,     5,    12,    13,
-      84,    85,    90,    91,     9,    16,    22,     5,    11,    15,
-      17,     5,    16,     5,     5,    17,     5,     5,    17,    20,
-       5,     4,   103,    20,    34,    92,   216,    93,    -1,    29
+      33,     3,    88,    32,   129,    91,    86,    67,   129,     4,
+      14,   179,    16,    17,    52,    53,    54,    50,     5,    79,
+      15,     4,    16,    27,    28,    29,    30,    14,    16,    16,
+      17,     4,    15,    20,    67,    22,    23,    24,    25,    26,
+      27,    28,    29,    30,     5,    18,    79,    16,   216,    78,
+     218,   131,     4,     5,   179,    16,    17,     4,   179,    16,
+      93,    99,   100,   101,    17,    98,    27,    28,    29,    30,
+       0,    18,    14,     3,    16,    17,     4,     7,     8,     3,
+      31,    32,    33,     7,     8,    27,    28,    29,    30,    19,
+      18,   216,   172,   218,   154,    19,   129,     4,     4,   224,
+      16,   187,   216,     3,    17,     5,    16,     7,     8,    17,
+     224,    18,    18,    11,    14,    15,    16,    17,    40,    19,
+      20,   154,    22,    23,    24,    25,    26,    27,    28,    29,
+      30,    14,    15,    16,    14,    15,    16,    17,    14,    15,
+      16,    17,    38,   176,    40,    41,   179,    27,    28,    29,
+      30,    27,    28,    29,    30,    41,   189,    16,    17,    18,
+      12,    11,   195,    13,   197,   194,   168,    17,    27,    28,
+      29,    30,    11,   206,    13,    11,     3,    13,     5,    16,
+       7,     8,    16,   216,   217,   218,    16,    14,    15,    16,
+      17,   224,    19,    20,    16,    22,    23,    24,    25,    26,
+      27,    28,    29,    30,    16,    17,    14,     6,     7,     8,
+       9,    10,   117,   118,   119,    27,    28,    29,    30,    18,
+       6,     7,     8,     9,    10,     6,     7,     8,     9,    10,
+      28,    29,    18,     7,     8,     9,    10,    18,     6,     7,
+       8,     9,    10,     5,    11,    11,    13,    13,     4,     5,
+      18,    17,     6,     7,     8,     9,    10,    34,    35,    36,
+      37,   104,   105,   106,   107,    11,    11,    13,    13,     4,
+       5,     4,     5,     4,     5,     4,     5,    38,    39,   102,
+     103,     5,   108,   109,     5,    11,    18,     5,     5,    12,
+       5,    18,    12,    12,     5,    11,     5,     5,    23,     5,
+      12,     5,    44,    17,    17,     5,     5,    17,    36,   224,
+     121,    18,    -1,   110,    -1,    18,    21,   111,    -1,    -1,
+      -1,    -1,    -1,    -1,    26
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     7,    18,    42,    43,    44,    45,    51,    56,
-      57,     7,     8,     9,    15,    52,    53,    15,     0,    43,
-      15,    47,    48,    47,    47,    10,    12,    16,    46,     4,
-       5,    16,    12,    46,     4,     5,     5,     5,    15,    16,
-      26,    27,    28,    29,    69,    70,    71,    72,    73,    75,
-      76,    77,    78,    79,    80,    81,    13,    54,    69,     7,
-       8,    17,    58,    59,    10,    12,    15,    53,    17,    58,
-      13,    49,    81,    12,    48,    16,    69,    72,    72,    72,
-      10,    30,    31,    32,    27,    28,    33,    34,    35,    36,
-      37,    38,    39,    40,    11,    14,    54,    55,    15,    15,
-       5,    13,    63,     4,    17,    81,    54,     5,    63,    17,
-      14,    49,    50,    49,    17,    69,    74,    17,    69,    72,
-      72,    72,    75,    75,    76,    76,    76,    76,    77,    77,
-      78,    79,     4,    14,    10,    62,    60,    62,     5,     7,
-      14,    18,    19,    21,    22,    23,    24,    25,    44,    63,
-      64,    65,    66,    67,    68,    69,    70,    59,     5,    63,
-      11,     5,    63,     4,    14,     4,    17,    11,    54,    11,
-      10,     9,    61,    15,    15,    16,    63,    16,     5,     5,
-       5,    69,    14,    44,    66,     5,    12,    49,    69,    81,
-      15,     9,    16,    16,    69,    22,    69,     5,    69,    11,
-      15,    17,    58,    17,    58,    17,    16,    17,     5,    62,
-      17,    17,    66,    67,    69,    66,    20,    17,    67,    68,
-       5
+       0,     3,     7,     8,    19,    43,    44,    45,    46,    52,
+      57,    58,    59,     7,     8,     9,    10,    16,    53,    54,
+      16,    53,    16,     0,    44,    16,    16,    48,    49,    48,
+      48,    48,    11,    13,    17,    47,     4,     5,    17,     5,
+      17,    17,    13,    47,     4,     5,     5,     5,     5,    16,
+      17,    27,    28,    29,    30,    69,    70,    71,    72,    73,
+      75,    76,    77,    78,    79,    80,    81,    14,    55,    69,
+       6,     7,     8,     9,    10,    18,    60,    61,    11,    13,
+      16,    54,    18,    60,    18,    60,    18,    60,    14,    50,
+      81,    13,    49,    17,    69,    72,    72,    72,    11,    31,
+      32,    33,    28,    29,    34,    35,    36,    37,    38,    39,
+      40,    41,    12,    15,    55,    56,    16,    16,    16,    16,
+       5,     4,    18,    81,    55,     5,    18,     5,    18,    14,
+      63,    18,    15,    50,    51,    50,    18,    69,    74,    18,
+      69,    72,    72,    72,    75,    75,    76,    76,    76,    76,
+      77,    77,    78,    79,     4,    15,    11,    62,    62,    62,
+      62,    61,     5,    12,     5,     5,     5,     7,     8,    15,
+      19,    20,    22,    23,    24,    25,    26,    45,    63,    64,
+      65,    66,    67,    68,    69,    70,    63,     4,    15,     4,
+      18,    12,    55,    12,    11,    17,    63,    17,     5,     5,
+       5,    69,    15,    45,    66,     5,    13,    50,    69,    81,
+      69,    23,    69,     5,    69,    12,    18,    17,    18,     5,
+      66,    67,    69,    66,    21,    18,    67,    68,     5
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    41,    42,    42,    43,    43,    44,    44,    44,    45,
-      45,    45,    46,    46,    47,    47,    48,    48,    49,    49,
-      49,    50,    50,    51,    52,    52,    53,    53,    53,    53,
-      54,    54,    54,    55,    55,    56,    56,    56,    56,    57,
-      57,    57,    57,    58,    58,    59,    60,    59,    59,    61,
-      59,    62,    62,    63,    63,    64,    64,    64,    65,    65,
-      66,    66,    67,    67,    67,    67,    67,    67,    67,    67,
-      67,    67,    67,    68,    68,    69,    70,    70,    71,    71,
-      71,    72,    72,    72,    72,    72,    72,    73,    74,    74,
-      75,    75,    75,    75,    76,    76,    76,    77,    77,    77,
-      77,    77,    78,    78,    78,    79,    79,    80,    80,    81
+       0,    42,    43,    43,    44,    44,    45,    45,    45,    46,
+      46,    46,    46,    47,    47,    48,    48,    49,    49,    50,
+      50,    50,    51,    51,    52,    52,    53,    53,    54,    54,
+      54,    54,    55,    55,    55,    56,    56,    57,    57,    57,
+      57,    57,    57,    58,    58,    58,    59,    59,    60,    60,
+      61,    61,    61,    61,    61,    61,    61,    61,    61,    62,
+      62,    63,    63,    64,    64,    64,    65,    65,    66,    66,
+      67,    67,    67,    67,    67,    67,    67,    67,    67,    67,
+      67,    68,    68,    69,    70,    70,    71,    71,    71,    72,
+      72,    72,    72,    72,    72,    73,    74,    74,    75,    75,
+      75,    75,    76,    76,    76,    77,    77,    77,    77,    77,
+      78,    78,    78,    79,    79,    80,    80,    81
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
        0,     2,     2,     1,     1,     1,     1,     1,     1,     4,
-       4,     4,     3,     4,     1,     3,     3,     4,     1,     2,
-       3,     1,     3,     3,     1,     3,     1,     3,     2,     4,
-       1,     2,     3,     1,     3,     5,     5,     6,     6,     5,
-       5,     6,     6,     1,     3,     2,     0,     5,     3,     0,
-       7,     2,     4,     2,     3,     1,     2,     2,     1,     1,
-       1,     1,     4,     1,     2,     1,     7,     5,     2,     2,
-       2,     3,     7,     5,     7,     1,     1,     4,     3,     1,
-       1,     1,     3,     4,     2,     2,     2,     1,     1,     3,
-       1,     3,     3,     3,     1,     3,     3,     1,     3,     3,
-       3,     3,     1,     3,     3,     1,     3,     1,     3,     1
+       4,     4,     4,     3,     4,     1,     3,     3,     4,     1,
+       2,     3,     1,     3,     3,     3,     1,     3,     1,     3,
+       2,     4,     1,     2,     3,     1,     3,     5,     5,     5,
+       6,     6,     6,     1,     1,     1,     5,     6,     1,     3,
+       1,     2,     2,     2,     2,     3,     3,     3,     3,     2,
+       4,     2,     3,     1,     2,     2,     1,     1,     1,     1,
+       4,     1,     2,     1,     7,     5,     2,     2,     2,     3,
+       7,     5,     7,     1,     1,     4,     3,     1,     1,     1,
+       3,     4,     2,     2,     2,     1,     1,     3,     1,     3,
+       3,     3,     1,     3,     3,     1,     3,     3,     3,     3,
+       1,     3,     3,     1,     3,     1,     3,     1
 };
 
 
@@ -2087,11 +2127,13 @@ yyreduce:
     switch (yyn)
       {
   case 2: /* CompUnit: CompUnit CompUnitItem  */
-#line 254 "parser.y"
+#line 287 "parser.y"
                                 {
   if(global_decl){
     llvm::json::Array json_inner = llvm::json::Array{};
     for(int i = 0; i < def_num; i++){
+      std::string name = stak.back().getAsObject()->get("name")->getAsString()->str();
+      ident2type[name] = global_type_decl;
       json_inner.push_back(stak.back());
       stak.pop_back();
     }
@@ -2107,15 +2149,18 @@ yyreduce:
     global_decl = false;
   }
 }
-#line 2111 "parser.tab.c"
+#line 2153 "parser.tab.c"
     break;
 
   case 3: /* CompUnit: CompUnitItem  */
-#line 272 "parser.y"
+#line 307 "parser.y"
                {
   if(global_decl){
     llvm::json::Array json_inner = llvm::json::Array{};
     for(int i = 0; i < def_num; i++){
+      std::string name = stak.back().getAsObject()->get("name")->getAsString()->str();
+      ident2type[name] = global_type_decl;
+
       json_inner.push_back(stak.back());
       stak.pop_back();
     }
@@ -2133,113 +2178,124 @@ yyreduce:
     global_decl = false;
   }
 }
-#line 2137 "parser.tab.c"
+#line 2182 "parser.tab.c"
     break;
 
   case 4: /* CompUnitItem: Decl  */
-#line 294 "parser.y"
+#line 332 "parser.y"
      {
   global_decl = true;
 }
-#line 2145 "parser.tab.c"
+#line 2190 "parser.tab.c"
     break;
 
   case 5: /* CompUnitItem: FuncDef  */
-#line 297 "parser.y"
+#line 335 "parser.y"
          {}
-#line 2151 "parser.tab.c"
+#line 2196 "parser.tab.c"
     break;
 
   case 6: /* Decl: ConstDecl  */
-#line 299 "parser.y"
+#line 337 "parser.y"
                {
   
 }
-#line 2159 "parser.tab.c"
+#line 2204 "parser.tab.c"
     break;
 
   case 7: /* Decl: VarDecl  */
-#line 301 "parser.y"
+#line 339 "parser.y"
           {
 
 }
-#line 2167 "parser.tab.c"
+#line 2212 "parser.tab.c"
     break;
 
   case 8: /* Decl: FuncDecl  */
-#line 303 "parser.y"
+#line 341 "parser.y"
            {
 
 }
-#line 2175 "parser.tab.c"
+#line 2220 "parser.tab.c"
     break;
 
   case 9: /* ConstDecl: T_CONST T_INT ConstDefChain T_SEMI  */
-#line 307 "parser.y"
+#line 345 "parser.y"
                                              {
-
-}
-#line 2183 "parser.tab.c"
-    break;
-
-  case 10: /* ConstDecl: T_CONST T_CHAR ConstDefChain T_SEMI  */
-#line 309 "parser.y"
-                                     {
-  
-}
-#line 2191 "parser.tab.c"
-    break;
-
-  case 11: /* ConstDecl: T_CONST T_LONGLONG ConstDefChain T_SEMI  */
-#line 311 "parser.y"
-                                         {
-  
-}
-#line 2199 "parser.tab.c"
-    break;
-
-  case 12: /* ConstExpChain: T_L_SQUARE ConstExp T_R_SQUARE  */
-#line 315 "parser.y"
-                                             {
-  // todo
-  lvalStack.pop();
-  stak.pop_back();
-}
-#line 2209 "parser.tab.c"
-    break;
-
-  case 13: /* ConstExpChain: ConstExpChain T_L_SQUARE ConstExp T_R_SQUARE  */
-#line 319 "parser.y"
-                                               {
-  // todo
-  lvalStack.pop();
-  stak.pop_back();
-}
-#line 2219 "parser.tab.c"
-    break;
-
-  case 14: /* ConstDefChain: ConstDef  */
-#line 325 "parser.y"
-                       {
-  if(debug) llvm::outs()<<"constdef first\n";
-  def_num = 1;
+  global_type_decl = TYPE_INT;
 }
 #line 2228 "parser.tab.c"
     break;
 
-  case 15: /* ConstDefChain: ConstDefChain T_COMMA ConstDef  */
-#line 328 "parser.y"
+  case 10: /* ConstDecl: T_CONST T_CHAR ConstDefChain T_SEMI  */
+#line 347 "parser.y"
+                                     {
+  
+}
+#line 2236 "parser.tab.c"
+    break;
+
+  case 11: /* ConstDecl: T_CONST T_LONGLONG ConstDefChain T_SEMI  */
+#line 349 "parser.y"
+                                         {
+  
+}
+#line 2244 "parser.tab.c"
+    break;
+
+  case 12: /* ConstDecl: T_CONST T_FLOAT ConstDefChain T_SEMI  */
+#line 351 "parser.y"
+                                      {
+  // todo
+  global_type_decl = TYPE_FLOAT;
+}
+#line 2253 "parser.tab.c"
+    break;
+
+  case 13: /* ConstExpChain: T_L_SQUARE ConstExp T_R_SQUARE  */
+#line 356 "parser.y"
+                                             {
+  // 
+  lvalStack.pop();
+  typeStack.pop();
+  stak.pop_back();
+}
+#line 2264 "parser.tab.c"
+    break;
+
+  case 14: /* ConstExpChain: ConstExpChain T_L_SQUARE ConstExp T_R_SQUARE  */
+#line 361 "parser.y"
+                                               {
+  // 
+  lvalStack.pop();
+  typeStack.pop();
+  stak.pop_back();
+}
+#line 2275 "parser.tab.c"
+    break;
+
+  case 15: /* ConstDefChain: ConstDef  */
+#line 368 "parser.y"
+                       {
+  if(debug) llvm::outs()<<"constdef first\n";
+  def_num = 1;
+}
+#line 2284 "parser.tab.c"
+    break;
+
+  case 16: /* ConstDefChain: ConstDefChain T_COMMA ConstDef  */
+#line 371 "parser.y"
                                 {
   if(debug) llvm::outs()<<"constdef second\n";
   def_num++;
 }
-#line 2237 "parser.tab.c"
+#line 2293 "parser.tab.c"
     break;
 
-  case 16: /* ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal  */
-#line 333 "parser.y"
+  case 17: /* ConstDef: T_IDENTIFIER T_EQUAL ConstInitVal  */
+#line 376 "parser.y"
                                            {
-  // todo
+  // 
   auto exp1 = lexStack.back();
   lexStack.pop_back();
   auto exp2 = stak.back();
@@ -2250,13 +2306,13 @@ yyreduce:
                                   {"name",exp1_name},
                                   {"inner", llvm::json::Array{exp2}}});
 }
-#line 2254 "parser.tab.c"
+#line 2310 "parser.tab.c"
     break;
 
-  case 17: /* ConstDef: T_IDENTIFIER ConstExpChain T_EQUAL ConstInitVal  */
-#line 344 "parser.y"
+  case 18: /* ConstDef: T_IDENTIFIER ConstExpChain T_EQUAL ConstInitVal  */
+#line 387 "parser.y"
                                                  {
-  // todo
+  // 
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto init_val = stak.back();
@@ -2266,43 +2322,52 @@ yyreduce:
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}});
 }
-#line 2270 "parser.tab.c"
+#line 2326 "parser.tab.c"
     break;
 
-  case 18: /* ConstInitVal: ConstExp  */
-#line 356 "parser.y"
+  case 19: /* ConstInitVal: ConstExp  */
+#line 399 "parser.y"
                       {
-  // todo
+  // 
   if(debug) llvm::outs()<<"constexp 2 ConstInitVal\n";
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  int type2 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
-                                   {"inner", llvm::json::Array{rvalexp}}};
+                                    {"inner", llvm::json::Array{rvalexp}}};
+  }
+
+  if(type2!=local_type_decl){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
+                                    {"inner", llvm::json::Array{rvalexp}}};
   }
 
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",1}});
 }
-#line 2289 "parser.tab.c"
+#line 2354 "parser.tab.c"
     break;
 
-  case 19: /* ConstInitVal: T_L_BRACE T_R_BRACE  */
-#line 369 "parser.y"
+  case 20: /* ConstInitVal: T_L_BRACE T_R_BRACE  */
+#line 421 "parser.y"
                        {
-  // todo
+  // 
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"}});
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
-#line 2300 "parser.tab.c"
+#line 2365 "parser.tab.c"
     break;
 
-  case 20: /* ConstInitVal: T_L_BRACE ConstInitValChain T_R_BRACE  */
-#line 374 "parser.y"
+  case 21: /* ConstInitVal: T_L_BRACE ConstInitValChain T_R_BRACE  */
+#line 426 "parser.y"
                                          {
-  // todo
+  // 
   auto json_inner = llvm::json::Array{};
   int initStakSize = initStak.size();
   // while(initStakSize--){
@@ -2321,7 +2386,7 @@ yyreduce:
     initStak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"},
-                                   {"inner", llvm::json::Array{}}});
+                                    {"inner", llvm::json::Array{}}});
   // llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
   // for(int i = json_inner.size()-1; i >= 0; i--){
   //   array_inner->push_back(json_inner[i]);
@@ -2329,65 +2394,76 @@ yyreduce:
   init_stak_level++;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
-#line 2333 "parser.tab.c"
+#line 2398 "parser.tab.c"
     break;
 
-  case 21: /* ConstInitValChain: ConstInitVal  */
-#line 403 "parser.y"
+  case 22: /* ConstInitValChain: ConstInitVal  */
+#line 455 "parser.y"
                                 {
-  // todo
+  // 
 
 }
-#line 2342 "parser.tab.c"
+#line 2407 "parser.tab.c"
     break;
 
-  case 22: /* ConstInitValChain: ConstInitValChain T_COMMA ConstInitVal  */
-#line 406 "parser.y"
+  case 23: /* ConstInitValChain: ConstInitValChain T_COMMA ConstInitVal  */
+#line 458 "parser.y"
                                          {
-  // todo
+  // 
 }
-#line 2350 "parser.tab.c"
+#line 2415 "parser.tab.c"
     break;
 
-  case 23: /* VarDecl: T_INT VarDefChain T_SEMI  */
-#line 411 "parser.y"
+  case 24: /* VarDecl: T_INT VarDefChain T_SEMI  */
+#line 463 "parser.y"
                                   {
   if(debug) llvm::outs()<<"valdefchain 2 vardecl and def_num is "<<def_num<<"\n";
+  global_type_decl = TYPE_INT;
 }
-#line 2358 "parser.tab.c"
+#line 2424 "parser.tab.c"
     break;
 
-  case 24: /* VarDefChain: VarDef  */
-#line 415 "parser.y"
+  case 25: /* VarDecl: T_FLOAT VarDefChain T_SEMI  */
+#line 466 "parser.y"
+                              {
+  // todo
+  global_type_decl = TYPE_FLOAT;
+  if(debug) llvm::outs()<<"valdefchain 2 vardecl and def_num is "<<def_num<<"\n";
+}
+#line 2434 "parser.tab.c"
+    break;
+
+  case 26: /* VarDefChain: VarDef  */
+#line 472 "parser.y"
                    {
   def_num = 1;
 }
-#line 2366 "parser.tab.c"
+#line 2442 "parser.tab.c"
     break;
 
-  case 25: /* VarDefChain: VarDefChain T_COMMA VarDef  */
-#line 417 "parser.y"
+  case 27: /* VarDefChain: VarDefChain T_COMMA VarDef  */
+#line 474 "parser.y"
                             {
   def_num++;
 }
-#line 2374 "parser.tab.c"
+#line 2450 "parser.tab.c"
     break;
 
-  case 26: /* VarDef: T_IDENTIFIER  */
-#line 421 "parser.y"
+  case 28: /* VarDef: T_IDENTIFIER  */
+#line 478 "parser.y"
                     {
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name}});
 }
-#line 2385 "parser.tab.c"
+#line 2461 "parser.tab.c"
     break;
 
-  case 27: /* VarDef: T_IDENTIFIER T_EQUAL InitVal  */
-#line 426 "parser.y"
+  case 29: /* VarDef: T_IDENTIFIER T_EQUAL InitVal  */
+#line 483 "parser.y"
                               {
-  // todo
+  // 
   initStak.pop_back();
   auto init_val = stak.back();
   stak.pop_back();
@@ -2396,26 +2472,26 @@ yyreduce:
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}});
 }
-#line 2400 "parser.tab.c"
+#line 2476 "parser.tab.c"
     break;
 
-  case 28: /* VarDef: T_IDENTIFIER ConstExpChain  */
-#line 435 "parser.y"
+  case 30: /* VarDef: T_IDENTIFIER ConstExpChain  */
+#line 492 "parser.y"
                              {
-  // todo
+  // 
   // to compute constexp
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name}});
 }
-#line 2413 "parser.tab.c"
+#line 2489 "parser.tab.c"
     break;
 
-  case 29: /* VarDef: T_IDENTIFIER ConstExpChain T_EQUAL InitVal  */
-#line 442 "parser.y"
+  case 31: /* VarDef: T_IDENTIFIER ConstExpChain T_EQUAL InitVal  */
+#line 499 "parser.y"
                                             {
-  // todo
+  // 
   auto init_val = stak.back();
   stak.pop_back();
   initStak.pop_back();
@@ -2426,46 +2502,53 @@ yyreduce:
   stak.push_back(llvm::json::Object{{"kind", "VarDecl"}, {"name", name},{"inner",llvm::json::Array{init_val}}})
   ;
 }
-#line 2430 "parser.tab.c"
+#line 2506 "parser.tab.c"
     break;
 
-  case 30: /* InitVal: Exp  */
-#line 456 "parser.y"
+  case 32: /* InitVal: Exp  */
+#line 513 "parser.y"
             {
   if(debug) llvm::outs()<<"Exp 2 InitVal\n";
   if(debug) print_stack();
   
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  int type2 = typeStack.top();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
-                                   {"inner", llvm::json::Array{rvalexp}}};
+                                    {"inner", llvm::json::Array{rvalexp}}};
+  }
+  if(type2!=local_type_decl){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind", "ImplicitCastExpr"},
+                                    {"inner", llvm::json::Array{rvalexp}}};
   }
 
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",1}});
 }
-#line 2450 "parser.tab.c"
+#line 2533 "parser.tab.c"
     break;
 
-  case 31: /* InitVal: T_L_BRACE T_R_BRACE  */
-#line 470 "parser.y"
+  case 33: /* InitVal: T_L_BRACE T_R_BRACE  */
+#line 534 "parser.y"
                        {
-  // todo
+  // 
   if(debug) llvm::outs()<<"empty 2 InitVal\n";
   if(debug) print_stack();
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"}});
   init_stak_level = 1;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
-#line 2463 "parser.tab.c"
+#line 2546 "parser.tab.c"
     break;
 
-  case 32: /* InitVal: T_L_BRACE InitValChain T_R_BRACE  */
-#line 477 "parser.y"
+  case 34: /* InitVal: T_L_BRACE InitValChain T_R_BRACE  */
+#line 541 "parser.y"
                                     {
-  // todo
+  // 
   if(debug) llvm::outs()<<"initvalchain 2 initval\n";
   if(debug) print_stack();
   auto json_inner = llvm::json::Array{};
@@ -2486,7 +2569,7 @@ yyreduce:
     initStak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "InitListExpr"},
-                                   {"inner", llvm::json::Array{}}});
+                                    {"inner", llvm::json::Array{}}});
   // llvm::json::Array * array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
   // for(int i = json_inner.size()-1; i >= 0; i--){
   //   array_inner->push_back(json_inner[i]);
@@ -2494,58 +2577,77 @@ yyreduce:
   init_stak_level++;
   initStak.push_back(llvm::json::Object{{"value",init_stak_level}});
 }
-#line 2498 "parser.tab.c"
+#line 2581 "parser.tab.c"
     break;
 
-  case 33: /* InitValChain: InitVal  */
-#line 508 "parser.y"
+  case 35: /* InitValChain: InitVal  */
+#line 572 "parser.y"
                       {
-  // todo
+  // 
   if(debug) llvm::outs()<<"initval 2 initvalchain\n";
   if(debug) print_stack();
 }
-#line 2508 "parser.tab.c"
+#line 2591 "parser.tab.c"
     break;
 
-  case 34: /* InitValChain: InitValChain T_COMMA InitVal  */
-#line 512 "parser.y"
+  case 36: /* InitValChain: InitValChain T_COMMA InitVal  */
+#line 576 "parser.y"
                                {
-  // todo
+  // 
   if(debug) llvm::outs()<<"initvalchain 2 initvalchain\n";
   if(debug) print_stack();
 }
-#line 2518 "parser.tab.c"
+#line 2601 "parser.tab.c"
     break;
 
-  case 35: /* FuncDecl: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI  */
-#line 518 "parser.y"
+  case 37: /* FuncDecl: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI  */
+#line 582 "parser.y"
                                                         {
+  global_type_decl = TYPE_INT;
   def_num = 1;
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
-                                   {"name", name}});
+                                    {"name", name}});
+  ident2type[name] = TYPE_INT;
 }
-#line 2531 "parser.tab.c"
+#line 2616 "parser.tab.c"
     break;
 
-  case 36: /* FuncDecl: T_VOID T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI  */
-#line 525 "parser.y"
+  case 38: /* FuncDecl: T_VOID T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI  */
+#line 591 "parser.y"
                                                  {
   def_num = 1;
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
-                                   {"name", name}});
+                                    {"name", name}});
 }
-#line 2544 "parser.tab.c"
+#line 2629 "parser.tab.c"
     break;
 
-  case 37: /* FuncDecl: T_INT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI  */
-#line 532 "parser.y"
+  case 39: /* FuncDecl: T_FLOAT T_IDENTIFIER T_L_PAREN T_R_PAREN T_SEMI  */
+#line 598 "parser.y"
+                                                  {
+  global_type_decl = TYPE_FLOAT;
+  // todo
+  def_num = 1;
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                    {"name", name}});
+  ident2type[name] = TYPE_FLOAT;
+}
+#line 2645 "parser.tab.c"
+    break;
+
+  case 40: /* FuncDecl: T_INT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI  */
+#line 608 "parser.y"
                                                              {
+  global_type_decl = TYPE_INT;
   def_num = 1;
 
   auto json_inner = llvm::json::Array{};
@@ -2564,13 +2666,13 @@ yyreduce:
   for(int i = func_FPara_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
-
+  ident2type[name] = TYPE_INT;
 }
-#line 2570 "parser.tab.c"
+#line 2672 "parser.tab.c"
     break;
 
-  case 38: /* FuncDecl: T_VOID T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI  */
-#line 552 "parser.y"
+  case 41: /* FuncDecl: T_VOID T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI  */
+#line 629 "parser.y"
                                                              {
   def_num = 1;
   
@@ -2591,42 +2693,83 @@ yyreduce:
     array_inner->push_back(json_inner[i]);
   }
 }
-#line 2595 "parser.tab.c"
+#line 2697 "parser.tab.c"
     break;
 
-  case 39: /* FuncDef: T_INT T_IDENTIFIER T_L_PAREN T_R_PAREN Block  */
-#line 573 "parser.y"
-                                                      {
+  case 42: /* FuncDecl: T_FLOAT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN T_SEMI  */
+#line 648 "parser.y"
+                                                              {
+  //todo
+  global_type_decl = TYPE_FLOAT;
+  def_num = 1;
+  
+  auto json_inner = llvm::json::Array{};
+  for(int i = 0; i < func_FPara_num; i++){
+    json_inner.push_back(stak.back());
+    stak.pop_back();
+  }
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+
+  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
+                                    {"name",name},
+                                    {"inner", llvm::json::Array{}}});
+  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
+  for(int i = func_FPara_num-1; i >= 0; i--){
+    array_inner->push_back(json_inner[i]);
+  }
+  ident2type[name] = TYPE_FLOAT;
+}
+#line 2725 "parser.tab.c"
+    break;
+
+  case 43: /* FuncType: T_INT  */
+#line 672 "parser.y"
+               {
+  global_type_decl = TYPE_INT;
+  return_type = TYPE_INT;
+}
+#line 2734 "parser.tab.c"
+    break;
+
+  case 44: /* FuncType: T_VOID  */
+#line 675 "parser.y"
+        {
+  global_type_decl = TYPE_INT;
+  return_type = TYPE_INT;
+}
+#line 2743 "parser.tab.c"
+    break;
+
+  case 45: /* FuncType: T_FLOAT  */
+#line 678 "parser.y"
+         {
+  global_type_decl = TYPE_FLOAT;
+  return_type = TYPE_FLOAT;
+}
+#line 2752 "parser.tab.c"
+    break;
+
+  case 46: /* FuncDef: FuncType T_IDENTIFIER T_L_PAREN T_R_PAREN Block  */
+#line 683 "parser.y"
+                                                         {
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto inner = stak.back();
   stak.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
-                                   {"name", name},
-                                   {"inner", llvm::json::Array{inner}}});
+                                    {"name", name},
+                                    {"inner", llvm::json::Array{inner}}});
+  ident2type[name] = return_type;
 }
-#line 2610 "parser.tab.c"
+#line 2768 "parser.tab.c"
     break;
 
-  case 40: /* FuncDef: T_VOID T_IDENTIFIER T_L_PAREN T_R_PAREN Block  */
-#line 582 "parser.y"
-                                                {
-  auto ident = lexStack.back();
-  lexStack.pop_back();
-  auto inner = stak.back();
-  stak.pop_back();
-  auto name = ident.getAsObject()->get("value")->getAsString()->str();
-  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
-                                   {"name", name},
-                                   {"inner", llvm::json::Array{inner}}});
-}
-#line 2625 "parser.tab.c"
-    break;
-
-  case 41: /* FuncDef: T_INT T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN Block  */
-#line 591 "parser.y"
-                                                            {
+  case 47: /* FuncDef: FuncType T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN Block  */
+#line 693 "parser.y"
+                                                               {
   auto inner = stak.back();
   stak.pop_back();
 
@@ -2647,70 +2790,63 @@ yyreduce:
     array_inner->push_back(json_inner[i]);
   }
   array_inner->push_back(inner);
+  ident2type[name] = return_type;
 }
-#line 2652 "parser.tab.c"
+#line 2796 "parser.tab.c"
     break;
 
-  case 42: /* FuncDef: T_VOID T_IDENTIFIER T_L_PAREN FuncFParams T_R_PAREN Block  */
-#line 612 "parser.y"
-                                                            {
-  auto inner = stak.back();
-  stak.pop_back();
-
-  auto json_inner = llvm::json::Array{};
-  for(int i = 0; i < func_FPara_num; i++){
-    json_inner.push_back(stak.back());
-    stak.pop_back();
-  }
-  auto ident = lexStack.back();
-  lexStack.pop_back();
-  auto name = ident.getAsObject()->get("value")->getAsString()->str();
-
-  stak.push_back(llvm::json::Object{{"kind", "FunctionDecl"},
-                                    {"name",name},
-                                    {"inner", llvm::json::Array{}}});
-  auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
-  for(int i = func_FPara_num-1; i >= 0; i--){
-    array_inner->push_back(json_inner[i]);
-  }
-  array_inner->push_back(inner);
-}
-#line 2679 "parser.tab.c"
-    break;
-
-  case 43: /* FuncFParams: FuncFParam  */
-#line 635 "parser.y"
+  case 48: /* FuncFParams: FuncFParam  */
+#line 717 "parser.y"
                          {
 
-  func_FPara_num = 1;
+  if(ellipsis){
+
+  }else{
+    func_FPara_num = 1;
+  }
+  ellipsis = false;
 
 }
-#line 2689 "parser.tab.c"
+#line 2811 "parser.tab.c"
     break;
 
-  case 44: /* FuncFParams: FuncFParams T_COMMA FuncFParam  */
-#line 639 "parser.y"
+  case 49: /* FuncFParams: FuncFParams T_COMMA FuncFParam  */
+#line 726 "parser.y"
                                  {
 
-  func_FPara_num++;
+  if(ellipsis){
+
+  }else{
+    func_FPara_num ++;
+  }
+  ellipsis = false;
 }
-#line 2698 "parser.tab.c"
+#line 2825 "parser.tab.c"
     break;
 
-  case 45: /* FuncFParam: T_INT T_IDENTIFIER  */
-#line 644 "parser.y"
-                               {
+  case 50: /* FuncFParam: T_ELLIPSIS  */
+#line 736 "parser.y"
+                       {
+  ellipsis = true;
+}
+#line 2833 "parser.tab.c"
+    break;
+
+  case 51: /* FuncFParam: T_INT T_IDENTIFIER  */
+#line 738 "parser.y"
+                    {
 
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
+  ident2type[name] = TYPE_INT;
 }
-#line 2710 "parser.tab.c"
+#line 2846 "parser.tab.c"
     break;
 
-  case 46: /* $@1: %empty  */
-#line 650 "parser.y"
+  case 52: /* FuncFParam: T_CHAR T_IDENTIFIER  */
+#line 745 "parser.y"
                      {
 
   auto ident = lexStack.back();
@@ -2718,25 +2854,38 @@ yyreduce:
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }
-#line 2722 "parser.tab.c"
+#line 2858 "parser.tab.c"
     break;
 
-  case 47: /* FuncFParam: T_CHAR T_IDENTIFIER $@1 T_LONGLONG T_IDENTIFIER  */
-#line 656 "parser.y"
-                        {
+  case 53: /* FuncFParam: T_LONGLONG T_IDENTIFIER  */
+#line 751 "parser.y"
+                         {
 
   auto ident = lexStack.back();
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }
-#line 2734 "parser.tab.c"
+#line 2870 "parser.tab.c"
     break;
 
-  case 48: /* FuncFParam: T_INT T_IDENTIFIER ArrayFuncFParam  */
-#line 662 "parser.y"
+  case 54: /* FuncFParam: T_FLOAT T_IDENTIFIER  */
+#line 757 "parser.y"
+                      {
+  //todo
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
+  ident2type[name] = TYPE_FLOAT;
+}
+#line 2883 "parser.tab.c"
+    break;
+
+  case 55: /* FuncFParam: T_INT T_IDENTIFIER ArrayFuncFParam  */
+#line 764 "parser.y"
                                     {
-  // todo
+  // 
 
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
@@ -2744,14 +2893,15 @@ yyreduce:
   lexStack.pop_back();
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
+  ident2type[name] = TYPE_INT;
 }
-#line 2749 "parser.tab.c"
+#line 2899 "parser.tab.c"
     break;
 
-  case 49: /* $@2: %empty  */
-#line 671 "parser.y"
+  case 56: /* FuncFParam: T_CHAR T_IDENTIFIER ArrayFuncFParam  */
+#line 774 "parser.y"
                                      {
-  // todo
+  // 
 
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
@@ -2760,14 +2910,14 @@ yyreduce:
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }
-#line 2764 "parser.tab.c"
+#line 2914 "parser.tab.c"
     break;
 
-  case 50: /* FuncFParam: T_CHAR T_IDENTIFIER ArrayFuncFParam $@2 T_LONGLONG T_IDENTIFIER ArrayFuncFParam  */
-#line 680 "parser.y"
-                                        {
+  case 57: /* FuncFParam: T_LONGLONG T_IDENTIFIER ArrayFuncFParam  */
+#line 783 "parser.y"
+                                         {
 
-  // todo
+  // 
   auto ArrayFuncFParam = stak.back();
   stak.pop_back();
   auto ident = lexStack.back();
@@ -2775,23 +2925,40 @@ yyreduce:
   auto name = ident.getAsObject()->get("value")->getAsString()->str();
   stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
 }
-#line 2779 "parser.tab.c"
+#line 2929 "parser.tab.c"
     break;
 
-  case 51: /* ArrayFuncFParam: T_L_SQUARE T_R_SQUARE  */
-#line 691 "parser.y"
+  case 58: /* FuncFParam: T_FLOAT T_IDENTIFIER ArrayFuncFParam  */
+#line 792 "parser.y"
+                                      {
+  //todo
+  // 
+  auto ArrayFuncFParam = stak.back();
+  stak.pop_back();
+  auto ident = lexStack.back();
+  lexStack.pop_back();
+  auto name = ident.getAsObject()->get("value")->getAsString()->str();
+  stak.push_back(llvm::json::Object{{"kind","ParmVarDecl"},{"name",name}});
+  ident2type[name] = TYPE_FLOAT;
+}
+#line 2945 "parser.tab.c"
+    break;
+
+  case 59: /* ArrayFuncFParam: T_L_SQUARE T_R_SQUARE  */
+#line 804 "parser.y"
                                        {
-  // todo
+  // 
   stak.push_back(llvm::json::Object{{"kind","ArrayFuncFParam"}});
 }
-#line 2788 "parser.tab.c"
+#line 2954 "parser.tab.c"
     break;
 
-  case 52: /* ArrayFuncFParam: ArrayFuncFParam T_L_SQUARE ConstExp T_R_SQUARE  */
-#line 694 "parser.y"
+  case 60: /* ArrayFuncFParam: ArrayFuncFParam T_L_SQUARE ConstExp T_R_SQUARE  */
+#line 807 "parser.y"
                                                  {
-  // todo
+  // 
   lvalStack.pop();
+  typeStack.pop();
 
   auto constExp = stak.back();
   stak.pop_back();
@@ -2799,54 +2966,56 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","ArrayFuncFParam"}});
 }
-#line 2803 "parser.tab.c"
+#line 2970 "parser.tab.c"
     break;
 
-  case 53: /* Block: T_L_BRACE T_R_BRACE  */
-#line 705 "parser.y"
+  case 61: /* Block: T_L_BRACE T_R_BRACE  */
+#line 819 "parser.y"
                           {
   stak.push_back(llvm::json::Object{{"kind", "CompoundStmt"}});
 }
-#line 2811 "parser.tab.c"
+#line 2978 "parser.tab.c"
     break;
 
-  case 54: /* Block: T_L_BRACE BlockItemChain T_R_BRACE  */
-#line 707 "parser.y"
+  case 62: /* Block: T_L_BRACE BlockItemChain T_R_BRACE  */
+#line 821 "parser.y"
                                      {
   if(debug) llvm::outs()<<"blockitem 2 block\n";
 }
-#line 2819 "parser.tab.c"
+#line 2986 "parser.tab.c"
     break;
 
-  case 55: /* BlockItemChain: BlockItem  */
-#line 711 "parser.y"
+  case 63: /* BlockItemChain: BlockItem  */
+#line 825 "parser.y"
                         {
 
 }
-#line 2827 "parser.tab.c"
+#line 2994 "parser.tab.c"
     break;
 
-  case 56: /* BlockItemChain: BlockItemChain Stmt  */
-#line 713 "parser.y"
+  case 64: /* BlockItemChain: BlockItemChain Stmt  */
+#line 827 "parser.y"
                      {
   auto stmt = stak.back();
   stak.pop_back();
   auto be_block_item = stak.back();
   stak.back().getAsObject()->get("inner")->getAsArray()->push_back(stmt);
 }
-#line 2838 "parser.tab.c"
+#line 3005 "parser.tab.c"
     break;
 
-  case 57: /* BlockItemChain: BlockItemChain Decl  */
-#line 718 "parser.y"
+  case 65: /* BlockItemChain: BlockItemChain Decl  */
+#line 832 "parser.y"
                      {
   auto json_inner = llvm::json::Array{};
   for(int i = 0; i < def_num; i++){
+    std::string name = stak.back().getAsObject()->get("name")->getAsString()->str();
+    ident2type[name] = global_type_decl;
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "DeclStmt"},
-                                   {"inner", llvm::json::Array{}}});
+                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
   for(int i = def_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
@@ -2856,106 +3025,121 @@ yyreduce:
   auto be_block_item = stak.back();
   stak.back().getAsObject()->get("inner")->getAsArray()->push_back(decl);
 }
-#line 2860 "parser.tab.c"
+#line 3029 "parser.tab.c"
     break;
 
-  case 58: /* BlockItem: Stmt  */
-#line 737 "parser.y"
+  case 66: /* BlockItem: Stmt  */
+#line 853 "parser.y"
      {
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
+                                    {"inner", llvm::json::Array{inner}}};
 }
-#line 2870 "parser.tab.c"
+#line 3039 "parser.tab.c"
     break;
 
-  case 59: /* BlockItem: Decl  */
-#line 741 "parser.y"
+  case 67: /* BlockItem: Decl  */
+#line 857 "parser.y"
       {
   auto json_inner = llvm::json::Array{};
   for(int i = 0; i < def_num; i++){
+    std::string name = stak.back().getAsObject()->get("name")->getAsString()->str();
+    ident2type[name] = global_type_decl;
     json_inner.push_back(stak.back());
     stak.pop_back();
   }
   stak.push_back(llvm::json::Object{{"kind", "DeclStmt"},
-                                   {"inner", llvm::json::Array{}}});
+                                    {"inner", llvm::json::Array{}}});
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
   for(int i = def_num-1; i >= 0; i--){
     array_inner->push_back(json_inner[i]);
   }
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "CompoundStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
+                                    {"inner", llvm::json::Array{inner}}};
 }
-#line 2891 "parser.tab.c"
+#line 3062 "parser.tab.c"
     break;
 
-  case 60: /* Stmt: MatchedStmt  */
-#line 759 "parser.y"
+  case 68: /* Stmt: MatchedStmt  */
+#line 877 "parser.y"
                  {
 
 }
-#line 2899 "parser.tab.c"
+#line 3070 "parser.tab.c"
     break;
 
-  case 61: /* Stmt: OpenStmt  */
-#line 761 "parser.y"
+  case 69: /* Stmt: OpenStmt  */
+#line 879 "parser.y"
           {
 
 }
-#line 2907 "parser.tab.c"
+#line 3078 "parser.tab.c"
     break;
 
-  case 62: /* MatchedStmt: LVal T_EQUAL Exp T_SEMI  */
-#line 765 "parser.y"
+  case 70: /* MatchedStmt: LVal T_EQUAL Exp T_SEMI  */
+#line 883 "parser.y"
                                     {
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+  
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
   }
+
+  if(type1!=type2){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+
   auto exp = stak.back();
   stak.pop_back();
   auto lval = stak.back();
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","BinaryOperator"},{"opcode","="},{"inner",llvm::json::Array{lval,exp}}});
 }
-#line 2926 "parser.tab.c"
+#line 3109 "parser.tab.c"
     break;
 
-  case 63: /* MatchedStmt: T_SEMI  */
-#line 778 "parser.y"
+  case 71: /* MatchedStmt: T_SEMI  */
+#line 908 "parser.y"
         {
   stak.push_back(llvm::json::Object{{"kind","NullStmt"}});
 }
-#line 2934 "parser.tab.c"
+#line 3117 "parser.tab.c"
     break;
 
-  case 64: /* MatchedStmt: Exp T_SEMI  */
-#line 780 "parser.y"
+  case 72: /* MatchedStmt: Exp T_SEMI  */
+#line 910 "parser.y"
             {
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
   }
 }
-#line 2947 "parser.tab.c"
+#line 3131 "parser.tab.c"
     break;
 
-  case 65: /* MatchedStmt: Block  */
-#line 787 "parser.y"
+  case 73: /* MatchedStmt: Block  */
+#line 918 "parser.y"
        {
 
 }
-#line 2955 "parser.tab.c"
+#line 3139 "parser.tab.c"
     break;
 
-  case 66: /* MatchedStmt: T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE MatchedStmt  */
-#line 789 "parser.y"
+  case 74: /* MatchedStmt: T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE MatchedStmt  */
+#line 920 "parser.y"
                                                               {
   if(debug) llvm::outs()<<"matched stmt 2 if\n";
   if(debug) print_stack();
@@ -2966,6 +3150,7 @@ yyreduce:
   
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -2975,17 +3160,18 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt,elseStmt}}});
 }
-#line 2979 "parser.tab.c"
+#line 3164 "parser.tab.c"
     break;
 
-  case 67: /* MatchedStmt: T_WHILE T_L_PAREN Exp T_R_PAREN Stmt  */
-#line 807 "parser.y"
+  case 75: /* MatchedStmt: T_WHILE T_L_PAREN Exp T_R_PAREN Stmt  */
+#line 939 "parser.y"
                                        {
   auto loopStmt = stak.back();
   stak.pop_back();
 
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -2995,59 +3181,66 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","WhileStmt"},{"inner",llvm::json::Array{whileExp,loopStmt}}});
 }
-#line 2999 "parser.tab.c"
+#line 3185 "parser.tab.c"
     break;
 
-  case 68: /* MatchedStmt: T_BREAK T_SEMI  */
-#line 821 "parser.y"
+  case 76: /* MatchedStmt: T_BREAK T_SEMI  */
+#line 954 "parser.y"
                  {
   stak.push_back(llvm::json::Object{{"kind","BreakStmt"}});
 }
-#line 3007 "parser.tab.c"
+#line 3193 "parser.tab.c"
     break;
 
-  case 69: /* MatchedStmt: T_CONTINUE T_SEMI  */
-#line 823 "parser.y"
+  case 77: /* MatchedStmt: T_CONTINUE T_SEMI  */
+#line 956 "parser.y"
                     {
   stak.push_back(llvm::json::Object{{"kind","ContinueStmt"}});
 }
-#line 3015 "parser.tab.c"
+#line 3201 "parser.tab.c"
     break;
 
-  case 70: /* MatchedStmt: T_RETURN T_SEMI  */
-#line 825 "parser.y"
+  case 78: /* MatchedStmt: T_RETURN T_SEMI  */
+#line 958 "parser.y"
                  {
   stak.push_back(llvm::json::Object{{"kind", "ReturnStmt"}});
 }
-#line 3023 "parser.tab.c"
+#line 3209 "parser.tab.c"
     break;
 
-  case 71: /* MatchedStmt: T_RETURN Exp T_SEMI  */
-#line 827 "parser.y"
+  case 79: /* MatchedStmt: T_RETURN Exp T_SEMI  */
+#line 960 "parser.y"
                       {
   if(debug) llvm::outs()<<"return 2 stmt\n";
   if(debug) print_stack();
 
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  int typeStacktop = typeStack.top();
+  typeStack.pop();
   if(lval2rval){
+    auto rvalexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
+  }
+  if(typeStacktop!=return_type){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
   }
 
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind", "ReturnStmt"},
-                                   {"inner", llvm::json::Array{inner}}};
+                                    {"inner", llvm::json::Array{inner}}};
 }
-#line 3043 "parser.tab.c"
+#line 3235 "parser.tab.c"
     break;
 
-  case 72: /* MatchedStmt: T_DO Block T_WHILE T_L_PAREN Exp T_R_PAREN T_SEMI  */
-#line 841 "parser.y"
+  case 80: /* MatchedStmt: T_DO Block T_WHILE T_L_PAREN Exp T_R_PAREN T_SEMI  */
+#line 980 "parser.y"
                                                     {
 
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -3059,11 +3252,11 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","DoStmt"},{"inner",llvm::json::Array{blockStmt,whileExp}}});
 }
-#line 3063 "parser.tab.c"
+#line 3256 "parser.tab.c"
     break;
 
-  case 73: /* OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN Stmt  */
-#line 857 "parser.y"
+  case 81: /* OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN Stmt  */
+#line 997 "parser.y"
                                             {
   if(debug) llvm::outs()<<"open stmt no else 2 if\n";
   if(debug) print_stack();
@@ -3072,6 +3265,7 @@ yyreduce:
 
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -3081,11 +3275,11 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt}}});
 }
-#line 3085 "parser.tab.c"
+#line 3279 "parser.tab.c"
     break;
 
-  case 74: /* OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE OpenStmt  */
-#line 873 "parser.y"
+  case 82: /* OpenStmt: T_IF T_L_PAREN Exp T_R_PAREN MatchedStmt T_ELSE OpenStmt  */
+#line 1014 "parser.y"
                                                            {
   if(debug) llvm::outs()<<"open stmt no else 2 if\n";
   if(debug) print_stack();
@@ -3096,6 +3290,7 @@ yyreduce:
 
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -3105,19 +3300,19 @@ yyreduce:
   stak.pop_back();
   stak.push_back(llvm::json::Object{{"kind","IfStmt"},{"inner",llvm::json::Array{ifExp,thenStmt,elseStmt}}});
 }
-#line 3109 "parser.tab.c"
+#line 3304 "parser.tab.c"
     break;
 
-  case 75: /* Exp: LOrExp  */
-#line 897 "parser.y"
+  case 83: /* Exp: LOrExp  */
+#line 1039 "parser.y"
             {
   if(debug) llvm::outs()<<"LOrExp 2 Exp\n";
 }
-#line 3117 "parser.tab.c"
+#line 3312 "parser.tab.c"
     break;
 
-  case 76: /* LVal: T_IDENTIFIER  */
-#line 901 "parser.y"
+  case 84: /* LVal: T_IDENTIFIER  */
+#line 1043 "parser.y"
                    {
   auto ident = lexStack.back();
   lexStack.pop_back();
@@ -3125,20 +3320,23 @@ yyreduce:
   stak.push_back(llvm::json::Object{{"kind","DeclRefExpr"},{"name",name}});
   
   lvalStack.push(true);
+  typeStack.push(ident2type[name]);
 }
-#line 3130 "parser.tab.c"
+#line 3326 "parser.tab.c"
     break;
 
-  case 77: /* LVal: LVal T_L_SQUARE Exp T_R_SQUARE  */
-#line 908 "parser.y"
+  case 85: /* LVal: LVal T_L_SQUARE Exp T_R_SQUARE  */
+#line 1051 "parser.y"
                                 {
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto exp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp}}};
   }
   lvalStack.pop();
+
 
   auto exp = stak.back();
   stak.pop_back();
@@ -3150,47 +3348,48 @@ yyreduce:
   stak.push_back(llvm::json::Object{{"kind","ArraySubscriptExpr"},{"inner",llvm::json::Array{ImplicitCastExpr,exp}}});
   
   lvalStack.push(true);
+
 }
-#line 3155 "parser.tab.c"
+#line 3354 "parser.tab.c"
     break;
 
-  case 78: /* PrimaryExp: T_L_PAREN Exp T_R_PAREN  */
-#line 929 "parser.y"
+  case 86: /* PrimaryExp: T_L_PAREN Exp T_R_PAREN  */
+#line 1075 "parser.y"
                                     {
   auto inner = stak.back();
   stak.back() = llvm::json::Object{{"kind","ParenExpr"},
   {"inner", llvm::json::Array{inner}}};
 }
-#line 3165 "parser.tab.c"
+#line 3364 "parser.tab.c"
     break;
 
-  case 79: /* PrimaryExp: LVal  */
-#line 933 "parser.y"
+  case 87: /* PrimaryExp: LVal  */
+#line 1079 "parser.y"
       {
-  // todo
+  // 
 }
-#line 3173 "parser.tab.c"
+#line 3372 "parser.tab.c"
     break;
 
-  case 80: /* PrimaryExp: Number  */
-#line 935 "parser.y"
+  case 88: /* PrimaryExp: Number  */
+#line 1081 "parser.y"
         {
   if(debug) llvm::outs()<<"number 2 primary\n";
 }
-#line 3181 "parser.tab.c"
+#line 3380 "parser.tab.c"
     break;
 
-  case 81: /* UnaryExp: PrimaryExp  */
-#line 939 "parser.y"
+  case 89: /* UnaryExp: PrimaryExp  */
+#line 1085 "parser.y"
                      {
   if(debug) llvm::outs()<<"primary 2 unaryexp\n";
   if(debug) print_stack();
 }
-#line 3190 "parser.tab.c"
+#line 3389 "parser.tab.c"
     break;
 
-  case 82: /* UnaryExp: T_IDENTIFIER T_L_PAREN T_R_PAREN  */
-#line 942 "parser.y"
+  case 90: /* UnaryExp: T_IDENTIFIER T_L_PAREN T_R_PAREN  */
+#line 1088 "parser.y"
                                    {
   auto ident = lexStack.back();
   lexStack.pop_back();
@@ -3207,12 +3406,13 @@ yyreduce:
                                     {"inner", llvm::json::Array{ImplicitCastExpr}}};
   
   lvalStack.push(false);
+  typeStack.push(ident2type[name]);
 }
-#line 3212 "parser.tab.c"
+#line 3412 "parser.tab.c"
     break;
 
-  case 83: /* UnaryExp: T_IDENTIFIER T_L_PAREN FuncRParams T_R_PAREN  */
-#line 958 "parser.y"
+  case 91: /* UnaryExp: T_IDENTIFIER T_L_PAREN FuncRParams T_R_PAREN  */
+#line 1105 "parser.y"
                                                {
 
   llvm::json::Value funcRParams(stak.back());
@@ -3244,6 +3444,7 @@ yyreduce:
   auto array_inner = stak.back().getAsObject()->get("inner")->getAsArray();
   array_inner->insert(array_inner->begin(),ImplicitCastExpr);
   lvalStack.push(false);
+  typeStack.push(ident2type[name]);
 
 
   // stak.back() = llvm::json::Object{{"kind", "CallExpr"},
@@ -3254,11 +3455,11 @@ yyreduce:
   //   array_inner->push_back(json_inner[i]);
   // }
 }
-#line 3258 "parser.tab.c"
+#line 3459 "parser.tab.c"
     break;
 
-  case 84: /* UnaryExp: T_PLUS UnaryExp  */
-#line 998 "parser.y"
+  case 92: /* UnaryExp: T_PLUS UnaryExp  */
+#line 1146 "parser.y"
                  {
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
   bool lval2rval = lvalStack.top();
@@ -3278,11 +3479,11 @@ yyreduce:
   }
   lvalStack.push(false);
 }
-#line 3282 "parser.tab.c"
+#line 3483 "parser.tab.c"
     break;
 
-  case 85: /* UnaryExp: T_MINUS UnaryExp  */
-#line 1016 "parser.y"
+  case 93: /* UnaryExp: T_MINUS UnaryExp  */
+#line 1164 "parser.y"
                   {
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
   bool lval2rval = lvalStack.top();
@@ -3302,11 +3503,11 @@ yyreduce:
   }
   lvalStack.push(false);
 }
-#line 3306 "parser.tab.c"
+#line 3507 "parser.tab.c"
     break;
 
-  case 86: /* UnaryExp: T_EXCLAIM UnaryExp  */
-#line 1034 "parser.y"
+  case 94: /* UnaryExp: T_EXCLAIM UnaryExp  */
+#line 1182 "parser.y"
                     {
   if(debug) llvm::outs()<<"UnaryExp 2 UnaryExp\n";
   bool lval2rval = lvalStack.top();
@@ -3326,11 +3527,11 @@ yyreduce:
   }
   lvalStack.push(false);
 }
-#line 3330 "parser.tab.c"
+#line 3531 "parser.tab.c"
     break;
 
-  case 87: /* Number: T_NUMERIC_CONSTANT  */
-#line 1054 "parser.y"
+  case 95: /* Number: T_NUMERIC_CONSTANT  */
+#line 1202 "parser.y"
                            {
   auto number = lexStack.back();
   lexStack.pop_back();
@@ -3339,14 +3540,15 @@ yyreduce:
 
   lvalStack.push(false);
 }
-#line 3343 "parser.tab.c"
+#line 3544 "parser.tab.c"
     break;
 
-  case 88: /* FuncRParams: Exp  */
-#line 1064 "parser.y"
+  case 96: /* FuncRParams: Exp  */
+#line 1212 "parser.y"
                  {
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -3356,14 +3558,15 @@ yyreduce:
 
   // func_RPara_num = 1;
 }
-#line 3360 "parser.tab.c"
+#line 3562 "parser.tab.c"
     break;
 
-  case 89: /* FuncRParams: FuncRParams T_COMMA Exp  */
-#line 1075 "parser.y"
+  case 97: /* FuncRParams: FuncRParams T_COMMA Exp  */
+#line 1224 "parser.y"
                           {
   bool lval2rval = lvalStack.top();
   lvalStack.pop();
+  typeStack.pop();
   if(lval2rval){
     auto rvalexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rvalexp}}};
@@ -3375,20 +3578,20 @@ yyreduce:
 
   // func_RPara_num ++;
 }
-#line 3379 "parser.tab.c"
+#line 3582 "parser.tab.c"
     break;
 
-  case 90: /* MulExp: UnaryExp  */
-#line 1093 "parser.y"
+  case 98: /* MulExp: UnaryExp  */
+#line 1243 "parser.y"
         {
   if(debug) llvm::outs()<<"UnaryExp 2 MulExp\n";
   print_stack();
 }
-#line 3388 "parser.tab.c"
+#line 3591 "parser.tab.c"
     break;
 
-  case 91: /* MulExp: MulExp T_STAR UnaryExp  */
-#line 1096 "parser.y"
+  case 99: /* MulExp: MulExp T_STAR UnaryExp  */
+#line 1246 "parser.y"
                         {
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
@@ -3397,25 +3600,47 @@ yyreduce:
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
 
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
-    auto exp2 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto unary_exp = stak.back();
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
-    auto exp1 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto mul_exp = stak.back();
-  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","*"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","*"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3415 "parser.tab.c"
+#line 3640 "parser.tab.c"
     break;
 
-  case 92: /* MulExp: MulExp T_SLASH UnaryExp  */
-#line 1117 "parser.y"
+  case 100: /* MulExp: MulExp T_SLASH UnaryExp  */
+#line 1289 "parser.y"
                          {
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
@@ -3424,25 +3649,47 @@ yyreduce:
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
 
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
-    auto exp2 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto unary_exp = stak.back();
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
-    auto exp1 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto mul_exp = stak.back();
-  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","/"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","/"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3442 "parser.tab.c"
+#line 3689 "parser.tab.c"
     break;
 
-  case 93: /* MulExp: MulExp T_PERCENT UnaryExp  */
-#line 1138 "parser.y"
+  case 101: /* MulExp: MulExp T_PERCENT UnaryExp  */
+#line 1332 "parser.y"
                            {
   if(debug) llvm::outs()<<"MulExp 2 MulExp\n";
   if(debug) print_stack();
@@ -3451,33 +3698,55 @@ yyreduce:
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
 
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
-    auto exp2 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp2}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto unary_exp = stak.back();
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
-    auto exp1 = stak.back();
-    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{exp1}}};
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
-  auto mul_exp = stak.back();
-  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","%"},{"inner",llvm::json::Array{mul_exp,unary_exp}}};
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
+  auto exp1 = stak.back();
+  stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","%"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3469 "parser.tab.c"
+#line 3738 "parser.tab.c"
     break;
 
-  case 94: /* AddExp: MulExp  */
-#line 1163 "parser.y"
+  case 102: /* AddExp: MulExp  */
+#line 1379 "parser.y"
       {
   if(debug) llvm::outs()<<"MulExp 2 AddExp\n";
 }
-#line 3477 "parser.tab.c"
+#line 3746 "parser.tab.c"
     break;
 
-  case 95: /* AddExp: AddExp T_PLUS MulExp  */
-#line 1165 "parser.y"
+  case 103: /* AddExp: AddExp T_PLUS MulExp  */
+#line 1381 "parser.y"
                        {
   if(debug) llvm::outs()<<"exp1 2 AddExp\n";
 
@@ -3485,25 +3754,48 @@ yyreduce:
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","+"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3503 "parser.tab.c"
+#line 3795 "parser.tab.c"
     break;
 
-  case 96: /* AddExp: AddExp T_MINUS MulExp  */
-#line 1185 "parser.y"
+  case 104: /* AddExp: AddExp T_MINUS MulExp  */
+#line 1424 "parser.y"
                         {
   if(debug) llvm::outs()<<"exp2 2 AddExp\n";
 
@@ -3511,58 +3803,104 @@ yyreduce:
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","-"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3529 "parser.tab.c"
+#line 3844 "parser.tab.c"
     break;
 
-  case 97: /* RelExp: AddExp  */
-#line 1208 "parser.y"
+  case 105: /* RelExp: AddExp  */
+#line 1470 "parser.y"
       {
   if(debug) llvm::outs()<<"AddExp 2 RelExp\n";
 }
-#line 3537 "parser.tab.c"
+#line 3852 "parser.tab.c"
     break;
 
-  case 98: /* RelExp: RelExp T_LESS AddExp  */
-#line 1210 "parser.y"
+  case 106: /* RelExp: RelExp T_LESS AddExp  */
+#line 1472 "parser.y"
                        {
   if(debug) llvm::outs()<<"exp1 2 RelExp\n";
   auto lval2rval2 = lvalStack.top();
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3562 "parser.tab.c"
+#line 3900 "parser.tab.c"
     break;
 
-  case 99: /* RelExp: RelExp T_GREATER AddExp  */
-#line 1229 "parser.y"
+  case 107: /* RelExp: RelExp T_GREATER AddExp  */
+#line 1514 "parser.y"
                           {
   if(debug) llvm::outs()<<"exp2 2 RelExp\n";
 
@@ -3570,26 +3908,49 @@ yyreduce:
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 
 }
-#line 3589 "parser.tab.c"
+#line 3950 "parser.tab.c"
     break;
 
-  case 100: /* RelExp: RelExp T_LESSEQUAL AddExp  */
-#line 1250 "parser.y"
+  case 108: /* RelExp: RelExp T_LESSEQUAL AddExp  */
+#line 1558 "parser.y"
                             {
   if(debug) llvm::outs()<<"exp3 2 RelExp\n";
 
@@ -3597,25 +3958,48 @@ yyreduce:
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","<="},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3615 "parser.tab.c"
+#line 3999 "parser.tab.c"
     break;
 
-  case 101: /* RelExp: RelExp T_GREATEREQUAL AddExp  */
-#line 1270 "parser.y"
+  case 109: /* RelExp: RelExp T_GREATEREQUAL AddExp  */
+#line 1601 "parser.y"
                                {
   if(debug) llvm::outs()<<"exp4 2 RelExp\n";
 
@@ -3623,153 +4007,268 @@ yyreduce:
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode",">="},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3641 "parser.tab.c"
+#line 4048 "parser.tab.c"
     break;
 
-  case 102: /* EqExp: RelExp  */
-#line 1293 "parser.y"
+  case 110: /* EqExp: RelExp  */
+#line 1647 "parser.y"
       {
 
 }
-#line 3649 "parser.tab.c"
+#line 4056 "parser.tab.c"
     break;
 
-  case 103: /* EqExp: EqExp T_EQUALEQUAL RelExp  */
-#line 1295 "parser.y"
+  case 111: /* EqExp: EqExp T_EQUALEQUAL RelExp  */
+#line 1649 "parser.y"
                            {
   auto lval2rval2 = lvalStack.top();
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","=="},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3673 "parser.tab.c"
+#line 4103 "parser.tab.c"
     break;
 
-  case 104: /* EqExp: EqExp T_EXCLAIMEQUAL RelExp  */
-#line 1313 "parser.y"
+  case 112: /* EqExp: EqExp T_EXCLAIMEQUAL RelExp  */
+#line 1690 "parser.y"
                              {
   auto lval2rval2 = lvalStack.top();
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","!="},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3697 "parser.tab.c"
+#line 4150 "parser.tab.c"
     break;
 
-  case 105: /* LAndExp: EqExp  */
-#line 1334 "parser.y"
+  case 113: /* LAndExp: EqExp  */
+#line 1734 "parser.y"
      {
 
 }
-#line 3705 "parser.tab.c"
+#line 4158 "parser.tab.c"
     break;
 
-  case 106: /* LAndExp: LAndExp T_AMPAMP EqExp  */
-#line 1336 "parser.y"
+  case 114: /* LAndExp: LAndExp T_AMPAMP EqExp  */
+#line 1736 "parser.y"
                         {
   auto lval2rval2 = lvalStack.top();
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","&&"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3729 "parser.tab.c"
+#line 4205 "parser.tab.c"
     break;
 
-  case 107: /* LOrExp: LAndExp  */
-#line 1356 "parser.y"
+  case 115: /* LOrExp: LAndExp  */
+#line 1779 "parser.y"
                {
 
 }
-#line 3737 "parser.tab.c"
+#line 4213 "parser.tab.c"
     break;
 
-  case 108: /* LOrExp: LOrExp T_PIPEPIPE LAndExp  */
-#line 1358 "parser.y"
+  case 116: /* LOrExp: LOrExp T_PIPEPIPE LAndExp  */
+#line 1781 "parser.y"
                            {
   auto lval2rval2 = lvalStack.top();
   lvalStack.pop();
   auto lval2rval1 = lvalStack.top();
   lvalStack.pop();
+
+  int type2 = typeStack.top();
+  typeStack.pop();
+  int type1 = typeStack.top();
+  typeStack.pop();
+
   if(lval2rval2){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type1==TYPE_FLOAT||type1==TYPE_DOUBLE)&&type2==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp2 = stak.back();
   stak.pop_back();
   if(lval2rval1){
     auto rexp = stak.back();
     stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
   }
+
+  if((type2==TYPE_FLOAT||type2==TYPE_DOUBLE)&&type1==TYPE_INT){
+    auto rexp = stak.back();
+    stak.back() = llvm::json::Object{{"kind","ImplicitCastExpr"},{"inner",llvm::json::Array{rexp}}};
+  }
+
   auto exp1 = stak.back();
   stak.back() = llvm::json::Object{{"kind","BinaryOperator"},{"opcode","||"},{"inner",llvm::json::Array{exp1,exp2}}};
   lvalStack.push(false);
+  int newtype = type1>type2?type1:type2;
+  if(newtype==2){
+    newtype=1;
+  }
+  typeStack.push(newtype);
 }
-#line 3761 "parser.tab.c"
+#line 4260 "parser.tab.c"
     break;
 
-  case 109: /* ConstExp: Exp  */
-#line 1378 "parser.y"
+  case 117: /* ConstExp: Exp  */
+#line 1824 "parser.y"
              {
   if(debug) llvm::outs()<<"ConstExp 2 Exp\n";
 }
-#line 3769 "parser.tab.c"
+#line 4268 "parser.tab.c"
     break;
 
 
-#line 3773 "parser.tab.c"
+#line 4272 "parser.tab.c"
 
         default: break;
       }
@@ -4004,4 +4503,4 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 1383 "parser.y"
+#line 1829 "parser.y"
