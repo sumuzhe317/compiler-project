@@ -1,0 +1,1624 @@
+[0/111] ../tester/function_test2020/00_arr_defn2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[0/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[0/111] sysu-lang: 0us, ret 0
+[1/111] ../tester/function_test2020/00_main.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[1/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[1/111] sysu-lang: 0us, ret 0
+[2/111] ../tester/function_test2020/01_var_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[2/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[2/111] sysu-lang: 0us, ret 0
+[3/111] ../tester/function_test2020/02_arr_defn4.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+llvm.memset.p0i8.i32 2         
+-------------------------------------------------
+
+Compile Finish.
+[3/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[3/111] sysu-lang: 0us, ret 0
+[4/111] ../tester/function_test2020/02_var_defn2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[4/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[4/111] sysu-lang: 0us, ret 0
+[5/111] ../tester/function_test2020/03_arr_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[5/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[5/111] sysu-lang: 0us, ret 0
+[6/111] ../tester/function_test2020/03_var_defn2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[6/111] clang -O3: 0us, ret 28
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[6/111] sysu-lang: 0us, ret 28
+[7/111] ../tester/function_test2020/04_const_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[7/111] clang -O3: 0us, ret 4
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[7/111] sysu-lang: 0us, ret 4
+[8/111] ../tester/function_test2020/04_func_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func                 1         
+-------------------------------------------------
+
+Compile Finish.
+[8/111] clang -O3: 0us, ret 9
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[8/111] sysu-lang: 0us, ret 9
+[9/111] ../tester/function_test2020/05_add.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[9/111] clang -O3: 0us, ret 30
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[9/111] sysu-lang: 0us, ret 30
+[10/111] ../tester/function_test2020/05_const_array_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[10/111] clang -O3: 0us, ret 4
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[10/111] sysu-lang: 0us, ret 4
+[11/111] ../tester/function_test2020/06_mod.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[11/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[11/111] sysu-lang: 0us, ret 1
+[12/111] ../tester/function_test2020/06_var_defn_func.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+defn                 1         
+-------------------------------------------------
+
+Compile Finish.
+[12/111] clang -O3: 0us, ret 4
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[12/111] sysu-lang: 0us, ret 4
+[13/111] ../tester/function_test2020/07_comment1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[13/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[13/111] sysu-lang: 0us, ret 0
+[14/111] ../tester/function_test2020/07_return_var.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[14/111] clang -O3: 0us, ret 10
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[14/111] sysu-lang: 0us, ret 10
+[15/111] ../tester/function_test2020/08_arr_assign.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[15/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[15/111] sysu-lang: 0us, ret 0
+[16/111] ../tester/function_test2020/08_comment2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[16/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[16/111] sysu-lang: 0us, ret 0
+[17/111] ../tester/function_test2020/09_if.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[17/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[17/111] sysu-lang: 0us, ret 1
+[18/111] ../tester/function_test2020/09_void_func.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+add                  1         
+-------------------------------------------------
+
+Compile Finish.
+[18/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[18/111] sysu-lang: 0us, ret 5
+[19/111] ../tester/function_test2020/10_break.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[19/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[19/111] sysu-lang: 0us, ret 5
+[20/111] ../tester/function_test2020/10_if_else.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[20/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[20/111] sysu-lang: 0us, ret 1
+[21/111] ../tester/function_test2020/11_continue.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[21/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[21/111] sysu-lang: 0us, ret 5
+[22/111] ../tester/function_test2020/11_while.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[22/111] clang -O3: 0us, ret 6
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[22/111] sysu-lang: 0us, ret 6
+[23/111] ../tester/function_test2020/12_array_traverse.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[23/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[23/111] sysu-lang: 0us, ret 0
+[24/111] ../tester/function_test2020/12_getint.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+-------------------------------------------------
+
+Compile Finish.
+[24/111] clang -O3: 0us, ret 10
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[24/111] sysu-lang: 0us, ret 10
+[25/111] ../tester/function_test2020/13_and.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+Compile Finish.
+[25/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[25/111] sysu-lang: 0us, ret 0
+[26/111] ../tester/function_test2020/13_array_traverse2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[26/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[26/111] sysu-lang: 0us, ret 0
+[27/111] ../tester/function_test2020/14_or.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+Compile Finish.
+[27/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[27/111] sysu-lang: 0us, ret 1
+[28/111] ../tester/function_test2020/15_array_test3.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func                 1         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[28/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[28/111] sysu-lang: 0us, ret 0
+[29/111] ../tester/function_test2020/15_equal.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+Compile Finish.
+[29/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[29/111] sysu-lang: 0us, ret 0
+[30/111] ../tester/function_test2020/16_greater_eq.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[30/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[30/111] sysu-lang: 0us, ret 5
+[31/111] ../tester/function_test2020/16_nequal.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+Compile Finish.
+[31/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[31/111] sysu-lang: 0us, ret 1
+[32/111] ../tester/function_test2020/17_less.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+Compile Finish.
+[32/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[32/111] sysu-lang: 0us, ret 1
+[33/111] ../tester/function_test2020/17_less_eq.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+Compile Finish.
+[33/111] clang -O3: 0us, ret 6
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[33/111] sysu-lang: 0us, ret 6
+[34/111] ../tester/function_test2020/18_cal_prio.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         3         
+-------------------------------------------------
+
+Compile Finish.
+[34/111] clang -O3: 0us, ret 7
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[34/111] sysu-lang: 0us, ret 7
+[35/111] ../tester/function_test2020/19_neg_expr.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[35/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[35/111] sysu-lang: 0us, ret 0
+[36/111] ../tester/function_test2020/20_arr_sum.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         5         
+-------------------------------------------------
+
+Compile Finish.
+[36/111] clang -O3: 0us, ret 12
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[36/111] sysu-lang: 0us, ret 12
+[37/111] ../tester/function_test2020/21_suminput.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[37/111] clang -O3: 0us, ret 6
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[37/111] sysu-lang: 0us, ret 6
+[38/111] ../tester/function_test2020/22_if_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+ifElse               1         
+-------------------------------------------------
+
+Compile Finish.
+[38/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[38/111] sysu-lang: 0us, ret 25
+[39/111] ../tester/function_test2020/23_if_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+ifElseElseIf         1         
+-------------------------------------------------
+
+Compile Finish.
+[39/111] clang -O3: 0us, ret 132
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[39/111] sysu-lang: 0us, ret 132
+[40/111] ../tester/function_test2020/24_if_test3.sysu.c
+../tester/function_test2020/24_if_test3.sysu.c:10:5: warning: add explicit braces to avoid dangling else [-Wdangling-else]
+    else 
+    ^
+1 warning generated.
+../tester/function_test2020/24_if_test3.sysu.c:10:5: warning: add explicit braces to avoid dangling else [-Wdangling-else]
+    else
+    ^
+1 warning generated.
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+ififElse             1         
+-------------------------------------------------
+
+Compile Finish.
+[40/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[40/111] sysu-lang: 0us, ret 25
+[41/111] ../tester/function_test2020/25_if_test4.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+if_ifElse_           1         
+-------------------------------------------------
+
+Compile Finish.
+[41/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[41/111] sysu-lang: 0us, ret 25
+[42/111] ../tester/function_test2020/26_if_test5.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+if_if_Else           1         
+-------------------------------------------------
+
+Compile Finish.
+[42/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[42/111] sysu-lang: 0us, ret 25
+[43/111] ../tester/function_test2020/27_while_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+doubleWhile          1         
+-------------------------------------------------
+
+Compile Finish.
+[43/111] clang -O3: 0us, ret 3
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[43/111] sysu-lang: 0us, ret 3
+[44/111] ../tester/function_test2020/28_while_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+FourWhile            1         
+-------------------------------------------------
+
+Compile Finish.
+[44/111] clang -O3: 0us, ret 54
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[44/111] sysu-lang: 0us, ret 54
+[45/111] ../tester/function_test2020/29_while_test3.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+EightWhile           1         
+-------------------------------------------------
+
+Compile Finish.
+[45/111] clang -O3: 0us, ret 23
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[45/111] sysu-lang: 0us, ret 23
+[46/111] ../tester/function_test2020/30_while_if_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+whileIf              1         
+-------------------------------------------------
+
+Compile Finish.
+[46/111] clang -O3: 0us, ret 198
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[46/111] sysu-lang: 0us, ret 198
+[47/111] ../tester/function_test2020/31_while_if_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+ifWhile              1         
+-------------------------------------------------
+
+Compile Finish.
+[47/111] clang -O3: 0us, ret 96
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[47/111] sysu-lang: 0us, ret 96
+[48/111] ../tester/function_test2020/32_while_if_test3.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+deepWhileBr          1         
+-------------------------------------------------
+
+Compile Finish.
+[48/111] clang -O3: 0us, ret 88
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[48/111] sysu-lang: 0us, ret 88
+[49/111] ../tester/function_test2020/33_func_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+myFunc               1         
+-------------------------------------------------
+
+Compile Finish.
+[49/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[49/111] sysu-lang: 0us, ret 5
+[50/111] ../tester/function_test2020/34_func_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func1                1         
+func2                1         
+func3                1         
+func4                1         
+-------------------------------------------------
+
+Compile Finish.
+[50/111] clang -O3: 0us, ret 127
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[50/111] sysu-lang: 0us, ret 127
+[51/111] ../tester/function_test2020/35_array_test.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func                 1         
+-------------------------------------------------
+
+Compile Finish.
+[51/111] clang -O3: 0us, ret 15
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[51/111] sysu-lang: 0us, ret 15
+[52/111] ../tester/function_test2020/36_domain_test.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func                 1         
+-------------------------------------------------
+
+Compile Finish.
+[52/111] clang -O3: 0us, ret 12
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[52/111] sysu-lang: 0us, ret 12
+[53/111] ../tester/function_test2020/38_if_complex_expr.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+-------------------------------------------------
+
+Compile Finish.
+[53/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[53/111] sysu-lang: 0us, ret 0
+[54/111] ../tester/function_test2020/39_assign_complex_expr.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+-------------------------------------------------
+
+Compile Finish.
+[54/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[54/111] sysu-lang: 0us, ret 0
+[55/111] ../tester/function_test2020/40_index_complex_expr.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+-------------------------------------------------
+
+Compile Finish.
+[55/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[55/111] sysu-lang: 0us, ret 0
+[56/111] ../tester/function_test2020/41_index_arithmetic_expr.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[56/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[56/111] sysu-lang: 0us, ret 0
+[57/111] ../tester/function_test2020/42_index_func_ret.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_getMaxOfAll         1         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[57/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[57/111] sysu-lang: 0us, ret 0
+[58/111] ../tester/function_test2020/43_time_prior_plus.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[58/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[58/111] sysu-lang: 0us, ret 0
+[59/111] ../tester/function_test2020/44_add_prior_equal.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+-------------------------------------------------
+
+Compile Finish.
+[59/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[59/111] sysu-lang: 0us, ret 0
+[60/111] ../tester/function_test2020/45_equal_prior_logic.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+-------------------------------------------------
+
+Compile Finish.
+[60/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[60/111] sysu-lang: 0us, ret 0
+[61/111] ../tester/function_test2020/46_and_prior_or.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[61/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[61/111] sysu-lang: 0us, ret 0
+[62/111] ../tester/function_test2020/47_minus_with_sub.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[62/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[62/111] sysu-lang: 0us, ret 0
+[63/111] ../tester/function_test2020/49_decl_in_defn.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[63/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[63/111] sysu-lang: 0us, ret 0
+[64/111] ../tester/function_test2020/50_recursion_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+fact                 2         
+-------------------------------------------------
+
+Compile Finish.
+[64/111] clang -O3: 0us, ret 24
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[64/111] sysu-lang: 0us, ret 24
+[65/111] ../tester/function_test2020/51_recursion_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+fib                  3         
+-------------------------------------------------
+
+Compile Finish.
+[65/111] clang -O3: 0us, ret 55
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[65/111] sysu-lang: 0us, ret 55
+[66/111] ../tester/function_test2020/52_recursion_test3.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+fac                  2         
+-------------------------------------------------
+
+Compile Finish.
+[66/111] clang -O3: 0us, ret 120
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[66/111] sysu-lang: 0us, ret 120
+[67/111] ../tester/function_test2020/53_sort_test1.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+bubblesort           1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[67/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[67/111] sysu-lang: 0us, ret 0
+[68/111] ../tester/function_test2020/54_sort_test2.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+insertsort           1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[68/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[68/111] sysu-lang: 0us, ret 0
+[69/111] ../tester/function_test2020/55_sort_test3.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+QuickSort            3         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[69/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[69/111] sysu-lang: 0us, ret 0
+[70/111] ../tester/function_test2020/56_sort_test4.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+select_sort          1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[70/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[70/111] sysu-lang: 0us, ret 0
+[71/111] ../tester/function_test2020/57_sort_test5.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+swap                 2         
+heap_ajust           2         
+heap_sort            1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[71/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[71/111] sysu-lang: 0us, ret 0
+[72/111] ../tester/function_test2020/58_sort_test6.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+counting_sort        1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[72/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[72/111] sysu-lang: 0us, ret 0
+[73/111] ../tester/function_test2020/59_sort_test7.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+MergeSort            3         
+Merge                1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[73/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[73/111] sysu-lang: 0us, ret 0
+[74/111] ../tester/function_test2020/60_while_fibonacci.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+fib                  1         
+-------------------------------------------------
+
+Compile Finish.
+[74/111] clang -O3: 0us, ret 3
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[74/111] sysu-lang: 0us, ret 3
+[75/111] ../tester/function_test2020/61_rec_fibonacci.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+f                    3         
+_sysy_getint         1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[75/111] clang -O3: 0us, ret 55
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[75/111] sysu-lang: 0us, ret 55
+[76/111] ../tester/function_test2020/62_long_code.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+QuickSort            3         
+arrCopy              6         
+revert               1         
+_sysy_putint         9         
+bubblesort           2         
+getMid               1         
+getMost              1         
+insertsort           1         
+calSum               1         
+avgPooling           1         
+-------------------------------------------------
+
+Compile Finish.
+[76/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[76/111] sysu-lang: 0us, ret 0
+[77/111] ../tester/function_test2020/63_simple_atoi.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getch          1         
+atoi_                1         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[77/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[77/111] sysu-lang: 0us, ret 0
+[78/111] ../tester/function_test2020/64_alpha_count.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getch          1         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[78/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[78/111] sysu-lang: 0us, ret 0
+[79/111] ../tester/function_test2020/65_word_count.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getch          1         
+wc                   1         
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[79/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[79/111] sysu-lang: 0us, ret 0
+[80/111] ../tester/function_test2020/66_go_upstairs.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+climbStairs          1         
+-------------------------------------------------
+
+Compile Finish.
+[80/111] clang -O3: 0us, ret 8
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[80/111] sysu-lang: 0us, ret 8
+[81/111] ../tester/function_test2020/67_remove_duplicate_element.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+removeElement        1         
+-------------------------------------------------
+
+Compile Finish.
+[81/111] clang -O3: 0us, ret 8
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[81/111] sysu-lang: 0us, ret 8
+[82/111] ../tester/function_test2020/68_accumulate.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[82/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[82/111] sysu-lang: 0us, ret 0
+[83/111] ../tester/function_test2020/69_last_word_length.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+lengthOfLastWord     1         
+-------------------------------------------------
+
+Compile Finish.
+[83/111] clang -O3: 0us, ret 5
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[83/111] sysu-lang: 0us, ret 5
+[84/111] ../tester/function_test2020/70_multi.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+Compile Finish.
+[84/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[84/111] sysu-lang: 0us, ret 0
+[85/111] ../tester/function_test2020/71_max_subsequence_sum.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+maxSubArray          1         
+-------------------------------------------------
+
+Compile Finish.
+[85/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[85/111] sysu-lang: 0us, ret 25
+[86/111] ../tester/function_test2020/72_enum.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         3         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[86/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[86/111] sysu-lang: 0us, ret 0
+[87/111] ../tester/function_test2020/73_exchange_value.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+_sysy_putint         2         
+_sysy_putch          2         
+-------------------------------------------------
+
+Compile Finish.
+[87/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[87/111] sysu-lang: 0us, ret 0
+[88/111] ../tester/function_test2020/74_itera_sqrt.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+fsqrt                1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[88/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[88/111] sysu-lang: 0us, ret 0
+[89/111] ../tester/function_test2020/75_max_container.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+maxArea              1         
+-------------------------------------------------
+
+Compile Finish.
+[89/111] clang -O3: 0us, ret 56
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[89/111] sysu-lang: 0us, ret 56
+[90/111] ../tester/function_test2020/76_int_factor_sum.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+factor               1         
+-------------------------------------------------
+
+Compile Finish.
+[90/111] clang -O3: 0us, ret 172
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[90/111] sysu-lang: 0us, ret 172
+[91/111] ../tester/function_test2020/77_unique_path.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+uniquePaths          1         
+-------------------------------------------------
+
+Compile Finish.
+[91/111] clang -O3: 0us, ret 6
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[91/111] sysu-lang: 0us, ret 6
+[92/111] ../tester/function_test2020/78_decbinoct.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+dec2bin              1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[92/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[92/111] sysu-lang: 0us, ret 0
+[93/111] ../tester/function_test2020/79_gcd.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+gcd                  1         
+-------------------------------------------------
+
+Compile Finish.
+[93/111] clang -O3: 0us, ret 4
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[93/111] sysu-lang: 0us, ret 4
+[94/111] ../tester/function_test2020/80_lcm.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+gcd                  1         
+-------------------------------------------------
+
+Compile Finish.
+[94/111] clang -O3: 0us, ret 20
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[94/111] sysu-lang: 0us, ret 20
+[95/111] ../tester/function_test2020/81_jump_game.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+canJump              1         
+-------------------------------------------------
+
+Compile Finish.
+[95/111] clang -O3: 0us, ret 1
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[95/111] sysu-lang: 0us, ret 1
+[96/111] ../tester/function_test2020/82_int_split.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+split                1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[96/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[96/111] sysu-lang: 0us, ret 0
+[97/111] ../tester/function_test2020/83_enc_dec.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+enc                  1         
+dec                  1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[97/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[97/111] sysu-lang: 0us, ret 0
+[98/111] ../tester/function_test2020/84_palindrome_number.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+palindrome           1         
+_sysy_putint         2         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[98/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[98/111] sysu-lang: 0us, ret 0
+[99/111] ../tester/function_test2020/86_bin_search.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+_sysy_putint         2         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[99/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[99/111] sysu-lang: 0us, ret 0
+[100/111] ../tester/function_test2020/88_array_concat.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+concat               1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[100/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[100/111] sysu-lang: 0us, ret 0
+[101/111] ../tester/function_test2020/90_insert_order.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+insert               1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[101/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[101/111] sysu-lang: 0us, ret 0
+[102/111] ../tester/function_test2020/91_line_search.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+_sysy_putint         2         
+_sysy_putch          1         
+-------------------------------------------------
+
+Compile Finish.
+[102/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[102/111] sysu-lang: 0us, ret 0
+[103/111] ../tester/function_test2020/92_matrix_add.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+add                  1         
+_sysy_putint         3         
+_sysy_putch          3         
+-------------------------------------------------
+
+Compile Finish.
+[103/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[103/111] sysu-lang: 0us, ret 0
+[104/111] ../tester/function_test2020/93_matrix_sub.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+sub                  1         
+_sysy_putint         3         
+_sysy_putch          3         
+-------------------------------------------------
+
+Compile Finish.
+[104/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[104/111] sysu-lang: 0us, ret 0
+[105/111] ../tester/function_test2020/94_matrix_mul.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+mul                  1         
+_sysy_putint         3         
+_sysy_putch          3         
+-------------------------------------------------
+
+Compile Finish.
+[105/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[105/111] sysu-lang: 0us, ret 0
+[106/111] ../tester/function_test2020/95_matrix_tran.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+tran                 1         
+_sysy_putint         3         
+_sysy_putch          3         
+-------------------------------------------------
+
+Compile Finish.
+[106/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[106/111] sysu-lang: 0us, ret 0
+[107/111] ../tester/function_test2020/96_many_param_call.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+testParam8           1         
+_sysy_putint         3         
+testParam16          1         
+testParam32          1         
+-------------------------------------------------
+
+Compile Finish.
+[107/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[107/111] sysu-lang: 0us, ret 0
+[108/111] ../tester/function_test2020/97_many_global_var.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+testParam8           1         
+_sysy_putint         3         
+testParam16          1         
+testParam32          1         
+-------------------------------------------------
+
+Compile Finish.
+[108/111] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[108/111] sysu-lang: 0us, ret 0
+[109/111] ../tester/function_test2020/98_many_local_var.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+_sysy_putint         31        
+_sysy_putch          2         
+-------------------------------------------------
+
+Compile Finish.
+[109/111] clang -O3: 0us, ret 25
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[109/111] sysu-lang: 0us, ret 25
+[110/111] ../tester/function_test2020/99_register_realloc.sysu.c
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+func                 1         
+-------------------------------------------------
+
+Compile Finish.
+[110/111] clang -O3: 0us, ret 132
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[110/111] sysu-lang: 0us, ret 132
+{"tests": [{"name": "../tester/function_test2020/00_arr_defn2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[0/111] clang -O3: 0us, ret 0\n[0/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/00_main.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[1/111] clang -O3: 0us, ret 0\n[1/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/01_var_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[2/111] clang -O3: 0us, ret 0\n[2/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/02_arr_defn4.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[3/111] clang -O3: 0us, ret 0\n[3/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/02_var_defn2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[4/111] clang -O3: 0us, ret 0\n[4/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/03_arr_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[5/111] clang -O3: 0us, ret 0\n[5/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/03_var_defn2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[6/111] clang -O3: 0us, ret 28\n[6/111] sysu-lang: 0us, ret 28\n"}, {"name": "../tester/function_test2020/04_const_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[7/111] clang -O3: 0us, ret 4\n[7/111] sysu-lang: 0us, ret 4\n"}, {"name": "../tester/function_test2020/04_func_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[8/111] clang -O3: 0us, ret 9\n[8/111] sysu-lang: 0us, ret 9\n"}, {"name": "../tester/function_test2020/05_add.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[9/111] clang -O3: 0us, ret 30\n[9/111] sysu-lang: 0us, ret 30\n"}, {"name": "../tester/function_test2020/05_const_array_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[10/111] clang -O3: 0us, ret 4\n[10/111] sysu-lang: 0us, ret 4\n"}, {"name": "../tester/function_test2020/06_mod.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[11/111] clang -O3: 0us, ret 1\n[11/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/06_var_defn_func.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[12/111] clang -O3: 0us, ret 4\n[12/111] sysu-lang: 0us, ret 4\n"}, {"name": "../tester/function_test2020/07_comment1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[13/111] clang -O3: 0us, ret 0\n[13/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/07_return_var.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[14/111] clang -O3: 0us, ret 10\n[14/111] sysu-lang: 0us, ret 10\n"}, {"name": "../tester/function_test2020/08_arr_assign.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[15/111] clang -O3: 0us, ret 0\n[15/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/08_comment2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[16/111] clang -O3: 0us, ret 0\n[16/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/09_if.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[17/111] clang -O3: 0us, ret 1\n[17/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/09_void_func.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[18/111] clang -O3: 0us, ret 5\n[18/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/10_break.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[19/111] clang -O3: 0us, ret 5\n[19/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/10_if_else.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[20/111] clang -O3: 0us, ret 1\n[20/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/11_continue.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[21/111] clang -O3: 0us, ret 5\n[21/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/11_while.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[22/111] clang -O3: 0us, ret 6\n[22/111] sysu-lang: 0us, ret 6\n"}, {"name": "../tester/function_test2020/12_array_traverse.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[23/111] clang -O3: 0us, ret 0\n[23/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/12_getint.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[24/111] clang -O3: 0us, ret 10\n[24/111] sysu-lang: 0us, ret 10\n"}, {"name": "../tester/function_test2020/13_and.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[25/111] clang -O3: 0us, ret 0\n[25/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/13_array_traverse2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[26/111] clang -O3: 0us, ret 0\n[26/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/14_or.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[27/111] clang -O3: 0us, ret 1\n[27/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/15_array_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[28/111] clang -O3: 0us, ret 0\n[28/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/15_equal.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[29/111] clang -O3: 0us, ret 0\n[29/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/16_greater_eq.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[30/111] clang -O3: 0us, ret 5\n[30/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/16_nequal.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[31/111] clang -O3: 0us, ret 1\n[31/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/17_less.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[32/111] clang -O3: 0us, ret 1\n[32/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/17_less_eq.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[33/111] clang -O3: 0us, ret 6\n[33/111] sysu-lang: 0us, ret 6\n"}, {"name": "../tester/function_test2020/18_cal_prio.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[34/111] clang -O3: 0us, ret 7\n[34/111] sysu-lang: 0us, ret 7\n"}, {"name": "../tester/function_test2020/19_neg_expr.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[35/111] clang -O3: 0us, ret 0\n[35/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/20_arr_sum.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[36/111] clang -O3: 0us, ret 12\n[36/111] sysu-lang: 0us, ret 12\n"}, {"name": "../tester/function_test2020/21_suminput.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[37/111] clang -O3: 0us, ret 6\n[37/111] sysu-lang: 0us, ret 6\n"}, {"name": "../tester/function_test2020/22_if_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[38/111] clang -O3: 0us, ret 25\n[38/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/23_if_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[39/111] clang -O3: 0us, ret 132\n[39/111] sysu-lang: 0us, ret 132\n"}, {"name": "../tester/function_test2020/24_if_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[40/111] clang -O3: 0us, ret 25\n[40/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/25_if_test4.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[41/111] clang -O3: 0us, ret 25\n[41/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/26_if_test5.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[42/111] clang -O3: 0us, ret 25\n[42/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/27_while_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[43/111] clang -O3: 0us, ret 3\n[43/111] sysu-lang: 0us, ret 3\n"}, {"name": "../tester/function_test2020/28_while_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[44/111] clang -O3: 0us, ret 54\n[44/111] sysu-lang: 0us, ret 54\n"}, {"name": "../tester/function_test2020/29_while_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[45/111] clang -O3: 0us, ret 23\n[45/111] sysu-lang: 0us, ret 23\n"}, {"name": "../tester/function_test2020/30_while_if_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[46/111] clang -O3: 0us, ret 198\n[46/111] sysu-lang: 0us, ret 198\n"}, {"name": "../tester/function_test2020/31_while_if_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[47/111] clang -O3: 0us, ret 96\n[47/111] sysu-lang: 0us, ret 96\n"}, {"name": "../tester/function_test2020/32_while_if_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[48/111] clang -O3: 0us, ret 88\n[48/111] sysu-lang: 0us, ret 88\n"}, {"name": "../tester/function_test2020/33_func_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[49/111] clang -O3: 0us, ret 5\n[49/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/34_func_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[50/111] clang -O3: 0us, ret 127\n[50/111] sysu-lang: 0us, ret 127\n"}, {"name": "../tester/function_test2020/35_array_test.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[51/111] clang -O3: 0us, ret 15\n[51/111] sysu-lang: 0us, ret 15\n"}, {"name": "../tester/function_test2020/36_domain_test.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[52/111] clang -O3: 0us, ret 12\n[52/111] sysu-lang: 0us, ret 12\n"}, {"name": "../tester/function_test2020/38_if_complex_expr.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[53/111] clang -O3: 0us, ret 0\n[53/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/39_assign_complex_expr.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[54/111] clang -O3: 0us, ret 0\n[54/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/40_index_complex_expr.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[55/111] clang -O3: 0us, ret 0\n[55/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/41_index_arithmetic_expr.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[56/111] clang -O3: 0us, ret 0\n[56/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/42_index_func_ret.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[57/111] clang -O3: 0us, ret 0\n[57/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/43_time_prior_plus.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[58/111] clang -O3: 0us, ret 0\n[58/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/44_add_prior_equal.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[59/111] clang -O3: 0us, ret 0\n[59/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/45_equal_prior_logic.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[60/111] clang -O3: 0us, ret 0\n[60/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/46_and_prior_or.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[61/111] clang -O3: 0us, ret 0\n[61/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/47_minus_with_sub.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[62/111] clang -O3: 0us, ret 0\n[62/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/49_decl_in_defn.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[63/111] clang -O3: 0us, ret 0\n[63/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/50_recursion_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[64/111] clang -O3: 0us, ret 24\n[64/111] sysu-lang: 0us, ret 24\n"}, {"name": "../tester/function_test2020/51_recursion_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[65/111] clang -O3: 0us, ret 55\n[65/111] sysu-lang: 0us, ret 55\n"}, {"name": "../tester/function_test2020/52_recursion_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[66/111] clang -O3: 0us, ret 120\n[66/111] sysu-lang: 0us, ret 120\n"}, {"name": "../tester/function_test2020/53_sort_test1.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[67/111] clang -O3: 0us, ret 0\n[67/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/54_sort_test2.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[68/111] clang -O3: 0us, ret 0\n[68/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/55_sort_test3.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[69/111] clang -O3: 0us, ret 0\n[69/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/56_sort_test4.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[70/111] clang -O3: 0us, ret 0\n[70/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/57_sort_test5.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[71/111] clang -O3: 0us, ret 0\n[71/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/58_sort_test6.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[72/111] clang -O3: 0us, ret 0\n[72/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/59_sort_test7.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[73/111] clang -O3: 0us, ret 0\n[73/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/60_while_fibonacci.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[74/111] clang -O3: 0us, ret 3\n[74/111] sysu-lang: 0us, ret 3\n"}, {"name": "../tester/function_test2020/61_rec_fibonacci.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[75/111] clang -O3: 0us, ret 55\n[75/111] sysu-lang: 0us, ret 55\n"}, {"name": "../tester/function_test2020/62_long_code.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[76/111] clang -O3: 0us, ret 0\n[76/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/63_simple_atoi.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[77/111] clang -O3: 0us, ret 0\n[77/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/64_alpha_count.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[78/111] clang -O3: 0us, ret 0\n[78/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/65_word_count.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[79/111] clang -O3: 0us, ret 0\n[79/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/66_go_upstairs.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[80/111] clang -O3: 0us, ret 8\n[80/111] sysu-lang: 0us, ret 8\n"}, {"name": "../tester/function_test2020/67_remove_duplicate_element.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[81/111] clang -O3: 0us, ret 8\n[81/111] sysu-lang: 0us, ret 8\n"}, {"name": "../tester/function_test2020/68_accumulate.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[82/111] clang -O3: 0us, ret 0\n[82/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/69_last_word_length.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[83/111] clang -O3: 0us, ret 5\n[83/111] sysu-lang: 0us, ret 5\n"}, {"name": "../tester/function_test2020/70_multi.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[84/111] clang -O3: 0us, ret 0\n[84/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/71_max_subsequence_sum.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[85/111] clang -O3: 0us, ret 25\n[85/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/72_enum.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[86/111] clang -O3: 0us, ret 0\n[86/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/73_exchange_value.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[87/111] clang -O3: 0us, ret 0\n[87/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/74_itera_sqrt.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[88/111] clang -O3: 0us, ret 0\n[88/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/75_max_container.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[89/111] clang -O3: 0us, ret 56\n[89/111] sysu-lang: 0us, ret 56\n"}, {"name": "../tester/function_test2020/76_int_factor_sum.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[90/111] clang -O3: 0us, ret 172\n[90/111] sysu-lang: 0us, ret 172\n"}, {"name": "../tester/function_test2020/77_unique_path.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[91/111] clang -O3: 0us, ret 6\n[91/111] sysu-lang: 0us, ret 6\n"}, {"name": "../tester/function_test2020/78_decbinoct.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[92/111] clang -O3: 0us, ret 0\n[92/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/79_gcd.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[93/111] clang -O3: 0us, ret 4\n[93/111] sysu-lang: 0us, ret 4\n"}, {"name": "../tester/function_test2020/80_lcm.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[94/111] clang -O3: 0us, ret 20\n[94/111] sysu-lang: 0us, ret 20\n"}, {"name": "../tester/function_test2020/81_jump_game.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[95/111] clang -O3: 0us, ret 1\n[95/111] sysu-lang: 0us, ret 1\n"}, {"name": "../tester/function_test2020/82_int_split.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[96/111] clang -O3: 0us, ret 0\n[96/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/83_enc_dec.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[97/111] clang -O3: 0us, ret 0\n[97/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/84_palindrome_number.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[98/111] clang -O3: 0us, ret 0\n[98/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/86_bin_search.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[99/111] clang -O3: 0us, ret 0\n[99/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/88_array_concat.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[100/111] clang -O3: 0us, ret 0\n[100/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/90_insert_order.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[101/111] clang -O3: 0us, ret 0\n[101/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/91_line_search.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[102/111] clang -O3: 0us, ret 0\n[102/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/92_matrix_add.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[103/111] clang -O3: 0us, ret 0\n[103/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/93_matrix_sub.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[104/111] clang -O3: 0us, ret 0\n[104/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/94_matrix_mul.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[105/111] clang -O3: 0us, ret 0\n[105/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/95_matrix_tran.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[106/111] clang -O3: 0us, ret 0\n[106/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/96_many_param_call.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[107/111] clang -O3: 0us, ret 0\n[107/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/97_many_global_var.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[108/111] clang -O3: 0us, ret 0\n[108/111] sysu-lang: 0us, ret 0\n"}, {"name": "../tester/function_test2020/98_many_local_var.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[109/111] clang -O3: 0us, ret 25\n[109/111] sysu-lang: 0us, ret 25\n"}, {"name": "../tester/function_test2020/99_register_realloc.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[110/111] clang -O3: 0us, ret 132\n[110/111] sysu-lang: 0us, ret 132\n"}]}

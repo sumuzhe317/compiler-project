@@ -77,7 +77,7 @@ llvm::Value *BuildBinaryOp(const llvm::json::Object *O,
   if (kind != "BinaryOperator") {
     auto value = GetValue(O, Builder, f);
     if (value->getType()->isPointerTy()) 
-      value = Builder->CreateLoad(value, "rval");
+      value = Builder->CreateLoad(value->getType(),value, "rval");
     return value;
   }
   auto innerArray = O->getArray("inner");
@@ -350,7 +350,7 @@ llvm::Value *getArray(const llvm::json::Object *O,
       auto innerPtr = cur->getArray("inner");
       auto Idx = GetValue((*innerPtr)[1].getAsObject(), Builder, f);
       if (Idx->getType()->isPointerTy()) 
-        Idx = Builder->CreateLoad(Idx, "rval");
+        Idx = Builder->CreateLoad(Idx->getType(),Idx, "rval");
       IdList.push_back(Idx);
       cur = (*innerPtr)[0].getAsObject();
     } else { 
@@ -364,18 +364,19 @@ llvm::Value *getArray(const llvm::json::Object *O,
   auto BasePtr = st.lookup(name);
   bool flag = false;
   if (!BasePtr->getType()->isArrayTy() && !BasePtr->getType()->getPointerElementType()->isArrayTy()) {
-    BasePtr = Builder->CreateLoad(BasePtr, "deref");
+    BasePtr = Builder->CreateLoad(BasePtr->getType(),BasePtr, "deref");
     flag = true;
   }
   for (int i = 0; i < IdList.size(); ++i) {
     if (((IdList.size() > 1) && (i == IdList.size() - 1)) || !flag) {
       BasePtr = Builder->CreateInBoundsGEP(
+          BasePtr->getType(),
           BasePtr,
           {llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)), IdList[i]},
           name);
     } 
     else 
-      BasePtr = Builder->CreateInBoundsGEP(BasePtr, {IdList[i]}, name);
+      BasePtr = Builder->CreateInBoundsGEP(BasePtr->getType(),BasePtr, {IdList[i]}, name);
   }
   return BasePtr;
 }
@@ -575,7 +576,7 @@ int BuildInstruction(const llvm::json::Object *O,
     auto innerArray = O->getArray("inner");
     auto Rval = GetValue((*innerArray)[1].getAsObject(), Builder, f);
     if (Rval->getType()->isPointerTy()) 
-      Rval = Builder->CreateLoad(Rval, "rval");
+      Rval = Builder->CreateLoad(Rval->getType(),Rval, "rval");
     auto Lval = GetValue((*innerArray)[0].getAsObject(), Builder, f);
     Builder->CreateStore(Rval, Lval);
     return StdType::BinaryOp;
@@ -630,7 +631,7 @@ int BuildInstruction(const llvm::json::Object *O,
             llvm::ConstantInt::get(TheContext, llvm::APInt(32, num * 4)),
             llvm::MaybeAlign(4));
         InitArray((*innerArray2)[0].getAsObject(), 
-                    Builder->CreateInBoundsGEP(BasePtr, IdList, name), 
+                    Builder->CreateInBoundsGEP(BasePtr->getType(),BasePtr, IdList, name), 
                     dim, Builder, 0, name, f);
         continue;
       } else if (kind == "StringLiteral") {  // 字符串数组
@@ -787,7 +788,7 @@ llvm::Function *BuildFunctionDecl(const llvm::json::Object *O) {
     Builder.CreateBr(ReturnBlock); 
   Builder.SetInsertPoint(ReturnBlock);
   if (TypeStr == "int" || TypeStr == "long" || TypeStr == "long long") {
-    auto Rval = Builder.CreateLoad(RetVal, "constretval");
+    auto Rval = Builder.CreateLoad(RetVal->getType(),RetVal, "constretval");
     Builder.CreateRet(Rval);
   } else if (TypeStr == "void") 
     Builder.CreateRetVoid();
@@ -810,7 +811,7 @@ llvm::Constant *GetConstInitList(const llvm::json::Object *O,
     if (ptr == nullptr) 
       ptr = Builder->getInt32(0);
     else if (ptr->getType()->isPointerTy()) 
-      ptr = Builder->CreateLoad(ptr, "rval");
+      ptr = Builder->CreateLoad(ptr->getType(),ptr, "rval");
     return llvm::dyn_cast<llvm::Constant>(ptr);
   }
   std::vector<llvm::Constant *> elems;
@@ -885,7 +886,7 @@ void InitArray(const llvm::json::Object *O,
     ++j;
   for (int i = 0; i < dim[depth]; ++i) {
     IdList.push_back(Builder->getInt32(i));
-    llvm::Value *NextPtr = Builder->CreateInBoundsGEP(BasePtr, IdList, array_name);
+    llvm::Value *NextPtr = Builder->CreateInBoundsGEP(BasePtr->getType(),BasePtr, IdList, array_name);
     if (innerArrayPtr != nullptr && j < innerArrayPtr->size()) 
       InitArray((*innerArrayPtr)[j].getAsObject(), NextPtr, dim, Builder, depth + 1, array_name, f);
     else 
@@ -922,13 +923,13 @@ llvm::Value *BuildImplicitCastExpr(const llvm::json::Object *O,
     std::string type = O->getObject("type")->getString("qualType")->str();
     if (type.find("int") != std::string::npos) {
       auto ptr = Builder->CreateInBoundsGEP(
-          value, {llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)),
+          value->getType(),value, {llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)),
                   llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0))});
       ptr->setName("Arr2Ptr");
       return ptr;
     } else if (type == "char *") {
       auto ptr = Builder->CreateInBoundsGEP(
-          value, {llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)),
+          value->getType(),value, {llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)),
                   llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0))});
       ptr->setName("Arr2Ptr");
       return ptr;
@@ -936,7 +937,7 @@ llvm::Value *BuildImplicitCastExpr(const llvm::json::Object *O,
   } else if (castKind == "IntegralCast") { 
     if (castType == "int") {
       if (value->getType()->isPointerTy()) 
-        value = Builder->CreateLoad(value, "rval");
+        value = Builder->CreateLoad(value->getType(),value, "rval");
       value = Builder->CreateIntCast(value, llvm::Type::getInt32Ty(TheContext), true, "IntegralCast");
     } else if (castType == "long") 
       value = Builder->CreateIntCast(value, llvm::Type::getInt32Ty(TheContext), true, "IntegralCast");
@@ -946,7 +947,7 @@ llvm::Value *BuildImplicitCastExpr(const llvm::json::Object *O,
       value = Builder->CreateIntCast(value, llvm::Type::getInt64Ty(TheContext), true, "IntegralCast");
     return value;
   } else if (castKind == "LValueToRValue") 
-    return Builder->CreateLoad(value, "lval2rval");
+    return Builder->CreateLoad(value->getType(),value, "lval2rval");
   else 
     return value;
   return nullptr;
