@@ -1,0 +1,603 @@
+[0/37] ../tester/h_functional/081_exgcd.sysu.c
+exgcd : Finish CSE Pass
+t ?
+r ?
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+exgcd                2         
+llvm.memset.p0i8.i32 2         
+_sysy_putint         1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[0/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[0/37] sysu-lang: 0us, ret 0
+[1/37] ../tester/h_functional/082_reverse_output.sysu.c
+reverse : Finish CSE Pass
+main : Finish CSE Pass
+i ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+_sysy_putint         2         
+reverse              2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[1/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[1/37] sysu-lang: 0us, ret 0
+[2/37] ../tester/h_functional/083_brainfk.sysu.c
+../tester/h_functional/083_brainfk.sysu.c:9:5: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+int tape[TAPE_LEN], program[BUFFER_LEN], ptr = 0;
+    ^
+../tester/h_functional/083_brainfk.sysu.c:9:21: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+int tape[TAPE_LEN], program[BUFFER_LEN], ptr = 0;
+                    ^
+2 warnings generated.
+../tester/h_functional/083_brainfk.sysu.c:9:5: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+int tape[TAPE_LEN], program[BUFFER_LEN], ptr = 0;
+    ^
+../tester/h_functional/083_brainfk.sysu.c:9:21: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+int tape[TAPE_LEN], program[BUFFER_LEN], ptr = 0;
+                    ^
+2 warnings generated.
+read_program : Finish CSE Pass
+interpret : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         1         
+_sysy_getch          2         
+_sysy_putch          1         
+read_program         1         
+interpret            1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[2/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[2/37] sysu-lang: 0us, ret 0
+[3/37] ../tester/h_functional/084_expr_eval.sysu.c
+next_char : Finish CSE Pass
+is_space : Finish CSE Pass
+is_num : Finish CSE Pass
+next_token : Finish CSE Pass
+panic : Finish CSE Pass
+get_op_prec : Finish CSE Pass
+stack_push : Finish CSE Pass
+s ?
+v ?
+stack_pop : Finish CSE Pass
+last ?
+s ?
+stack_peek : Finish CSE Pass
+s ?
+stack_size : Finish CSE Pass
+s ?
+eval_op : Finish CSE Pass
+eval : Finish CSE Pass
+lhs49 ?
+lhs ?
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getch          2         
+is_space             1         
+next_char            3         
+is_num               2         
+_sysy_putch          8         
+llvm.memset.p0i8.i32 2         
+panic                2         
+stack_push           5         
+next_token           5         
+get_op_prec          3         
+stack_size           2         
+stack_pop            6         
+eval_op              2         
+stack_peek           2         
+_sysy_getint         1         
+eval                 1         
+_sysy_putint         1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[3/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[3/37] sysu-lang: 0us, ret 0
+[4/37] ../tester/h_functional/085_dijkstra.sysu.c
+j ?
+Dijkstra : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         5         
+Dijkstra             1         
+_sysy_putint         1         
+_sysy_putch          2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[4/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[4/37] sysu-lang: 0us, ret 0
+[5/37] ../tester/h_functional/086_full_conn.sysu.c
+relu_reg : Finish CSE Pass
+model : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+relu_reg             10        
+_sysy_getint         2         
+model                1         
+_sysy_putch          8         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[5/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[5/37] sysu-lang: 0us, ret 0
+[6/37] ../tester/h_functional/087_gcd.sysu.c
+gcd : Finish CSE Pass
+main : Finish CSE Pass
+b ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+gcd                  2         
+_sysy_getint         3         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[6/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[6/37] sysu-lang: 0us, ret 0
+[7/37] ../tester/h_functional/088_hanoi.sysu.c
+move : Finish CSE Pass
+x ?
+hanoi : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         2         
+_sysy_putch          4         
+move                 2         
+hanoi                3         
+_sysy_getint         2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[7/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[7/37] sysu-lang: 0us, ret 0
+[8/37] ../tester/h_functional/089_hidden_var.sysu.c
+main : Finish CSE Pass
+a5 ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         12        
+_sysy_putch          5         
+llvm.memset.p0i8.i32 2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[8/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[8/37] sysu-lang: 0us, ret 0
+[9/37] ../tester/h_functional/090_int_io.sysu.c
+my_getint : Finish CSE Pass
+my_putint : Finish CSE Pass
+main : Finish CSE Pass
+m ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getch          2         
+_sysy_putch          2         
+my_getint            2         
+my_putint            1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[9/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[9/37] sysu-lang: 0us, ret 0
+[10/37] ../tester/h_functional/091_kmp.sysu.c
+get_next : Finish CSE Pass
+KMP : Finish CSE Pass
+read_str : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+get_next             1         
+_sysy_getch          1         
+read_str             2         
+KMP                  1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[10/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[10/37] sysu-lang: 0us, ret 0
+[11/37] ../tester/h_functional/092_max_flow.sysu.c
+my_memset : Finish CSE Pass
+add_node : Finish CSE Pass
+u ?
+v ?
+c ?
+dfs : Finish CSE Pass
+max_flow : Finish CSE Pass
+main : Finish CSE Pass
+c ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+dfs                  2         
+my_memset            2         
+_sysy_getint         5         
+add_node             1         
+max_flow             1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[11/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[11/37] sysu-lang: 0us, ret 0
+[12/37] ../tester/h_functional/093_n_queens.sysu.c
+printans : Finish CSE Pass
+f : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+_sysy_putch          2         
+printans             1         
+f                    2         
+_sysy_getint         2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[12/37] clang -O3: 0us, ret 107
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[12/37] sysu-lang: 0us, ret 107
+[13/37] ../tester/h_functional/094_substr.sysu.c
+MAX : Finish CSE Pass
+max_sum_nonadjacent : Finish CSE Pass
+longest_common_subseq : Finish CSE Pass
+An ?
+Bn ?
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+llvm.memset.p0i8.i32 4         
+MAX                  3         
+max_sum_nonadjacent  1         
+_sysy_putint         2         
+_sysy_putch          2         
+longest_common_subseq 1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[13/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[13/37] sysu-lang: 0us, ret 0
+[14/37] ../tester/h_functional/095_empty_stmt.sysu.c
+main : Finish CSE Pass
+a ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[14/37] clang -O3: 0us, ret 21
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[14/37] sysu-lang: 0us, ret 21
+[15/37] ../tester/h_functional/096_side_effect.sysu.c
+inc_a : Finish CSE Pass
+b ?
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+inc_a                8         
+_sysy_putint         5         
+_sysy_putch          5         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[15/37] clang -O3: 0us, ret 29
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[15/37] sysu-lang: 0us, ret 29
+[16/37] ../tester/h_functional/097_var_name.sysu.c
+../tester/h_functional/097_var_name.sysu.c:5:7: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+  int VLDTJUr0eYj3UiHhVWtQqVrqunxn8GIY2SPSCOKZw1azce1XN6Oqaz7crOokQxd0Jl_HNREMFQUaJQeHFmH5vE_4dX1cLiR7f9h64RWN1G3M1mKM7Y7FB1LheRSAHJA08GrqaVlh7NN05M3MGbywOWe5g91MEJX8AeOgM9Ja2XqNDj_cm1adEFa8e30NudvaPNpxFOC2C66LKK8i5xA8HVJgwFZWtYKEthyhLGYDShqNOShWyq14gC7EdfD4gR1dhvtMQDUbiGDc7G4WrjBJNb0zS0L8ALJ8CHKer7t657HqogSAcWFx2TBiQdtSP8jYK3tsS6_IefxvEGLTInAvZk5pvYhNVCDh6o8rHvfK3D_BEeFOIIsh0C_cUEX2RAsgwIMHkUbt3PbBXDp8_RuJr98J9y7eicGQLMpnpaNRz_W4vDanyNCy8SwZQij6CeJYhK9Z5AjUlta4VJTHlKy40vp3kAL9pWllUHbtAF_KsoETwLz0B7QQ5RN9b6DK2JkFFhsnRlmVrgXP_dsJib9gf_3_soE4nRVxmpm_liH19vUvlTxn3buGVkrZNsE7tSkwUiA1bBv9nMh3k6blOh6133Ym6WHqEh2nFO0wCtkd1PlgYW2_9TVzXMpwSEOi0NGp_LK6FqNiSZtHV2GEENDd15YV4CbryZLfM0QOY66Gi3gT_tRhAM3J6gSBHKN1ae9L1ucoWEQhUuYg2RcFwH3TR1J9MefSP7d7IEIbwm67h7al2_gOFIWKBt3rajglu0uTdDvmLfHd6SY6_dV2zMw8GFrAdlzE8i9YRCkJIBX3GZCmg_DsP09NVwBvRGs5znxMs47KvW8ipgOddYBylDm0eWNiSCL7NucfP6bDig9FxbLuoaRXJnWTDXEXb9OZS7CxbSn0Aph_cBLCN5_TNV73C9Hvz_6KTW9a34u1RW0Eesra9htMiKKycfHXUOe9QFhObXLBiCTSebAXH6O3Vv9C7_NLdPzSAk12YB3Vvr99sS2_rum0coC33LqNPUu_NXwKqo76sHr30xmOp7ASvq5R2AMxqzT_lKazOesV3Gu4cGWWIqWpN0kuem0xAxxKoBAnfmZZmyHlIckPpTAqMx9AZTUjiyZhuarAcfi3daF5FB3gJqZWH7XzcepCyrWwP_B_7PxaMzrI8yxhM2Ll2QYplWPApZ6Lxu7P5Q2GmM7G81pRrqFAYKMR_Licfh5OElDfR6W8RnFyIyzzdU8plHryg6RmKKusbR8gvNfYtne4JYeRHvEq623V87mCS8g6oPV1SYbSeDjfRir8QIvehNkvc2peAAtAJcBfLezojs8xTzGImP3BJLl9lHBbl8Ugb62gCbviGUaFMHhPBo9sFoLEPlG1De_gNmgWnK3Zt2hNKNqWuniLGWRgAS9jX6d7hDh6KSkVIsWaFxdt1XMjnqL1SRSBQiY9hnJkzD5XWG3oSWqUUUWCeq3kyvSdZrLRZHwsCsD027R2Xmsfekwxq_1S_09ug96n68v36Dbu6wZJr3cd4LfTPA6PbfSR_3m3DZyfPaPF_xM3mX6p7jg9GVfRtHCY8t_esPiazgDyjq_67vDqFuTOi8RAPPUKTWCsxI_XzgsBOvzQlxdIYhMF0d3Dve9iJzH7556mrXhGhFPFasFOrMjWZ6gyMpu9NuuEmrnDWcAV9uqJ6lLhTP5doiZJB8sei3RcNnQRHty4MlVKlVNasXYAtNNfPoh8zXM29wWtC9XReAxBSNaSDzqwVQU0PhfScQQwq4y04ait8KaAyuPKxmVuTcbQlWFfOr96d9umCj8A_XFmsF6mliW0FukpoTSCARZ3SG2aZmYVzPj3hTNl0EN1UDw7OMTLHM1nwbgc9I3d2r8SbLoGlbEk3nKrOv_kwYjgnyIwfiwaGd4igaLsk1cA1NAhJHsgH79ZA83wgEaxJ0iOfMKZ1QtBoIsxsecoER8HnjlvUYEfehifkE17w_OrsFCzdKgkQxe8BClbywbfbacJx86aWsSC[Cy92k8jOyGwpymrp_aZeu_vYwQPeRGHYo0nKXgxMsU3ALykomjoy0v7PrBR5MLWuTcPITZzLajYN3kAhROsMQ6uUe3NqQ6QJyFKvM2G1h6mT3QX9DYbJQsDjb_qKv7vEp6fZLUYJbP4BQnFuisvKlzY8Ym0f_IYchIbJQCvl5R0X3cujCWAWQmNXr8sWoyCtt8ghUridaVa8TcycXdrhLOXI4akvL4wY1B3BCAX4nTZsUGemmDbrjvz_XQ37Hw5lRNDM3AuNOb_oeTlLhRcIjoby7T1ozDgHQbUJFDKlD7D999ynqfEwOeJ1UTkX0elvwrn_Cem72IEwj0Kx_bCapCVe5JSCtVSKmoHhm0wlescYbATn21EnuIjiP_bVvzEvjKY9d7azInHGIwWjZJW_I8EgXj0rP9adIEZxSMJ6BLnuegBp71xWiZCJh_s4efmZUatbxHChtdHkY_VnLFku8X29hgVTjgPdTqjbP2Jcu2bV58lnZIt5wQk3rqeTInqkxNW4OvSbvo6np8PVtL0zjbJ5Sx2oSU1KcQTAG4Dgx14Eb8zGbDvs19ErvuUl48YOguAP2tJhbWBZ5Zv7FSg5V6BsF0ABLFmcT1LFgbgI0af8OK8eOrCzbQgG9SLnx9UTJx3_fCGpFOe5TtAqRvc4tqQglgYgfbGUpRT8X3yGln8jnUt6uR2Xgacd0JfjQg8CWLBihfD9JlE2hPUyoNzhaLmiZleiA4dg1I1q_5ugfO5PyfWwEVVwyTAlpaza1fOCAUCJW5Fy7g_fHFBfDNdUf98CJRmULkQ_qKCBxqVTV1JYDHm1vkKFt9qzr9sGxZWyLhQwTaBt2X_diibJJRHPEHGqcyla_O5MOy5VOu5tvpkw3V9Nn0UwUBzWEa32i2ekbzyGHjwsjoCm9q1IRDsunPKOgXpLmo21aUPPjpKH0nwKJWSfOTpa03CYMBjAZAxxLXNyH2wuTPt0ievT3BLmixYFifby5cqUHHZx7oaK6PnfHMoTh8PIF7KUQY2lkO3zgr9TnRNKtra_BbFArmWlWpvBVBBGuXnKuhJXSWRdARZi00QIMeApsc9hPXeV0OT9UiauD3mgxKTvWieLmXXg0ccoUyTkghCWRbA_SVbTEwHvmX8M_987cngFjVGdz7jYuWcTprOvoYc5qzNK8HZnP0iKHka2ysn6qvr4sheXnyybWMTdrMH6ej26BhzU2bHDgLZISeWIdu_mIQIKmgPNY7A6LujG1lp2K86YJ57RGFyTy5lPyV3yTRc3b5MEFMExLrqSx3m_vSNy1jr73sw6qU4wsBDTdhLvfqtR3FfKhcIdYNhz6BzzF50J42BSKYvk5x4oMhs7OSzPwPdMtEDt1BEkciRTt5LZgGBWYTsWAdXV3gbLKz0y2mOked_wgPwcu7dIuid2p1a0pq5SyV0aSYs13abh_ddAoNTiB7ZTwL3mw05WISorBytfJexyq0534kbAnp5DQwnGiAuM5GMVdE0mAnMr] = {1, 2};
+      ^
+1 warning generated.
+../tester/h_functional/097_var_name.sysu.c:5:7: warning: variable length array folded to constant array as an extension [-Wgnu-folding-constant]
+  int VLDTJUr0eYj3UiHhVWtQqVrqunxn8GIY2SPSCOKZw1azce1XN6Oqaz7crOokQxd0Jl_HNREMFQUaJQeHFmH5vE_4dX1cLiR7f9h64RWN1G3M1mKM7Y7FB1LheRSAHJA08GrqaVlh7NN05M3MGbywOWe5g91MEJX8AeOgM9Ja2XqNDj_cm1adEFa8e30NudvaPNpxFOC2C66LKK8i5xA8HVJgwFZWtYKEthyhLGYDShqNOShWyq14gC7EdfD4gR1dhvtMQDUbiGDc7G4WrjBJNb0zS0L8ALJ8CHKer7t657HqogSAcWFx2TBiQdtSP8jYK3tsS6_IefxvEGLTInAvZk5pvYhNVCDh6o8rHvfK3D_BEeFOIIsh0C_cUEX2RAsgwIMHkUbt3PbBXDp8_RuJr98J9y7eicGQLMpnpaNRz_W4vDanyNCy8SwZQij6CeJYhK9Z5AjUlta4VJTHlKy40vp3kAL9pWllUHbtAF_KsoETwLz0B7QQ5RN9b6DK2JkFFhsnRlmVrgXP_dsJib9gf_3_soE4nRVxmpm_liH19vUvlTxn3buGVkrZNsE7tSkwUiA1bBv9nMh3k6blOh6133Ym6WHqEh2nFO0wCtkd1PlgYW2_9TVzXMpwSEOi0NGp_LK6FqNiSZtHV2GEENDd15YV4CbryZLfM0QOY66Gi3gT_tRhAM3J6gSBHKN1ae9L1ucoWEQhUuYg2RcFwH3TR1J9MefSP7d7IEIbwm67h7al2_gOFIWKBt3rajglu0uTdDvmLfHd6SY6_dV2zMw8GFrAdlzE8i9YRCkJIBX3GZCmg_DsP09NVwBvRGs5znxMs47KvW8ipgOddYBylDm0eWNiSCL7NucfP6bDig9FxbLuoaRXJnWTDXEXb9OZS7CxbSn0Aph_cBLCN5_TNV73C9Hvz_6KTW9a34u1RW0Eesra9htMiKKycfHXUOe9QFhObXLBiCTSebAXH6O3Vv9C7_NLdPzSAk12YB3Vvr99sS2_rum0coC33LqNPUu_NXwKqo76sHr30xmOp7ASvq5R2AMxqzT_lKazOesV3Gu4cGWWIqWpN0kuem0xAxxKoBAnfmZZmyHlIckPpTAqMx9AZTUjiyZhuarAcfi3daF5FB3gJqZWH7XzcepCyrWwP_B_7PxaMzrI8yxhM2Ll2QYplWPApZ6Lxu7P5Q2GmM7G81pRrqFAYKMR_Licfh5OElDfR6W8RnFyIyzzdU8plHryg6RmKKusbR8gvNfYtne4JYeRHvEq623V87mCS8g6oPV1SYbSeDjfRir8QIvehNkvc2peAAtAJcBfLezojs8xTzGImP3BJLl9lHBbl8Ugb62gCbviGUaFMHhPBo9sFoLEPlG1De_gNmgWnK3Zt2hNKNqWuniLGWRgAS9jX6d7hDh6KSkVIsWaFxdt1XMjnqL1SRSBQiY9hnJkzD5XWG3oSWqUUUWCeq3kyvSdZrLRZHwsCsD027R2Xmsfekwxq_1S_09ug96n68v36Dbu6wZJr3cd4LfTPA6PbfSR_3m3DZyfPaPF_xM3mX6p7jg9GVfRtHCY8t_esPiazgDyjq_67vDqFuTOi8RAPPUKTWCsxI_XzgsBOvzQlxdIYhMF0d3Dve9iJzH7556mrXhGhFPFasFOrMjWZ6gyMpu9NuuEmrnDWcAV9uqJ6lLhTP5doiZJB8sei3RcNnQRHty4MlVKlVNasXYAtNNfPoh8zXM29wWtC9XReAxBSNaSDzqwVQU0PhfScQQwq4y04ait8KaAyuPKxmVuTcbQlWFfOr96d9umCj8A_XFmsF6mliW0FukpoTSCARZ3SG2aZmYVzPj3hTNl0EN1UDw7OMTLHM1nwbgc9I3d2r8SbLoGlbEk3nKrOv_kwYjgnyIwfiwaGd4igaLsk1cA1NAhJHsgH79ZA83wgEaxJ0iOfMKZ1QtBoIsxsecoER8HnjlvUYEfehifkE17w_OrsFCzdKgkQxe8BClbywbfbacJx86aWsSC[Cy92k8jOyGwpymrp_aZeu_vYwQPeRGHYo0nKXgxMsU3ALykomjoy0v7PrBR5MLWuTcPITZzLajYN3kAhROsMQ6uUe3NqQ6QJyFKvM2G1h6mT3QX9DYbJQsDjb_qKv7vEp6fZLUYJbP4BQnFuisvKlzY8Ym0f_IYchIbJQCvl5R0X3cujCWAWQmNXr8sWoyCtt8ghUridaVa8TcycXdrhLOXI4akvL4wY1B3BCAX4nTZsUGemmDbrjvz_XQ37Hw5lRNDM3AuNOb_oeTlLhRcIjoby7T1ozDgHQbUJFDKlD7D999ynqfEwOeJ1UTkX0elvwrn_Cem72IEwj0Kx_bCapCVe5JSCtVSKmoHhm0wlescYbATn21EnuIjiP_bVvzEvjKY9d7azInHGIwWjZJW_I8EgXj0rP9adIEZxSMJ6BLnuegBp71xWiZCJh_s4efmZUatbxHChtdHkY_VnLFku8X29hgVTjgPdTqjbP2Jcu2bV58lnZIt5wQk3rqeTInqkxNW4OvSbvo6np8PVtL0zjbJ5Sx2oSU1KcQTAG4Dgx14Eb8zGbDvs19ErvuUl48YOguAP2tJhbWBZ5Zv7FSg5V6BsF0ABLFmcT1LFgbgI0af8OK8eOrCzbQgG9SLnx9UTJx3_fCGpFOe5TtAqRvc4tqQglgYgfbGUpRT8X3yGln8jnUt6uR2Xgacd0JfjQg8CWLBihfD9JlE2hPUyoNzhaLmiZleiA4dg1I1q_5ugfO5PyfWwEVVwyTAlpaza1fOCAUCJW5Fy7g_fHFBfDNdUf98CJRmULkQ_qKCBxqVTV1JYDHm1vkKFt9qzr9sGxZWyLhQwTaBt2X_diibJJRHPEHGqcyla_O5MOy5VOu5tvpkw3V9Nn0UwUBzWEa32i2ekbzyGHjwsjoCm9q1IRDsunPKOgXpLmo21aUPPjpKH0nwKJWSfOTpa03CYMBjAZAxxLXNyH2wuTPt0ievT3BLmixYFifby5cqUHHZx7oaK6PnfHMoTh8PIF7KUQY2lkO3zgr9TnRNKtra_BbFArmWlWpvBVBBGuXnKuhJXSWRdARZi00QIMeApsc9hPXeV0OT9UiauD3mgxKTvWieLmXXg0ccoUyTkghCWRbA_SVbTEwHvmX8M_987cngFjVGdz7jYuWcTprOvoYc5qzNK8HZnP0iKHka2ysn6qvr4sheXnyybWMTdrMH6ej26BhzU2bHDgLZISeWIdu_mIQIKmgPNY7A6LujG1lp2K86YJ57RGFyTy5lPyV3yTRc3b5MEFMExLrqSx3m_vSNy1jr73sw6qU4wsBDTdhLvfqtR3FfKhcIdYNhz6BzzF50J42BSKYvk5x4oMhs7OSzPwPdMtEDt1BEkciRTt5LZgGBWYTsWAdXV3gbLKz0y2mOked_wgPwcu7dIuid2p1a0pq5SyV0aSYs13abh_ddAoNTiB7ZTwL3mw05WISorBytfJexyq0534kbAnp5DQwnGiAuM5GMVdE0mAnMr] = {1, 2};
+      ^
+1 warning generated.
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+llvm.memset.p0i8.i32 1         
+_sysy_putint         1         
+_sysy_putch          1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[16/37] clang -O3: 0us, ret 236
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[16/37] sysu-lang: 0us, ret 236
+[17/37] ../tester/h_functional/098_chaos_token.sysu.c
+putstr : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putch          1         
+putstr               5         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[17/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[17/37] sysu-lang: 0us, ret 0
+[18/37] ../tester/h_functional/099_skip_spaces.sysu.c
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_getint         2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[18/37] clang -O3: 0us, ret 55
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[18/37] sysu-lang: 0us, ret 55
+[19/37] ../tester/h_functional/100_int_literal.sysu.c
+get_ans_se : Finish CSE Pass
+v0 ?
+v1 ?
+get_ans : Finish CSE Pass
+v0 ?
+v1 ?
+main : Finish CSE Pass
+a4 ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+get_ans              11        
+get_ans_se           11        
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[19/37] clang -O3: 0us, ret 230
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[19/37] sysu-lang: 0us, ret 230
+[20/37] ../tester/h_functional/101_scope2.sysu.c
+main : Finish CSE Pass
+g13 ?
+l ?
+g ?
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[20/37] clang -O3: 0us, ret 62
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[20/37] sysu-lang: 0us, ret 62
+[21/37] ../tester/h_functional/102_short_circuit3.sysu.c
+../tester/h_functional/102_short_circuit3.sysu.c:16:31: warning: if statement has empty body [-Wempty-body]
+    if (set_a(0) && set_b(1)) ;
+                              ^
+../tester/h_functional/102_short_circuit3.sysu.c:16:31: note: put the semicolon on a separate line to silence this warning
+../tester/h_functional/102_short_circuit3.sysu.c:22:29: warning: if statement has empty body [-Wempty-body]
+    if (c >= 1 && set_d(3)) ;
+                            ^
+../tester/h_functional/102_short_circuit3.sysu.c:22:29: note: put the semicolon on a separate line to silence this warning
+../tester/h_functional/102_short_circuit3.sysu.c:40:25: warning: self-comparison always evaluates to false [-Wtautological-compare]
+    if (i0 == !i1 && i3 < i3 || i4 >= i4) { putch(74); }
+                        ^
+../tester/h_functional/102_short_circuit3.sysu.c:40:36: warning: self-comparison always evaluates to true [-Wtautological-compare]
+    if (i0 == !i1 && i3 < i3 || i4 >= i4) { putch(74); }
+                                   ^
+../tester/h_functional/102_short_circuit3.sysu.c:41:25: warning: self-comparison always evaluates to false [-Wtautological-compare]
+    if (i0 == !i1 || i3 < i3 && i4 >= i4) putch(75);
+                        ^
+../tester/h_functional/102_short_circuit3.sysu.c:41:36: warning: self-comparison always evaluates to true [-Wtautological-compare]
+    if (i0 == !i1 || i3 < i3 && i4 >= i4) putch(75);
+                                   ^
+6 warnings generated.
+../tester/h_functional/102_short_circuit3.sysu.c:40:25: warning: self-comparison always evaluates to false [-Wtautological-compare]
+    if (i0 == !i1 && i3 < i3 || i4 >= i4) { _sysy_putch(74); }
+                        ^
+../tester/h_functional/102_short_circuit3.sysu.c:40:36: warning: self-comparison always evaluates to true [-Wtautological-compare]
+    if (i0 == !i1 && i3 < i3 || i4 >= i4) { _sysy_putch(74); }
+                                   ^
+../tester/h_functional/102_short_circuit3.sysu.c:41:25: warning: self-comparison always evaluates to false [-Wtautological-compare]
+    if (i0 == !i1 || i3 < i3 && i4 >= i4) _sysy_putch(75);
+                        ^
+../tester/h_functional/102_short_circuit3.sysu.c:41:36: warning: self-comparison always evaluates to true [-Wtautological-compare]
+    if (i0 == !i1 || i3 < i3 && i4 >= i4) _sysy_putch(75);
+                                   ^
+4 warnings generated.
+set_a : Finish CSE Pass
+val ?
+set_b : Finish CSE Pass
+val ?
+set_d : Finish CSE Pass
+val ?
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+set_a                2         
+_sysy_putint         6         
+_sysy_putch          20        
+set_b                2         
+set_d                2         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[21/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[21/37] sysu-lang: 0us, ret 0
+[22/37] ../tester/h_functional/103_long_func.sysu.c
+long_func : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         3         
+_sysy_putch          3         
+long_func            1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[22/37] clang -O3: 0us, ret 0
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[22/37] sysu-lang: 0us, ret 0
+[23/37] ../tester/h_functional/104_long_array.sysu.c
+long_array : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+_sysy_putint         3         
+long_array           1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[23/37] clang -O3: 0us, ret 216
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+Traceback (most recent call last):
+  File "/mnt/sda/2022-0526/home/scc/zty/compiler/sysu/bin/sysu-compiler", line 536, in <module>
+    sys.exit(main(*sys.argv))
+  File "/mnt/sda/2022-0526/home/scc/zty/compiler/sysu/bin/sysu-compiler", line 515, in main
+    return benchmark_generator_and_optimizer(
+  File "/mnt/sda/2022-0526/home/scc/zty/compiler/sysu/bin/sysu-compiler", line 342, in benchmark_generator_and_optimizer
+    ff, len(filenames), get_tm(jt), jt.returncode)
+  File "/mnt/sda/2022-0526/home/scc/zty/compiler/sysu/bin/sysu-compiler", line 254, in get_tm
+    matchObj = matchObj[-1]
+IndexError: list index out of range

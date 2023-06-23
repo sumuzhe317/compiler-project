@@ -1,0 +1,21 @@
+[0/1] ../tester/mizuno_ai/mizuno_ai.sysu.c
+wk_puts : Finish CSE Pass
+main : Finish CSE Pass
+=================================================
+sysu-optimizer: static analysis results
+=================================================
+NAME                 #N DIRECT CALLS
+-------------------------------------------------
+llvm.memset.p0i8.i32 2         
+llvm.memcpy.p0i8.p0i8.i64 2         
+sysu_putchar         2         
+wk_puts              1         
+-------------------------------------------------
+
+In main!!!
+Compile Finish.
+[0/1] clang -O3: 0us, ret 31
+warning: overriding the module target triple with x86_64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+[0/1] sysu-lang: 0us, ret 31
+{"tests": [{"name": "../tester/mizuno_ai/mizuno_ai.sysu.c", "score": 1, "max_score": 1, "output": "Compile Finish.\n[0/1] clang -O3: 0us, ret 31\n[0/1] sysu-lang: 0us, ret 31\n"}]}
